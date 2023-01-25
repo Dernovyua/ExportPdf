@@ -1,17 +1,10 @@
-﻿using System;
+﻿using Export;
+using Export.Enums;
+using Export.Models;
+using Export.ModelsExport;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace ExportDevExpress
 {
@@ -20,9 +13,27 @@ namespace ExportDevExpress
     /// </summary>
     public partial class MainWindow : Window
     {
+        ClientReport clientReport { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
+
+            clientReport = new ClientReport();
+        }
+
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+            clientReport.SetExport(new Pdf());
+
+            List<Action> actions = new List<Action>()
+            {
+                () => clientReport.AddTable(new Table(null, null)),
+                () => clientReport.AddText(new Text("", new SettingText())),
+                () => clientReport.AddChart(new Chart(new SettingChart(1, 1, "", "", TypeChart.Pie), new ChartData())),
+            };
+
+            clientReport.GenerateReport(actions);
         }
     }
 }
