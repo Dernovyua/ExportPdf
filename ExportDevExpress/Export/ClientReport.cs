@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Export
 {
-    public class ClientReport : IMethodAdding
+    public class ClientReport : IExport
     {
         private ISequence _sequence { get; set; }
 
@@ -45,9 +45,19 @@ namespace Export
             _sequence.AddChart(chartData);
         }
 
-        public void AddTable(Table table)
+        public void AddTable(TableModel table)
         {
             _sequence.AddTable(table);
+        }
+
+        public void SaveDocument()
+        {
+            _sequence.SaveDocument();
+        }
+
+        public void OpenPreview()
+        {
+            _sequence.OpenPreview();
         }
     }
 }

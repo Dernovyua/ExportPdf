@@ -7,7 +7,9 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="573,305,0,0" VerticalAlignment="Top" Height="51" Width="89" Click="button_Click"/>
+        <Button x:Name="GeneratePdf" Content="GeneratePdf" HorizontalAlignment="Left" Margin="312,63,0,0" VerticalAlignment="Top" Height="61" Width="122" Click="button_Click"/>
+        <Button x:Name="button1" Content="OpenPreview" HorizontalAlignment="Left" Margin="312,142,0,0" VerticalAlignment="Top" Height="61" Width="122" Click="button1_Click"/>
+        <Button x:Name="button2" Content="SaveDocument" HorizontalAlignment="Left" Margin="312,217,0,0" VerticalAlignment="Top" Width="122" Height="61" Click="button2_Click"/>
 
     </Grid>
 </Window>

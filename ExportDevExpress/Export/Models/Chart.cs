@@ -1,25 +1,22 @@
-﻿using Export.Enums;
-using System;
-using System.Collections.Generic;
+﻿using Export.Interfaces;
+using System.Drawing;
 
 namespace Export.Models
 {
     public class Chart
     {
-        /// <summary>
-        /// Настройки графика
-        /// </summary>
+        private IChart _chart { get; set; }
         public SettingChart SettingChart { get; set; }
 
-        /// <summary>
-        /// Данные графика
-        /// </summary>
-        public ChartData ChartData { get; set; }
-
-        public Chart(SettingChart settingChart, ChartData chartData)
+        public Chart(IChart chart, SettingChart settingChart)
         {
+            _chart = chart;
             SettingChart = settingChart;
-            ChartData = chartData;
+        }
+
+        public Image CreateImage()
+        {
+            return _chart.CreateImageFromControl();
         }
     }
 
@@ -48,34 +45,18 @@ namespace Export.Models
         /// </summary>
         public string SignatureX { get; set; } = string.Empty;
 
-        /// <summary>
-        /// Тип графика
-        /// </summary>
-        public TypeChart TypeChart { get; set; }
-
-        public SettingChart(float? width, float? height, string signatureY, string signatureX, TypeChart typeChart)
+        public SettingChart(float? width, float? height, string signatureY = "", string signatureX = "")
         {
             Width = width;
             Height = height;
+
             SignatureY = signatureY;
             SignatureX = signatureX;
-            TypeChart = typeChart;
         }
-    }
 
-    /// <summary>
-    /// Данные графика
-    /// </summary>
-    public class ChartData
-    {
-        /// <summary>
-        /// Значения
-        /// </summary>
-        public IEnumerable<double> Data { get; set; } = Array.Empty<double>();
-
-        /// <summary>
-        /// Названия
-        /// </summary>
-        public IEnumerable<string> Name { get; set; } = Array.Empty<string>();
+        public SettingChart()
+        {
+            
+        }
     }
 }

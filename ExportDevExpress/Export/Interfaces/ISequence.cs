@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Export.Interfaces
 {
-    public interface ISequence : IMethodAdding
+    public interface ISequence : IExport
     {
         void GetCallSequenceMethods(IEnumerable<Action> actions);
     }

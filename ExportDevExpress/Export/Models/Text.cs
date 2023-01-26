@@ -31,6 +31,6 @@ namespace Export.Models
         public bool? Bold { get; set; } = false;
         public bool? Italic { get; set; } = false;
         public float? FontSize { get; set; } = 14.0f;
-        public TextAligment TextAligment { get; set; } = TextAligment.Justify;
+        public Aligment TextAligment { get; set; } = Aligment.Justify;
     }
 }

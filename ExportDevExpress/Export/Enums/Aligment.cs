@@ -1,6 +1,6 @@
 ﻿namespace Export.Enums
 {
-    public enum TextAligment
+    public enum Aligment
     {
         Center,
         Right,

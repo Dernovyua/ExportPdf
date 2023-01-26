@@ -6,4 +6,15 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="DevExpress.Document.Processor" Version="22.2.3" />
+    <PackageReference Include="DevExpress.Win.Charts" Version="22.2.3" />
+    <PackageReference Include="DevExpress.Wpf" Version="22.2.3" />
+    <PackageReference Include="DevExpress.Wpf.Charts" Version="22.2.3" />
+    <PackageReference Include="DevExpress.Wpf.Controls" Version="22.2.3" />
+    <PackageReference Include="DevExpress.Wpf.Core" Version="22.2.3" />
+    <PackageReference Include="DevExpress.Wpf.PdfViewer" Version="22.2.3" />
+    <PackageReference Include="DevExpress.Wpf.Reporting" Version="22.2.3" />
+  </ItemGroup>
+
 </Project>
