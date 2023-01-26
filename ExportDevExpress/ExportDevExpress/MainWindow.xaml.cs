@@ -34,14 +34,19 @@ namespace ExportDevExpress
 
             List<Action> actions = new List<Action>()
             {
-                () => clientReport.AddText(new Text("Текстовый блок", new SettingText() { Bold = true, FontSize = 30.0f, TextAligment = Aligment.Center })),
-                () => clientReport.AddText(new Text("Оценка параметров оптимизации с учетом плотности распределения статистической оценки", new SettingText() { FontSize = 14.0f, TextAligment = Aligment.Justify })),
-                () => clientReport.AddTable(GetTableData()),
-                () => clientReport.AddTable(GetTableData2()),
-                () => clientReport.AddTable(GetTableData3()),
+                () => clientReport.AddText(new Text("Текстовый блок", new SettingText() { Bold = true, FontSize = 10.0f, TextAligment = Aligment.Left })),
+                () => clientReport.AddText(new Text("Оценка параметров оптимизации с учетом плотности распределения статистической оценки", new SettingText() { Bold = true, FontSize = 50.0f, TextAligment = Aligment.Left })),
 
-                () => clientReport.AddChart(new Chart(new Histrogram() { HistrogramData = GetDataHistogram() }, new SettingChart())),
-                //() => clientReport.AddChart(new Chart(new Pie() { PieData = new PieData()}, new SettingChart())),
+                () => clientReport.AddTable(GetTableData()),
+                //() => clientReport.AddTable(GetTableData2()),
+                //() => clientReport.AddTable(GetTableData3()),
+
+                //() => clientReport.AddChart(new Chart(new Histrogram() { HistrogramData = GetDataHistogram(), SettingChart = new SettingChart("Гистограмма", signatureX: "X", signatureY: "Y") })),
+                //() => clientReport.AddChart(new Chart(new Histrogram() { HistrogramData = GetDataHistogram(), SettingChart = new SettingChart("Гистограмма2", 500, 250, "Hi", "Bye") })),
+
+                //() => clientReport.AddText(new Text("Текстовый блок2", new SettingText() { Bold = true, FontSize = 30.0f, TextAligment = Aligment.Center })),
+
+                //() => clientReport.AddChart(new Chart(new Pie() { PieData = GetPieData(), SettingChart = new SettingChart("Pie")})),
             };
 
             clientReport.GenerateReport(actions);
@@ -158,6 +163,22 @@ namespace ExportDevExpress
             }
 
             return histrogramDatas;
+        }
+
+        #endregion
+
+        #region Генерация данных для Pie charts
+
+        public IEnumerable<PieData> GetPieData()
+        {
+            return new List<PieData>()
+            {
+                new PieData() { Argument = "BTC", Value = 10 },
+                new PieData() { Argument = "ETH", Value = 36 },
+                new PieData() { Argument = "Doge", Value = 21000 },
+                new PieData() { Argument = "EOS", Value = 863 },
+                new PieData() { Argument = "AVAX", Value = 89 },
+            };
         }
 
         #endregion

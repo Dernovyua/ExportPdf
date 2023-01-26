@@ -11,10 +11,12 @@ namespace Export.Models.Charts
     public class Histrogram : IChart
     {
         public IEnumerable<HistrogramData> HistrogramData { get; set; } = Array.Empty<HistrogramData>();
+        public SettingChart SettingChart { get; set; }
 
-        public Histrogram(IEnumerable<HistrogramData> histrogramData)
+        public Histrogram(IEnumerable<HistrogramData> histrogramData, SettingChart settingChart)
         {
             HistrogramData = histrogramData;
+            SettingChart = settingChart;
         }
 
         public Histrogram()
@@ -26,12 +28,12 @@ namespace Export.Models.Charts
         {
             ChartControl chartControl = new ChartControl();
 
-            Series histogram = new Series("Histogram", ViewType.Bar);
-            histogram.ArgumentDataMember = "XValue"; // Название свойства, которое отвечает за значение по оси X
+            Series histogram = new Series(SettingChart.Name, ViewType.Bar);
+            histogram.ArgumentDataMember = "XValue";
             histogram.ValueDataMembers[0] = "YValue";
 
-            chartControl.Height = 250;
-            chartControl.Width = 600;
+            chartControl.Height = SettingChart.Height;
+            chartControl.Width = SettingChart.Width;
 
             chartControl.Series.Add(histogram);
 
@@ -40,18 +42,24 @@ namespace Export.Models.Charts
             histogram.DataSource = HistrogramData;
 
             XYDiagram diagram = (XYDiagram)chartControl.Diagram;
+
             diagram.AxisX.NumericScaleOptions.ScaleMode = ScaleMode.Interval;
             diagram.AxisX.Visibility = DevExpress.Utils.DefaultBoolean.True;
-
             diagram.AxisX.WholeRange.SideMarginsValue = 0;
             diagram.AxisX.NumericScaleOptions.IntervalOptions.Count = 20;
             diagram.AxisX.NumericScaleOptions.IntervalOptions.DivisionMode = IntervalDivisionMode.Auto;
+            diagram.Margins.All = 10;
 
             diagram.AxisX.Label.TextPattern = "{}{OB}{A1:F1}, {A2:F1}{CB}";
 
+            diagram.AxisX.Title.Text = SettingChart.SignatureX;
+            diagram.AxisY.Title.Text = SettingChart.SignatureY;
+
+            chartControl.Titles.Add(new ChartTitle() { Text = "CHART", Alignment = StringAlignment.Center });
+
             using (MemoryStream s = new MemoryStream())
             {
-                chartControl.ExportToImage(s, ImageFormat.Jpeg);
+                chartControl.ExportToImage(s, ImageFormat.Png);
                 return Image.FromStream(s);
             }
         }

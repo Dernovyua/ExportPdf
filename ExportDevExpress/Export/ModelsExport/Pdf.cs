@@ -1,17 +1,12 @@
-﻿using DevExpress.DataAccess.Native.Json;
-using DevExpress.Mvvm.Native;
-using DevExpress.Printing.Core.PdfExport.Metafile;
-using DevExpress.XtraCharts;
+﻿using DevExpress.Mvvm.Native;
 using DevExpress.XtraPrinting;
 using DevExpress.XtraRichEdit;
 using DevExpress.XtraRichEdit.API.Native;
-using Export.Enums;
 using Export.Interfaces;
 using Export.Models;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Drawing.Printing;
 using System.IO;
 
@@ -51,15 +46,35 @@ namespace Export.ModelsExport
 
             _richServer.Document.Images.Append(DocumentImageSource.FromImage(image));
             _richServer.Document.Paragraphs.Append();
+
+            AddText(new Text("", new SettingText()));
         }
 
         public void AddTable(TableModel table)
         {
             // Логика формирования/заполнения таблицы
 
-            Table tablePdf = _richServer.Document.Tables.Create(_richServer.Document.Selection.Start, table.TableData.Count + 1, table.HeaderTable.Headers.Count, AutoFitBehaviorType.AutoFitToContents);
+            AddText(new Text("", new SettingText()));
 
-            #region Вынести в настройки
+            Table tablePdf = _richServer.Document.Tables.Create(_richServer.Document.Selection.Start, table.TableData.Count, table.HeaderTable.Headers.Count, AutoFitBehaviorType.AutoFitToContents);
+
+            DocumentRange range = _richServer.Document.Tables[_richServer.Document.Tables.Count - 1].Range;
+            CharacterProperties titleFormatting = _richServer.Document.BeginUpdateCharacters(range);
+       
+            titleFormatting.FontSize = 14.0f;
+            titleFormatting.FontName = "Helvetica";
+            titleFormatting.ForeColor = Color.Red;
+
+            _richServer.Document.EndUpdateCharacters(titleFormatting);
+
+            tablePdf.Borders.InsideHorizontalBorder.LineThickness = 0;
+            tablePdf.Borders.InsideHorizontalBorder.LineStyle = TableBorderLineStyle.None;
+            tablePdf.Borders.InsideVerticalBorder.LineThickness = 0;
+            tablePdf.Borders.InsideVerticalBorder.LineStyle = TableBorderLineStyle.None;
+
+            tablePdf.TableAlignment = TableRowAlignment.Center;
+            tablePdf.HorizontalAlignment = TableHorizontalAlignment.Center;
+            tablePdf.VerticalAlignment = TableVerticalAlignment.Center;
 
             tablePdf.Borders.Left.LineStyle = TableBorderLineStyle.None;
             tablePdf.Borders.Left.LineThickness = 0;
@@ -73,8 +88,6 @@ namespace Export.ModelsExport
             tablePdf.Borders.Bottom.LineStyle = TableBorderLineStyle.None;
             tablePdf.Borders.Bottom.LineThickness = 0;
 
-            #endregion
-
             #region Заполнение таблицы
 
             tablePdf.BeginUpdate();
@@ -84,7 +97,7 @@ namespace Export.ModelsExport
                 _richServer.Document.InsertText(tablePdf[0, i].Range.Start, headreName);
             });
 
-            for (int i = 0; i < table.TableData.Count; i++)
+            for (int i = 0; i < table.TableData.Count - 1; i++)
             {
                 for (int j = 0; j < table.HeaderTable.Headers.Count; j++)
                 {
@@ -103,35 +116,20 @@ namespace Export.ModelsExport
         {
             // Логика добавления текста
 
-            Table tableText = _richServer.Document.Tables.Create(_richServer.Document.Selection.Start, 1, 1, AutoFitBehaviorType.AutoFitToContents);
+            DocumentRange range = _richServer.Document.Paragraphs[_richServer.Document.Paragraphs.Count - 1].Range;
 
-            tableText.BeginUpdate();
+            CharacterProperties titleFormatting = _richServer.Document.BeginUpdateCharacters(range);
 
-            tableText.TableAlignment = text.SettingText.TextAligment.Equals(Aligment.Left) ? TableRowAlignment.Left
-                : text.SettingText.TextAligment.Equals(Aligment.Right) ? TableRowAlignment.Right 
-                : text.SettingText.TextAligment.Equals(Aligment.Center) ? TableRowAlignment.Center : TableRowAlignment.Both;
+            titleFormatting.FontSize = text.SettingText.FontSize;
+            titleFormatting.FontName = text.SettingText.FontName;
+            titleFormatting.ForeColor = text.SettingText.Color;
+            titleFormatting.Bold = text.SettingText.Bold;
+            titleFormatting.Italic = text.SettingText.Italic;
 
-            tableText.Style.FontSize = text.SettingText.FontSize;
-            tableText.Style.Bold = text.SettingText.Bold;
-            tableText.Style.Italic = text.SettingText.Italic;
-
-            tableText.Borders.Left.LineStyle = TableBorderLineStyle.None;
-            tableText.Borders.Left.LineThickness = 0;
-
-            tableText.Borders.Right.LineStyle = TableBorderLineStyle.None;
-            tableText.Borders.Right.LineThickness = 0;
-
-            tableText.Borders.Top.LineStyle = TableBorderLineStyle.None;
-            tableText.Borders.Top.LineThickness = 0;
-
-            tableText.Borders.Bottom.LineStyle = TableBorderLineStyle.None;
-            tableText.Borders.Bottom.LineThickness = 0;
-
-            _richServer.Document.InsertText(tableText[0, 0].Range.Start, text.Letter);
-
-            tableText.EndUpdate();
-
+            _richServer.Document.AppendText(text.Letter);
             _richServer.Document.Paragraphs.Append();
+
+            _richServer.Document.EndUpdateCharacters(titleFormatting);
         }
 
         public void OpenPreview()

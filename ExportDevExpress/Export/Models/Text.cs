@@ -30,6 +30,7 @@ namespace Export.Models
         public Color Color { get; set; } = Color.Black;
         public bool? Bold { get; set; } = false;
         public bool? Italic { get; set; } = false;
+        public string FontName { get; set; } = "Helvetica";
         public float? FontSize { get; set; } = 14.0f;
         public Aligment TextAligment { get; set; } = Aligment.Justify;
     }
