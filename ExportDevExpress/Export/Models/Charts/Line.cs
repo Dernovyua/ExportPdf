@@ -16,6 +16,8 @@ namespace Export.Models.Charts
         /// </summary>
         public IEnumerable<LineData> Lines { get; set; } = Array.Empty<LineData>();
 
+        public SettingChart SettingChart { get; set; }
+
         public Line()
         {
 
@@ -54,7 +56,7 @@ namespace Export.Models.Charts
             lineChart.Width = 600;
             lineChart.Height = 350;
 
-            lineChart.Titles.Add(new ChartTitle() { Text = "Line Chart", Alignment = StringAlignment.Center });
+            lineChart.Titles.Add(new ChartTitle() { Text = SettingChart.Name, Alignment = StringAlignment.Center, TextColor = SettingChart.SettingText.Color });
 
             using (MemoryStream s = new MemoryStream())
             {

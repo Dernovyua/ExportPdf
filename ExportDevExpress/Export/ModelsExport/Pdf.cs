@@ -1,5 +1,4 @@
 ﻿using DevExpress.Mvvm.Native;
-using DevExpress.Xpf.Editors.Helpers;
 using DevExpress.XtraPrinting;
 using DevExpress.XtraRichEdit;
 using DevExpress.XtraRichEdit.API.Native;
@@ -15,8 +14,6 @@ namespace Export.ModelsExport
 {
     public class Pdf : ISequence
     {
-        // Здесь будут еще свойства от DevExpress
-
         #region Свойства DevExpress
 
         private RichEditDocumentServer _richServer { get; set; }
@@ -69,7 +66,7 @@ namespace Export.ModelsExport
             titleFormatting.FontName = table.TableSetting.SettingText.FontName;
             titleFormatting.ForeColor = table.TableSetting.SettingText.Color;
             titleFormatting.Bold = table.TableSetting.SettingText.Bold;
-            titleFormatting.Italic = table.TableSetting. SettingText.Italic;
+            titleFormatting.Italic = table.TableSetting.SettingText.Italic;
 
             #endregion
 
@@ -141,8 +138,6 @@ namespace Export.ModelsExport
             _richServer.Document.AppendText(text.Letter + "\n");
 
             _richServer.Document.EndUpdateCharacters(titleFormatting);
-
-            //_richServer.Document.AppendText("\n");
         }
 
         public void OpenPreview()
@@ -158,8 +153,8 @@ namespace Export.ModelsExport
             using (FileStream fs = new FileStream($@"../../{Guid.NewGuid()}.pdf", FileMode.OpenOrCreate))
             {
                 _link.Component = _richServer;
-                _link.CreateDocument();
 
+                _link.CreateDocument();
                 _link.ExportToPdf(fs);
             }
         }

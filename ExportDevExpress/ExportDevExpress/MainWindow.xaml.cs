@@ -41,9 +41,9 @@ namespace ExportDevExpress
                 () => clientReport.AddTable(GetTableData2()),
                 () => clientReport.AddTable(GetTableData3()),
 
-                () => clientReport.AddChart(new Chart(new Histrogram() { HistrogramData = GetDataHistogram(), SettingChart = new SettingChart("Гистограмма", signatureX: "X", signatureY: "Y") })),
-                () => clientReport.AddChart(new Chart(new Histrogram() { HistrogramData = GetDataHistogram(), SettingChart = new SettingChart("Гистограмма2", signatureX: "Hi", signatureY: "Bye") })),
-                () => clientReport.AddChart(new Chart(new Pie() { PieData = GetPieData(), SettingChart = new SettingChart("Pie", 600, 350, "X", "Y")})),
+                () => clientReport.AddChart(new Chart(new Histrogram() { HistrogramData = GetDataHistogram(), SettingChart = new SettingChart() { Name = "Histrogram Chart" } })),
+                () => clientReport.AddChart(new Chart(new Histrogram() { HistrogramData = GetDataHistogram(), SettingChart = new SettingChart() { Name = "Histrogram Chart 2" } })),
+                () => clientReport.AddChart(new Chart(new Doughnut() { PieData = GetPieData(), SettingChart = new SettingChart() { Name = "Pie" }})),
                 () => clientReport.AddChart(new Chart(new Area()
                 {
                     Areas = new List<AreaData>()
@@ -51,7 +51,8 @@ namespace ExportDevExpress
                         new AreaData() { NameArea = "Первый", AreaPoints = GetAreaPoints() },
                         new AreaData() { NameArea = "Второй", AreaPoints = GetAreaPoints2() },
                         new AreaData() { NameArea = "Третий", AreaPoints = GetAreaPoints3() }
-                    }
+                    },
+                    SettingChart = new SettingChart() { Name = "Area Chart" }
                 })),
                 () => clientReport.AddText(new Text("\n")),
                 () => clientReport.AddText(new Text("Оценка параметров оптимизации с учетом плотности распределения статистической оценки", new SettingText() { Italic = true, FontSize = 14.0f, TextAligment = Aligment.Justify })),
@@ -62,7 +63,8 @@ namespace ExportDevExpress
                         new LineData() { NameLine = "Первый", LinePoints = GetLinePoints() },
                         new LineData() { NameLine = "Второй", LinePoints = GetLinePoints2() },
                         new LineData() { NameLine = "Третий", LinePoints = GetLinePoints3() }
-                    }
+                    },
+                    SettingChart = new SettingChart() { Name = "Line Chart" }
                 }))
             };
 

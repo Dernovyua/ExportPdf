@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using DashStyle = DevExpress.XtraCharts.DashStyle;
 
 namespace Export.Models.Charts
 {
@@ -14,6 +13,13 @@ namespace Export.Models.Charts
     {
         public IEnumerable<AreaData> Areas { get; set; } = Array.Empty<AreaData>();
 
+        public SettingChart SettingChart { get; set; }
+
+        public Area(IEnumerable<AreaData> areas, SettingChart settingChart)
+        {
+            Areas = areas;
+            SettingChart = settingChart;
+        }
         public Area()
         {
             
@@ -48,10 +54,10 @@ namespace Export.Models.Charts
             ((XYDiagram)areaChart.Diagram).AxisX.NumericScaleOptions.AutoGrid = false;
             ((XYDiagram)areaChart.Diagram).AxisX.NumericScaleOptions.GridSpacing = 1;
 
-            areaChart.Width = 600;
-            areaChart.Height = 350;
+            areaChart.Width = SettingChart.Width;
+            areaChart.Height = SettingChart.Height;
 
-            areaChart.Titles.Add(new ChartTitle() { Text = "Area Chart", Alignment = StringAlignment.Center });
+            areaChart.Titles.Add(new ChartTitle() { Text = SettingChart.Name, Alignment = StringAlignment.Center, TextColor = SettingChart.SettingText.Color });
 
             using (MemoryStream s = new MemoryStream())
             {

@@ -8,17 +8,19 @@
         /// <summary>
         /// Название графика
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
+
+        public SettingText SettingText { get; set; } = default!;
 
         /// <summary>
         /// Ширина графика
         /// </summary>
-        public int Width { get; set; }
+        public int Width { get; set; } = 600;
 
         /// <summary>
         /// Высота графика
         /// </summary>
-        public int Height { get; set; }
+        public int Height { get; set; } = 350;
 
         /// <summary>
         /// Подпись графика по оси Y
@@ -30,20 +32,9 @@
         /// </summary>
         public string SignatureX { get; set; } = string.Empty;
 
-        public SettingChart(string name, int width = 600, int height = 350, string signatureY = "", string signatureX = "")
+        public SettingChart()
         {
-            Name = name;
-
-            Width = width;
-            Height = height;
-
-            SignatureY = signatureY;
-            SignatureX = signatureX;
-        }
-
-        public SettingChart(string name)
-        {
-            Name = name;
+            SettingText = new SettingText();
         }
     }
 }
