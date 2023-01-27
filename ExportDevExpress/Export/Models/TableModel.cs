@@ -1,17 +1,21 @@
-﻿using System;
+﻿using Export.Enums;
 using System.Collections.Generic;
 
 namespace Export.Models
 {
     public class TableModel
     {
-        public HeaderTable HeaderTable { get; set; }
-        public List<List<Cell>> TableData { get; set; } = new();
+        public HeaderTable HeaderTable { get; set; } = default!;
 
-        public TableModel(HeaderTable headerTable, List<List<Cell>> tableData)
+        public TableSetting TableSetting { get; set; } = default!;
+
+        public List<List<string>> TableData { get; set; } = new();
+
+        public TableModel(HeaderTable headerTable, TableSetting tableSetting, List<List<string>> tableData)
         {
             HeaderTable = headerTable;
             TableData = tableData;
+            TableSetting = tableSetting;
         }
     }
 
@@ -23,16 +27,59 @@ namespace Export.Models
         public List<string> Headers { get; set; } = new();
     }
 
-    /// <summary>
-    /// Ячейка таблицы
-    /// </summary>
-    public class Cell
+    public class TableSetting
     {
-        public Text Text { get; set; }
+        public SettingText SettingText { get; set; }
+        public TableBorderSetting TableBorderSetting { get; set; }
+        public TableBorderInsideSetting TableBorderInsideSetting { get; set; } 
+        public TableAligment TableAligment { get; set; }
 
-        public Cell(Text text)
+        /// <summary>
+        /// На каждой новой странице вначале таблицы будут отображаться названия заголовков
+        /// </summary>
+        public bool RepeatHeaderEveryPage { get; set; } = true;
+
+        /// <summary>
+        /// Настройки по умолчанию
+        /// </summary>
+        public TableSetting()
         {
-            Text = text;
+            SettingText = new SettingText();
+            TableBorderSetting = new TableBorderSetting()
+            {
+                BorderLineStyle = BorderLineStyle.Single,
+                LineThickness = 1.0f
+            };
+            TableBorderInsideSetting = new TableBorderInsideSetting()
+            {
+                BorderLineStyle= BorderLineStyle.Single,
+                LineThickness = 1.0f
+            };
+
+            TableAligment = new TableAligment()
+            {
+                HorizontalAlignment = HorizontalAlignment.Center,
+                RowAlignment = RowAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+            };
         }
+    }
+
+    public class TableBorderSetting
+    {
+        public BorderLineStyle BorderLineStyle { get; set; } = BorderLineStyle.Single;
+        public float LineThickness { get; set; } = 0.0f;
+    }
+
+    public class TableBorderInsideSetting : TableBorderSetting
+    {
+
+    }
+
+    public class TableAligment
+    {
+        public RowAlignment RowAlignment { get; set; } = RowAlignment.Center;
+        public HorizontalAlignment HorizontalAlignment { get; set; } = HorizontalAlignment.Center;
+        public VerticalAlignment VerticalAlignment { get; set; } = VerticalAlignment.Center;
     }
 }

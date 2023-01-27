@@ -1,4 +1,5 @@
 ﻿using DevExpress.Mvvm.Native;
+using DevExpress.Xpf.Editors.Helpers;
 using DevExpress.XtraPrinting;
 using DevExpress.XtraRichEdit;
 using DevExpress.XtraRichEdit.API.Native;
@@ -42,55 +43,68 @@ namespace Export.ModelsExport
         {
             // Логика формирования графика
 
+            AddText(new Text(""));
+
             Image image = chart.CreateImage();
 
             _richServer.Document.Images.Append(DocumentImageSource.FromImage(image));
-            _richServer.Document.Paragraphs.Append();
 
-            AddText(new Text("", new SettingText()));
+            _richServer.Document.AppendText("\n");
         }
 
         public void AddTable(TableModel table)
         {
             // Логика формирования/заполнения таблицы
 
-            AddText(new Text("", new SettingText()));
+            AddText(new Text(""));
 
             Table tablePdf = _richServer.Document.Tables.Create(_richServer.Document.Selection.Start, table.TableData.Count, table.HeaderTable.Headers.Count, AutoFitBehaviorType.AutoFitToContents);
 
             DocumentRange range = _richServer.Document.Tables[_richServer.Document.Tables.Count - 1].Range;
             CharacterProperties titleFormatting = _richServer.Document.BeginUpdateCharacters(range);
-       
-            titleFormatting.FontSize = 14.0f;
-            titleFormatting.FontName = "Helvetica";
-            titleFormatting.ForeColor = Color.Red;
+
+            #region Настройки текста в таблице
+
+            titleFormatting.FontSize = table.TableSetting.SettingText.FontSize;
+            titleFormatting.FontName = table.TableSetting.SettingText.FontName;
+            titleFormatting.ForeColor = table.TableSetting.SettingText.Color;
+            titleFormatting.Bold = table.TableSetting.SettingText.Bold;
+            titleFormatting.Italic = table.TableSetting. SettingText.Italic;
+
+            #endregion
 
             _richServer.Document.EndUpdateCharacters(titleFormatting);
 
-            tablePdf.Borders.InsideHorizontalBorder.LineThickness = 0;
-            tablePdf.Borders.InsideHorizontalBorder.LineStyle = TableBorderLineStyle.None;
-            tablePdf.Borders.InsideVerticalBorder.LineThickness = 0;
-            tablePdf.Borders.InsideVerticalBorder.LineStyle = TableBorderLineStyle.None;
+            tablePdf.BeginUpdate();
 
-            tablePdf.TableAlignment = TableRowAlignment.Center;
-            tablePdf.HorizontalAlignment = TableHorizontalAlignment.Center;
-            tablePdf.VerticalAlignment = TableVerticalAlignment.Center;
+            #region Настройки таблицы
 
-            tablePdf.Borders.Left.LineStyle = TableBorderLineStyle.None;
-            tablePdf.Borders.Left.LineThickness = 0;
+            tablePdf.Borders.InsideHorizontalBorder.LineThickness = table.TableSetting.TableBorderInsideSetting.LineThickness;
+            tablePdf.Borders.InsideHorizontalBorder.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderInsideSetting.BorderLineStyle;
+            tablePdf.Borders.InsideVerticalBorder.LineThickness = table.TableSetting.TableBorderInsideSetting.LineThickness;
+            tablePdf.Borders.InsideVerticalBorder.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderInsideSetting.BorderLineStyle;
 
-            tablePdf.Borders.Right.LineStyle = TableBorderLineStyle.None;
-            tablePdf.Borders.Right.LineThickness = 0;
+            tablePdf.TableAlignment = (TableRowAlignment)table.TableSetting.TableAligment.RowAlignment;
+            tablePdf.HorizontalAlignment = (TableHorizontalAlignment)table.TableSetting.TableAligment.HorizontalAlignment;
+            tablePdf.VerticalAlignment = (TableVerticalAlignment)table.TableSetting.TableAligment.VerticalAlignment;
 
-            tablePdf.Borders.Top.LineStyle = TableBorderLineStyle.None;
-            tablePdf.Borders.Top.LineThickness = 0;
+            tablePdf.Borders.Left.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderSetting.BorderLineStyle;
+            tablePdf.Borders.Left.LineThickness = table.TableSetting.TableBorderSetting.LineThickness;
 
-            tablePdf.Borders.Bottom.LineStyle = TableBorderLineStyle.None;
-            tablePdf.Borders.Bottom.LineThickness = 0;
+            tablePdf.Borders.Right.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderSetting.BorderLineStyle;
+            tablePdf.Borders.Right.LineThickness = table.TableSetting.TableBorderSetting.LineThickness;
+
+            tablePdf.Borders.Top.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderSetting.BorderLineStyle;
+            tablePdf.Borders.Top.LineThickness = table.TableSetting.TableBorderSetting.LineThickness;
+
+            tablePdf.Borders.Bottom.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderSetting.BorderLineStyle;
+            tablePdf.Borders.Bottom.LineThickness = table.TableSetting.TableBorderSetting.LineThickness;
+
+            tablePdf.Rows[0].RepeatAsHeaderRow = table.TableSetting.RepeatHeaderEveryPage;
+
+            #endregion
 
             #region Заполнение таблицы
-
-            tablePdf.BeginUpdate();
 
             table.HeaderTable.Headers.ForEach((headreName, i) =>
             {
@@ -101,13 +115,11 @@ namespace Export.ModelsExport
             {
                 for (int j = 0; j < table.HeaderTable.Headers.Count; j++)
                 {
-                    _richServer.Document.InsertText(tablePdf[i + 1, j].Range.Start, table.TableData[i][j].Text.Letter);
+                    _richServer.Document.InsertText(tablePdf[i + 1, j].Range.Start, table.TableData[i][j]);
                 }
             }
 
             tablePdf.EndUpdate();
-
-            _richServer.Document.Paragraphs.Append();
 
             #endregion
         }
@@ -126,10 +138,11 @@ namespace Export.ModelsExport
             titleFormatting.Bold = text.SettingText.Bold;
             titleFormatting.Italic = text.SettingText.Italic;
 
-            _richServer.Document.AppendText(text.Letter);
-            _richServer.Document.Paragraphs.Append();
+            _richServer.Document.AppendText(text.Letter + "\n");
 
             _richServer.Document.EndUpdateCharacters(titleFormatting);
+
+            //_richServer.Document.AppendText("\n");
         }
 
         public void OpenPreview()

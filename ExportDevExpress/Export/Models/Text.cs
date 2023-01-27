@@ -20,6 +20,20 @@ namespace Export.Models
             Letter = letter;
             SettingText = settingText;
         }
+
+        public Text(string letter)
+        {
+            Letter = letter;
+            SettingText = new SettingText()
+            {
+                Bold = false,
+                Color = Color.Black,
+                FontName = "Helvetica",
+                FontSize = 14.0f,
+                Italic = false,
+                TextAligment = Aligment.Justify
+            };
+        }
     }
 
     /// <summary>

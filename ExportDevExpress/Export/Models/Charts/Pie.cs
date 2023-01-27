@@ -1,4 +1,5 @@
-﻿using DevExpress.XtraCharts;
+﻿using DevExpress.Utils;
+using DevExpress.XtraCharts;
 using Export.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -35,6 +36,13 @@ namespace Export.Models.Charts
 
             series1.LegendTextPattern = "{A}";
             series1.DataSource = PieData;
+
+            series1.LabelsVisibility = DefaultBoolean.True;
+
+            pieChart.Width = SettingChart.Width;
+            pieChart.Height = SettingChart.Height;
+
+            pieChart.Titles.Add(new ChartTitle() { Text = "Pie Chart" });
 
             pieChart.Series.Add(series1);
 

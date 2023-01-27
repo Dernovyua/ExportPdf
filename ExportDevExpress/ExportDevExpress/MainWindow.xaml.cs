@@ -34,19 +34,17 @@ namespace ExportDevExpress
 
             List<Action> actions = new List<Action>()
             {
-                () => clientReport.AddText(new Text("Текстовый блок", new SettingText() { Bold = true, FontSize = 10.0f, TextAligment = Aligment.Left })),
-                () => clientReport.AddText(new Text("Оценка параметров оптимизации с учетом плотности распределения статистической оценки", new SettingText() { Bold = true, FontSize = 50.0f, TextAligment = Aligment.Left })),
+                () => clientReport.AddText(new Text("Текстовый блок", new SettingText() { Bold = true, FontSize = 18.0f, TextAligment = Aligment.Center })),
+                () => clientReport.AddText(new Text("Оценка параметров оптимизации с учетом плотности распределения статистической оценки", new SettingText() { FontSize = 14.0f, TextAligment = Aligment.Justify })),
 
                 () => clientReport.AddTable(GetTableData()),
-                //() => clientReport.AddTable(GetTableData2()),
-                //() => clientReport.AddTable(GetTableData3()),
+                () => clientReport.AddTable(GetTableData2()),
+                () => clientReport.AddTable(GetTableData3()),
 
-                //() => clientReport.AddChart(new Chart(new Histrogram() { HistrogramData = GetDataHistogram(), SettingChart = new SettingChart("Гистограмма", signatureX: "X", signatureY: "Y") })),
-                //() => clientReport.AddChart(new Chart(new Histrogram() { HistrogramData = GetDataHistogram(), SettingChart = new SettingChart("Гистограмма2", 500, 250, "Hi", "Bye") })),
+                () => clientReport.AddChart(new Chart(new Histrogram() { HistrogramData = GetDataHistogram(), SettingChart = new SettingChart("Гистограмма", signatureX: "X", signatureY: "Y") })),
+                () => clientReport.AddChart(new Chart(new Histrogram() { HistrogramData = GetDataHistogram(), SettingChart = new SettingChart("Гистограмма2", signatureX: "Hi", signatureY: "Bye") })),
 
-                //() => clientReport.AddText(new Text("Текстовый блок2", new SettingText() { Bold = true, FontSize = 30.0f, TextAligment = Aligment.Center })),
-
-                //() => clientReport.AddChart(new Chart(new Pie() { PieData = GetPieData(), SettingChart = new SettingChart("Pie")})),
+                () => clientReport.AddChart(new Chart(new Pie() { PieData = GetPieData(), SettingChart = new SettingChart("Pie", 600, 350, "X", "Y")})),
             };
 
             clientReport.GenerateReport(actions);
@@ -66,78 +64,70 @@ namespace ExportDevExpress
 
         private TableModel GetTableData()
         {
-            SettingText settingText = new SettingText() { FontSize = 14.0f, TextAligment = Aligment.Center };
-
             TableModel tableModel = new TableModel(new HeaderTable()
             {
                 Headers = new List<string>() { "Profit", "DD", "Recovery", "Avg. Del", "Deal Count", "Symbol" }
-            },
-            new List<List<Cell>>());
+            }, new TableSetting(),
+            new List<List<string>>());
 
             Random random = new Random();
 
             for (int i = 0; i < 1000; i++)
             {
-                tableModel.TableData.Add(new List<Cell>()
+                tableModel.TableData.Add(new List<string>()
                 {
-                    new Cell(new Text(Math.Round(random.NextDouble() * 1000.0, 4).ToString(), settingText)),
-                    new Cell(new Text(Math.Round(random.NextDouble() * 1000.0, 4).ToString(), settingText)),
-                    new Cell(new Text(Math.Round(random.NextDouble(), 2).ToString(), settingText)),
-                    new Cell(new Text(Math.Round(random.NextDouble(), 4).ToString(), settingText)),
-                    new Cell(new Text(random.Next(600, 5000).ToString(), settingText)),
-                    new Cell(new Text("ETHUSDT.txt", settingText)),
+                    Math.Round(random.NextDouble() * 1000.0, 4).ToString(),
+                    Math.Round(random.NextDouble() * 1000.0, 4).ToString(),
+                    Math.Round(random.NextDouble(), 2).ToString(),
+                    Math.Round(random.NextDouble(), 4).ToString(),
+                    random.Next(600, 5000).ToString(),
+                    "ETHUSDT.txt",
                 });
             }
 
             return tableModel;
         }
-
         private TableModel GetTableData2()
         {
-            SettingText settingText = new SettingText() { FontSize = 14.0f, TextAligment = Aligment.Center };
-
             TableModel tableModel = new TableModel(new HeaderTable()
             {
                 Headers = new List<string>() { "Time Type", "Time", "Stat Total", "Stat Norm", "Moving Average:1" }
-            },
-            new List<List<Cell>>());
+            }, new TableSetting(),
+            new List<List<string>>());
 
             Random random = new Random();
 
             for (int i = 0; i < 1000; i++)
             {
-                tableModel.TableData.Add(new List<Cell>()
+                tableModel.TableData.Add(new List<string>()
                 {
-                    new Cell(new Text("Minute", settingText)),
-                    new Cell(new Text("15", settingText)),
-                    new Cell(new Text(Math.Round(random.NextDouble() * 3.0, 7).ToString(), settingText)),
-                    new Cell(new Text(Math.Round(random.NextDouble(), 7).ToString(), settingText)),
-                    new Cell(new Text(random.Next(5, 50).ToString(), settingText)),
+                    "Minute",
+                    "15",
+                    Math.Round(random.NextDouble() * 3.0, 7).ToString(),
+                    Math.Round(random.NextDouble(), 7).ToString(),
+                    random.Next(5, 50).ToString()
                 });
             }
 
             return tableModel;
         }
-
         private TableModel GetTableData3()
         {
-            SettingText settingText = new SettingText() { FontSize = 14.0f, TextAligment = Aligment.Center };
-
             TableModel tableModel = new TableModel(new HeaderTable()
             {
                 Headers = new List<string>() { "Moving Averagre:2", "Param. Total", "Param. Morm" }
-            },
-            new List<List<Cell>>());
+            }, new TableSetting(),
+            new List<List<string>>());
 
             Random random = new Random();
 
             for (int i = 0; i < 1000; i++)
             {
-                tableModel.TableData.Add(new List<Cell>()
+                tableModel.TableData.Add(new List<string>()
                 {
-                    new Cell(new Text(random.Next(5, 50).ToString(), settingText)),
-                    new Cell(new Text(Math.Round(random.NextDouble(), 7).ToString(), settingText)),
-                    new Cell(new Text(random.NextDouble().ToString(), settingText)),
+                    random.Next(5, 50).ToString(),
+                    Math.Round(random.NextDouble(), 7).ToString(),
+                    random.NextDouble().ToString(),
                 });
             }
 

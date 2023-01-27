@@ -28,7 +28,7 @@ namespace Export.Models.Charts
         {
             ChartControl chartControl = new ChartControl();
 
-            Series histogram = new Series(SettingChart.Name, ViewType.Bar);
+            Series histogram = new Series("", ViewType.Bar);
             histogram.ArgumentDataMember = "XValue";
             histogram.ValueDataMembers[0] = "YValue";
 
@@ -45,17 +45,15 @@ namespace Export.Models.Charts
 
             diagram.AxisX.NumericScaleOptions.ScaleMode = ScaleMode.Interval;
             diagram.AxisX.Visibility = DevExpress.Utils.DefaultBoolean.True;
-            diagram.AxisX.WholeRange.SideMarginsValue = 0;
-            diagram.AxisX.NumericScaleOptions.IntervalOptions.Count = 20;
+            //diagram.AxisX.WholeRange.SideMarginsValue = 0;
+            //diagram.AxisX.NumericScaleOptions.IntervalOptions.Count = 20;
             diagram.AxisX.NumericScaleOptions.IntervalOptions.DivisionMode = IntervalDivisionMode.Auto;
-            diagram.Margins.All = 10;
-
             diagram.AxisX.Label.TextPattern = "{}{OB}{A1:F1}, {A2:F1}{CB}";
 
             diagram.AxisX.Title.Text = SettingChart.SignatureX;
             diagram.AxisY.Title.Text = SettingChart.SignatureY;
 
-            chartControl.Titles.Add(new ChartTitle() { Text = "CHART", Alignment = StringAlignment.Center });
+            chartControl.Titles.Add(new ChartTitle() { Text = SettingChart.Name, Alignment = StringAlignment.Center });
 
             using (MemoryStream s = new MemoryStream())
             {
