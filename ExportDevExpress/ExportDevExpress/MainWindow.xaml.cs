@@ -50,11 +50,20 @@ namespace ExportDevExpress
                     {
                         new AreaData() { NameArea = "Первый", AreaPoints = GetAreaPoints() },
                         new AreaData() { NameArea = "Второй", AreaPoints = GetAreaPoints2() },
-                        new AreaData() { NameArea = "Третий", AreaPoints = GetAreaPoints3() },
+                        new AreaData() { NameArea = "Третий", AreaPoints = GetAreaPoints3() }
                     }
                 })),
                 () => clientReport.AddText(new Text("\n")),
-                () => clientReport.AddText(new Text("Оценка параметров оптимизации с учетом плотности распределения статистической оценки", new SettingText() { FontSize = 14.0f, TextAligment = Aligment.Justify })),
+                () => clientReport.AddText(new Text("Оценка параметров оптимизации с учетом плотности распределения статистической оценки", new SettingText() { Italic = true, FontSize = 14.0f, TextAligment = Aligment.Justify })),
+                () => clientReport.AddChart(new Chart(new Line()
+                {
+                    Lines = new List<LineData>()
+                    {
+                        new LineData() { NameLine = "Первый", LinePoints = GetLinePoints() },
+                        new LineData() { NameLine = "Второй", LinePoints = GetLinePoints2() },
+                        new LineData() { NameLine = "Третий", LinePoints = GetLinePoints3() }
+                    }
+                }))
             };
 
             clientReport.GenerateReport(actions);
@@ -218,6 +227,46 @@ namespace ExportDevExpress
                 new AreaPoint() { XValue = 1, YValue = 14 },
                 new AreaPoint() { XValue = 5, YValue = 17 },
                 new AreaPoint() { XValue = 4, YValue = 21 },
+            };
+        }
+
+        #endregion
+
+        #region Генерация данных для Line
+
+        public IEnumerable<LinePoint> GetLinePoints()
+        {
+            return new List<LinePoint>()
+            {
+                new LinePoint() { XValue = 2, YValue = 10 },
+                new LinePoint() { XValue = 3, YValue = 12 },
+                new LinePoint() { XValue = 1, YValue = 14 },
+                new LinePoint() { XValue = 5, YValue = 17 },
+                new LinePoint() { XValue = 4, YValue = 21 },
+            };
+        }
+
+        public IEnumerable<LinePoint> GetLinePoints2()
+        {
+            return new List<LinePoint>()
+            {
+                new LinePoint() { XValue = 1, YValue = 10 },
+                new LinePoint() { XValue = 2, YValue = 12 },
+                new LinePoint() { XValue = 3, YValue = 14 },
+                new LinePoint() { XValue = 4, YValue = 17 },
+                new LinePoint() { XValue = 5, YValue = 21 },
+            };
+        }
+
+        public IEnumerable<LinePoint> GetLinePoints3()
+        {
+            return new List<LinePoint>()
+            {
+                new LinePoint() { XValue = 1, YValue = 15 },
+                new LinePoint() { XValue = 2, YValue = 18 },
+                new LinePoint() { XValue = 3, YValue = 25 },
+                new LinePoint() { XValue = 4, YValue = 33 },
+                new LinePoint() { XValue = 5, YValue = 39 },
             };
         }
 
