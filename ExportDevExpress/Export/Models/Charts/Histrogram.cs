@@ -31,6 +31,7 @@ namespace Export.Models.Charts
             Series histogram = new Series("", ViewType.Bar);
             histogram.ArgumentDataMember = "XValue";
             histogram.ValueDataMembers[0] = "YValue";
+            histogram.DataSource = HistrogramData;
 
             chartControl.Height = SettingChart.Height;
             chartControl.Width = SettingChart.Width;
@@ -38,8 +39,8 @@ namespace Export.Models.Charts
             chartControl.Series.Add(histogram);
 
             ((BarSeriesView)histogram.View).AggregateFunction = SeriesAggregateFunction.Histogram;
-
-            histogram.DataSource = HistrogramData;
+            ((BarSeriesView)histogram.View).AxisX.Title.Text = SettingChart.SignatureX;
+            ((BarSeriesView)histogram.View).AxisY.Title.Text = SettingChart.SignatureY;
 
             XYDiagram diagram = (XYDiagram)chartControl.Diagram;
 
@@ -50,10 +51,9 @@ namespace Export.Models.Charts
             diagram.AxisX.NumericScaleOptions.IntervalOptions.DivisionMode = IntervalDivisionMode.Auto;
             diagram.AxisX.Label.TextPattern = "{}{OB}{A1:F1}, {A2:F1}{CB}";
 
-            diagram.AxisX.Title.Text = SettingChart.SignatureX;
-            diagram.AxisY.Title.Text = SettingChart.SignatureY;
-
             chartControl.Titles.Add(new ChartTitle() { Text = SettingChart.Name, Alignment = StringAlignment.Center });
+
+            chartControl.Legend.Visibility = DevExpress.Utils.DefaultBoolean.False;
 
             using (MemoryStream s = new MemoryStream())
             {

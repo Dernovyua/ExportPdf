@@ -34,13 +34,16 @@ namespace Export.Models.Charts
             series.ArgumentDataMember = "Argument";
             series.ValueDataMembers.AddRange(new string[] { "Value" });
 
-            series.LegendTextPattern = "{A}";
+            series.LegendTextPattern = "{A}: {VP:P0}";
             series.DataSource = PieData;
 
             series.LabelsVisibility = DefaultBoolean.True;
 
             pieChart.Width = SettingChart.Width;
             pieChart.Height = SettingChart.Height;
+
+            series.Label.TextPattern = "{}{OB}{A1:F1}, {A2:F1}{CB}";
+            //series.Label.TextPattern = "{Argument}, {Value}{CB} %";
 
             pieChart.Titles.Add(new ChartTitle() { Text = SettingChart.Name });
 
