@@ -1,10 +1,12 @@
-﻿using DevExpress.XtraCharts;
+﻿using DevExpress.Utils;
+using DevExpress.XtraCharts;
 using Export.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using DashStyle = DevExpress.XtraCharts.DashStyle;
 
 namespace Export.Models.Charts
 {
@@ -29,18 +31,27 @@ namespace Export.Models.Charts
 
                 foreach (var item in area.AreaPoints)
                 {
-                    series[series.Count - 1].Points.Add(new SeriesPoint(item.XValue, item.YValue));
+                    series[^1].Points.Add(new SeriesPoint(item.XValue, item.YValue));
                 }
 
-                series[series.Count - 1].ArgumentScaleType = ScaleType.Numerical;
+                series[^1].ArgumentScaleType = ScaleType.Numerical;
+
+                ((AreaSeriesView)series[^1].View).MarkerVisibility = DefaultBoolean.True;
+                ((AreaSeriesView)series[^1].View).Transparency = 80;
             }
 
             areaChart.Series.AddRange(series.ToArray());
 
+            ((XYDiagram)areaChart.Diagram).EnableAxisXZooming = true;
+            ((XYDiagram)areaChart.Diagram).AxisY.Interlaced = true;
+            ((XYDiagram)areaChart.Diagram).AxisY.InterlacedColor = Color.FromArgb(20, 60, 60, 60);
+            ((XYDiagram)areaChart.Diagram).AxisX.NumericScaleOptions.AutoGrid = false;
+            ((XYDiagram)areaChart.Diagram).AxisX.NumericScaleOptions.GridSpacing = 1;
+
             areaChart.Width = 600;
             areaChart.Height = 350;
 
-            ((XYDiagram)areaChart.Diagram).EnableAxisXZooming = true;
+            areaChart.Titles.Add(new ChartTitle() { Text = "Area Chart", Alignment = StringAlignment.Center });
 
             using (MemoryStream s = new MemoryStream())
             {

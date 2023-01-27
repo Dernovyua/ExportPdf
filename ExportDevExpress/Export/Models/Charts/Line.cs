@@ -1,4 +1,5 @@
-﻿using DevExpress.XtraCharts;
+﻿using DevExpress.Utils;
+using DevExpress.XtraCharts;
 using Export.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -32,15 +33,15 @@ namespace Export.Models.Charts
 
                 foreach (var item in line.LinePoints)
                 {
-                    series[series.Count - 1].Points.Add(new SeriesPoint(item.XValue, item.YValue));
+                    series[^1].Points.Add(new SeriesPoint(item.XValue, item.YValue));
                 }
 
                 series[series.Count - 1].ArgumentScaleType = ScaleType.Numerical;
 
-                ((LineSeriesView)series[series.Count - 1].View).MarkerVisibility = DevExpress.Utils.DefaultBoolean.True;
-                ((LineSeriesView)series[series.Count - 1].View).LineMarkerOptions.Size = 20;
-                ((LineSeriesView)series[series.Count - 1].View).LineMarkerOptions.Kind = MarkerKind.Circle;
-                ((LineSeriesView)series[series.Count - 1].View).LineStyle.DashStyle = DashStyle.Dash;
+                ((LineSeriesView)series[^1].View).MarkerVisibility = DefaultBoolean.True;
+                ((LineSeriesView)series[^1].View).LineMarkerOptions.Size = 5;
+                ((LineSeriesView)series[^1].View).LineMarkerOptions.Kind = MarkerKind.Circle;
+                ((LineSeriesView)series[^1].View).LineStyle.DashStyle = DashStyle.Dash;
             }
 
             lineChart.Series.AddRange(series.ToArray());
@@ -54,7 +55,6 @@ namespace Export.Models.Charts
             lineChart.Height = 350;
 
             lineChart.Titles.Add(new ChartTitle() { Text = "Line Chart", Alignment = StringAlignment.Center });
-
 
             using (MemoryStream s = new MemoryStream())
             {
