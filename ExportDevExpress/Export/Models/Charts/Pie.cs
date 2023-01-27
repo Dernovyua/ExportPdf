@@ -29,22 +29,22 @@ namespace Export.Models.Charts
         {
             ChartControl pieChart = new ChartControl();
 
-            Series series1 = new Series(SettingChart.Name, ViewType.Pie);
+            Series series = new Series("", ViewType.Pie);
 
-            series1.ArgumentDataMember = "Argument";
-            series1.ValueDataMembers.AddRange(new string[] { "Value" });
+            series.ArgumentDataMember = "Argument";
+            series.ValueDataMembers.AddRange(new string[] { "Value" });
 
-            series1.LegendTextPattern = "{A}";
-            series1.DataSource = PieData;
+            series.LegendTextPattern = "{A}";
+            series.DataSource = PieData;
 
-            series1.LabelsVisibility = DefaultBoolean.True;
+            series.LabelsVisibility = DefaultBoolean.True;
 
             pieChart.Width = SettingChart.Width;
             pieChart.Height = SettingChart.Height;
 
-            pieChart.Titles.Add(new ChartTitle() { Text = "Pie Chart" });
+            pieChart.Titles.Add(new ChartTitle() { Text = SettingChart.Name });
 
-            pieChart.Series.Add(series1);
+            pieChart.Series.Add(series);
 
             using (MemoryStream s = new MemoryStream())
             {

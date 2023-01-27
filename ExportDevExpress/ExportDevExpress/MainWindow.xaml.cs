@@ -43,8 +43,18 @@ namespace ExportDevExpress
 
                 () => clientReport.AddChart(new Chart(new Histrogram() { HistrogramData = GetDataHistogram(), SettingChart = new SettingChart("Гистограмма", signatureX: "X", signatureY: "Y") })),
                 () => clientReport.AddChart(new Chart(new Histrogram() { HistrogramData = GetDataHistogram(), SettingChart = new SettingChart("Гистограмма2", signatureX: "Hi", signatureY: "Bye") })),
-
                 () => clientReport.AddChart(new Chart(new Pie() { PieData = GetPieData(), SettingChart = new SettingChart("Pie", 600, 350, "X", "Y")})),
+                () => clientReport.AddChart(new Chart(new Area()
+                {
+                    Areas = new List<AreaData>()
+                    {
+                        new AreaData() { NameArea = "Первый", AreaPoints = GetAreaPoints() },
+                        new AreaData() { NameArea = "Второй", AreaPoints = GetAreaPoints2() },
+                        new AreaData() { NameArea = "Третий", AreaPoints = GetAreaPoints3() },
+                    }
+                })),
+                () => clientReport.AddText(new Text("\n")),
+                () => clientReport.AddText(new Text("Оценка параметров оптимизации с учетом плотности распределения статистической оценки", new SettingText() { FontSize = 14.0f, TextAligment = Aligment.Justify })),
             };
 
             clientReport.GenerateReport(actions);
@@ -165,9 +175,49 @@ namespace ExportDevExpress
             {
                 new PieData() { Argument = "BTC", Value = 10 },
                 new PieData() { Argument = "ETH", Value = 36 },
-                new PieData() { Argument = "Doge", Value = 21000 },
-                new PieData() { Argument = "EOS", Value = 863 },
+                new PieData() { Argument = "Doge", Value = 50 },
+                new PieData() { Argument = "EOS", Value = 61 },
                 new PieData() { Argument = "AVAX", Value = 89 },
+            };
+        }
+
+        #endregion
+
+        #region Генерация данных для Area
+
+        public IEnumerable<AreaPoint> GetAreaPoints()
+        {
+            return new List<AreaPoint>()
+            {
+                new AreaPoint() { XValue = 1, YValue = 15 },
+                new AreaPoint() { XValue = 2, YValue = 18 },
+                new AreaPoint() { XValue = 3, YValue = 25 },
+                new AreaPoint() { XValue = 4, YValue = 33 },
+                new AreaPoint() { XValue = 5, YValue = 39 },
+            };
+        }
+
+        public IEnumerable<AreaPoint> GetAreaPoints2()
+        {
+            return new List<AreaPoint>()
+            {
+                new AreaPoint() { XValue = 1, YValue = 10 },
+                new AreaPoint() { XValue = 2, YValue = 12 },
+                new AreaPoint() { XValue = 3, YValue = 14 },
+                new AreaPoint() { XValue = 4, YValue = 17 },
+                new AreaPoint() { XValue = 5, YValue = 21 },
+            };
+        }
+
+        public IEnumerable<AreaPoint> GetAreaPoints3()
+        {
+            return new List<AreaPoint>()
+            {
+                new AreaPoint() { XValue = 2, YValue = 10 },
+                new AreaPoint() { XValue = 3, YValue = 12 },
+                new AreaPoint() { XValue = 1, YValue = 14 },
+                new AreaPoint() { XValue = 5, YValue = 17 },
+                new AreaPoint() { XValue = 4, YValue = 21 },
             };
         }
 

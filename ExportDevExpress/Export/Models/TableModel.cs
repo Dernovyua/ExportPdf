@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Export.Models
 {
+    /// <summary>
+    /// Модель таблицы, состощая из настроек/заголовков/данных таблицы
+    /// </summary>
     public class TableModel
     {
         public HeaderTable HeaderTable { get; set; } = default!;
@@ -27,11 +30,29 @@ namespace Export.Models
         public List<string> Headers { get; set; } = new();
     }
 
+    /// <summary>
+    /// Настройки таблицы
+    /// </summary>
     public class TableSetting
     {
+        /// <summary>
+        /// Настройки текста (шрифт, размер, цвет и т.п)
+        /// </summary>
         public SettingText SettingText { get; set; }
+
+        /// <summary>
+        /// Настройка внешних границ таблицы
+        /// </summary>
         public TableBorderSetting TableBorderSetting { get; set; }
+
+        /// <summary>
+        /// Настройка внутренних границ таблицы
+        /// </summary>
         public TableBorderInsideSetting TableBorderInsideSetting { get; set; } 
+
+        /// <summary>
+        /// Настройка выравнивая элементов в таблице
+        /// </summary>
         public TableAligment TableAligment { get; set; }
 
         /// <summary>
