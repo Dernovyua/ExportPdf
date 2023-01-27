@@ -43,7 +43,7 @@ namespace ExportDevExpress
 
                 () => clientReport.AddChart(new Chart(new Histrogram() { HistrogramData = GetDataHistogram(), SettingChart = new SettingChart() { Name = "Histrogram Chart" } })),
                 () => clientReport.AddChart(new Chart(new Histrogram() { HistrogramData = GetDataHistogram(), SettingChart = new SettingChart() { Name = "Histrogram Chart 2" } })),
-                () => clientReport.AddChart(new Chart(new Doughnut() { PieData = GetPieData(), SettingChart = new SettingChart() { Name = "Pie" }})),
+                () => clientReport.AddChart(new Chart(new Doughnut() { PieData = GetPieData(), SettingChart = new SettingChart() { Name = "Doughnut" }})),
                 () => clientReport.AddChart(new Chart(new Area()
                 {
                     Areas = new List<AreaData>()
@@ -93,7 +93,7 @@ namespace ExportDevExpress
 
             Random random = new Random();
 
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 20; i++)
             {
                 tableModel.TableData.Add(new List<string>()
                 {
@@ -118,7 +118,7 @@ namespace ExportDevExpress
 
             Random random = new Random();
 
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 10; i++)
             {
                 tableModel.TableData.Add(new List<string>()
                 {
@@ -142,7 +142,7 @@ namespace ExportDevExpress
 
             Random random = new Random();
 
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 8; i++)
             {
                 tableModel.TableData.Add(new List<string>()
                 {
@@ -168,7 +168,7 @@ namespace ExportDevExpress
 
             Random random = new Random();
 
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 50; i++)
             {
                 histrogramDatas.Add(new HistrogramData(random.Next(1, 500), random.Next(1, 500)));
             }
