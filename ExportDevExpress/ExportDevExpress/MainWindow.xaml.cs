@@ -30,42 +30,53 @@ namespace ExportDevExpress
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            clientReport.SetExport(new Pdf());
+            //clientReport.SetExport(new Pdf());
+            clientReport.SetExport(new Csv());
+
+            #region Для PDF
+
+            //List<Action> actions = new List<Action>()
+            //{
+            //    () => clientReport.AddText(new Text("Текстовый блок", new SettingText() { Bold = true, FontSize = 18.0f, TextAligment = Aligment.Center })),
+            //    () => clientReport.AddText(new Text("Оценка параметров оптимизации с учетом плотности распределения статистической оценки", new SettingText() { FontSize = 14.0f, TextAligment = Aligment.Justify })),
+
+            //    () => clientReport.AddTable(GetTableData()),
+            //    () => clientReport.AddTable(GetTableData2()),
+            //    () => clientReport.AddTable(GetTableData3()),
+
+            //    () => clientReport.AddChart(new Chart(new Histrogram() { HistrogramData = GetDataHistogram(), SettingChart = new SettingChart() { Name = "Histrogram Chart" } })),
+            //    () => clientReport.AddChart(new Chart(new Histrogram() { HistrogramData = GetDataHistogram(), SettingChart = new SettingChart() { Name = "Histrogram Chart 2" } })),
+            //    () => clientReport.AddChart(new Chart(new Doughnut() { PieData = GetPieData(), SettingChart = new SettingChart() { Name = "Doughnut" }})),
+            //    () => clientReport.AddChart(new Chart(new Area()
+            //    {
+            //        Areas = new List<AreaData>()
+            //        {
+            //            new AreaData() { NameArea = "Первый", AreaPoints = GetAreaPoints() },
+            //            new AreaData() { NameArea = "Второй", AreaPoints = GetAreaPoints2() },
+            //            new AreaData() { NameArea = "Третий", AreaPoints = GetAreaPoints3() }
+            //        },
+            //        SettingChart = new SettingChart() { Name = "Area Chart" }
+            //    })),
+            //    () => clientReport.AddText(new Text("\n")),
+            //    () => clientReport.AddText(new Text("Оценка параметров оптимизации с учетом плотности распределения статистической оценки", new SettingText() { Italic = true, FontSize = 14.0f, TextAligment = Aligment.Justify })),
+            //    () => clientReport.AddChart(new Chart(new Line()
+            //    {
+            //        Lines = new List<LineData>()
+            //        {
+            //            new LineData() { NameLine = "Первый", LinePoints = GetLinePoints() },
+            //            new LineData() { NameLine = "Второй", LinePoints = GetLinePoints2() },
+            //            new LineData() { NameLine = "Третий", LinePoints = GetLinePoints3() }
+            //        },
+            //        SettingChart = new SettingChart() { Name = "Line Chart" }
+            //    }))
+            //};
+
+            #endregion
 
             List<Action> actions = new List<Action>()
             {
-                () => clientReport.AddText(new Text("Текстовый блок", new SettingText() { Bold = true, FontSize = 18.0f, TextAligment = Aligment.Center })),
-                () => clientReport.AddText(new Text("Оценка параметров оптимизации с учетом плотности распределения статистической оценки", new SettingText() { FontSize = 14.0f, TextAligment = Aligment.Justify })),
-
                 () => clientReport.AddTable(GetTableData()),
-                () => clientReport.AddTable(GetTableData2()),
-                () => clientReport.AddTable(GetTableData3()),
-
-                () => clientReport.AddChart(new Chart(new Histrogram() { HistrogramData = GetDataHistogram(), SettingChart = new SettingChart() { Name = "Histrogram Chart" } })),
-                () => clientReport.AddChart(new Chart(new Histrogram() { HistrogramData = GetDataHistogram(), SettingChart = new SettingChart() { Name = "Histrogram Chart 2" } })),
-                () => clientReport.AddChart(new Chart(new Doughnut() { PieData = GetPieData(), SettingChart = new SettingChart() { Name = "Doughnut" }})),
-                () => clientReport.AddChart(new Chart(new Area()
-                {
-                    Areas = new List<AreaData>()
-                    {
-                        new AreaData() { NameArea = "Первый", AreaPoints = GetAreaPoints() },
-                        new AreaData() { NameArea = "Второй", AreaPoints = GetAreaPoints2() },
-                        new AreaData() { NameArea = "Третий", AreaPoints = GetAreaPoints3() }
-                    },
-                    SettingChart = new SettingChart() { Name = "Area Chart" }
-                })),
-                () => clientReport.AddText(new Text("\n")),
-                () => clientReport.AddText(new Text("Оценка параметров оптимизации с учетом плотности распределения статистической оценки", new SettingText() { Italic = true, FontSize = 14.0f, TextAligment = Aligment.Justify })),
-                () => clientReport.AddChart(new Chart(new Line()
-                {
-                    Lines = new List<LineData>()
-                    {
-                        new LineData() { NameLine = "Первый", LinePoints = GetLinePoints() },
-                        new LineData() { NameLine = "Второй", LinePoints = GetLinePoints2() },
-                        new LineData() { NameLine = "Третий", LinePoints = GetLinePoints3() }
-                    },
-                    SettingChart = new SettingChart() { Name = "Line Chart" }
-                }))
+                //() => clientReport.AddChart(new Chart(new Histrogram() { HistrogramData = GetDataHistogram(), SettingChart = new SettingChart() { Name = "Histrogram Chart" } })),
             };
 
             clientReport.GenerateReport(actions);
@@ -89,20 +100,20 @@ namespace ExportDevExpress
             {
                 Headers = new List<string>() { "Profit", "DD", "Recovery", "Avg. Del", "Deal Count", "Symbol" }
             }, new TableSetting(),
-            new List<List<string>>());
+            new List<List<object>>());
 
             Random random = new Random();
 
             for (int i = 0; i < 20; i++)
             {
-                tableModel.TableData.Add(new List<string>()
+                tableModel.TableData.Add(new List<object>()
                 {
-                    Math.Round(random.NextDouble() * 1000.0, 4).ToString(),
-                    Math.Round(random.NextDouble() * 1000.0, 4).ToString(),
-                    Math.Round(random.NextDouble(), 2).ToString(),
-                    Math.Round(random.NextDouble(), 4).ToString(),
-                    random.Next(600, 5000).ToString(),
-                    "ETHUSDT.txt",
+                    Math.Round(random.NextDouble() * 1000.0, 4),
+                    Math.Round(random.NextDouble() * 1000.0, 4),
+                    Math.Round(random.NextDouble(), 2),
+                    Math.Round(random.NextDouble(), 4),
+                    random.Next(600, 5000),
+                    "Привет.txt",
                 });
             }
 
@@ -114,13 +125,13 @@ namespace ExportDevExpress
             {
                 Headers = new List<string>() { "Time Type", "Time", "Stat Total", "Stat Norm", "Moving Average:1" }
             }, new TableSetting(),
-            new List<List<string>>());
+            new List<List<object>>());
 
             Random random = new Random();
 
             for (int i = 0; i < 10; i++)
             {
-                tableModel.TableData.Add(new List<string>()
+                tableModel.TableData.Add(new List<object>()
                 {
                     "Minute",
                     "15",
@@ -138,17 +149,17 @@ namespace ExportDevExpress
             {
                 Headers = new List<string>() { "Moving Averagre:2", "Param. Total", "Param. Morm" }
             }, new TableSetting(),
-            new List<List<string>>());
+            new List<List<object>>());
 
             Random random = new Random();
 
             for (int i = 0; i < 8; i++)
             {
-                tableModel.TableData.Add(new List<string>()
+                tableModel.TableData.Add(new List<object>()
                 {
-                    random.Next(5, 50).ToString(),
-                    Math.Round(random.NextDouble(), 7).ToString(),
-                    random.NextDouble().ToString(),
+                    random.Next(5, 50),
+                    Math.Round(random.NextDouble(), 7),
+                    random.NextDouble(),
                 });
             }
 
