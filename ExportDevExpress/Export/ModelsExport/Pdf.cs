@@ -112,7 +112,7 @@ namespace Export.ModelsExport
             {
                 for (int j = 0; j < table.HeaderTable.Headers.Count; j++)
                 {
-                    _richServer.Document.InsertText(tablePdf[i + 1, j].Range.Start, table.TableData[i][j]);
+                    _richServer.Document.InsertText(tablePdf[i + 1, j].Range.Start, table.TableData[i][j].ToString());
                 }
             }
 

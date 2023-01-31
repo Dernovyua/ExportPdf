@@ -12,9 +12,9 @@ namespace Export.Models
 
         public TableSetting TableSetting { get; set; } = default!;
 
-        public List<List<string>> TableData { get; set; } = new();
+        public List<List<object>> TableData { get; set; } = new();
 
-        public TableModel(HeaderTable headerTable, TableSetting tableSetting, List<List<string>> tableData)
+        public TableModel(HeaderTable headerTable, TableSetting tableSetting, List<List<object>> tableData)
         {
             HeaderTable = headerTable;
             TableData = tableData;
