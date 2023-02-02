@@ -26,57 +26,65 @@ namespace ExportDevExpress
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            clientReport.SetExport(new Pdf());
-            //clientReport.SetExport(new Csv());
+            //clientReport.SetExport(new Pdf());
+            clientReport.SetExport(new Csv());
 
             #region Для PDF
 
-            List<Action> actions = new List<Action>()
-            {
-                () => clientReport.AddText(new Text("Текстовый блок", new SettingText() { Bold = true, FontSize = 18.0f, TextAligment = Aligment.Center })),
-                () => clientReport.AddText(new Text("Оценка параметров оптимизации с учетом плотности распределения статистической оценки", new SettingText() { FontSize = 14.0f, TextAligment = Aligment.Justify })),
-                () => clientReport.AddNewPage(),
-                () => clientReport.AddTable(GetTableData()),
-                () => clientReport.AddNewPage(),
-                () => clientReport.AddTable(GetTableData2()),
-                () => clientReport.AddNewPage(),
-                () => clientReport.AddTable(GetTableData3()),
-                () => clientReport.AddNewPage(),
+            //List<Action> actions = new List<Action>()
+            //{
+            //    () => clientReport.AddText(new Text("Текстовый блок", new SettingText() { Bold = true, FontSize = 18.0f, TextAligment = Aligment.Center })),
+            //    () => clientReport.AddText(new Text("Оценка параметров оптимизации с учетом плотности распределения статистической оценки", new SettingText() { FontSize = 14.0f, TextAligment = Aligment.Justify })),
+            //    () => clientReport.AddNewPage(),
+            //    () => clientReport.AddTable(GetTableData()),
+            //    () => clientReport.AddNewPage(),
+            //    () => clientReport.AddTable(GetTableData2()),
+            //    () => clientReport.AddNewPage(),
+            //    () => clientReport.AddTable(GetTableData3()),
+            //    () => clientReport.AddNewPage(),
 
-                () => clientReport.AddChart(new Chart(new Histrogram() { HistrogramData = GetDataHistogram(), SettingChart = new SettingChart() { Dimension = Dimension.Three, Name = "Histrogram Chart", SignatureX = "fgf", SignatureY = "yoyo" } })),
-                () => clientReport.AddChart(new Chart(new Histrogram() { HistrogramData = GetDataHistogram(), SettingChart = new SettingChart() { Name = "Histrogram Chart 2" } })),
-                () => clientReport.AddChart(new Chart(new Doughnut() { PieData = GetPieData(), SettingChart = new SettingChart() { Name = "Doughnut", Dimension = Dimension.Three }})),
-                () => clientReport.AddChart(new Chart(new Area()
-                {
-                    Areas = new List<AreaData>()
-                    {
-                        new AreaData() { NameArea = "Первый", AreaPoints = GetAreaPoints() },
-                        new AreaData() { NameArea = "Второй", AreaPoints = GetAreaPoints2() },
-                        new AreaData() { NameArea = "Третий", AreaPoints = GetAreaPoints3() }
-                    },
-                    SettingChart = new SettingChart() { Name = "Area Chart", Dimension = Dimension.Two, SignatureX = "ff", SignatureY = "gg" }
-                })),
-                () => clientReport.AddText(new Text("\n")),
-                () => clientReport.AddText(new Text("Оценка параметров оптимизации с учетом плотности распределения статистической оценки", new SettingText() { Italic = true, FontSize = 14.0f, TextAligment = Aligment.Justify })),
-                () => clientReport.AddChart(new Chart(new Line()
-                {
-                    Lines = new List<LineData>()
-                    {
-                        new LineData() { NameLine = "Первый", LinePoints = GetLinePoints() },
-                        new LineData() { NameLine = "Второй", LinePoints = GetLinePoints2() },
-                        new LineData() { NameLine = "Третий", LinePoints = GetLinePoints3() }
-                    },
-                    SettingChart = new SettingChart() { Name = "Line Chart", Dimension = Dimension.Two, SignatureX = "ff", SignatureY = "gg" }
-                }))
-            };
+            //    () => clientReport.AddChart(new Chart(new Histrogram() { HistrogramData = GetDataHistogram(), SettingChart = new SettingChart() { Dimension = Dimension.Three, Name = "Histrogram Chart", SignatureX = "fgf", SignatureY = "yoyo" } })),
+            //    () => clientReport.AddChart(new Chart(new Histrogram() { HistrogramData = GetDataHistogram(), SettingChart = new SettingChart() { Name = "Histrogram Chart 2" } })),
+            //    () => clientReport.AddChart(new Chart(new Doughnut() { PieData = GetPieData(), SettingChart = new SettingChart() { Name = "Doughnut", Dimension = Dimension.Three }})),
+            //    () => clientReport.AddChart(new Chart(new Area()
+            //    {
+            //        Areas = new List<AreaData>()
+            //        {
+            //            new AreaData() { NameArea = "Первый", AreaPoints = GetAreaPoints() },
+            //            new AreaData() { NameArea = "Второй", AreaPoints = GetAreaPoints2() },
+            //            new AreaData() { NameArea = "Третий", AreaPoints = GetAreaPoints3() }
+            //        },
+            //        SettingChart = new SettingChart() { Name = "Area Chart", Dimension = Dimension.Two, SignatureX = "ff", SignatureY = "gg" }
+            //    })),
+            //    () => clientReport.AddText(new Text("\n")),
+            //    () => clientReport.AddText(new Text("Оценка параметров оптимизации с учетом плотности распределения статистической оценки", new SettingText() { Italic = true, FontSize = 14.0f, TextAligment = Aligment.Justify })),
+            //    () => clientReport.AddChart(new Chart(new Line()
+            //    {
+            //        Lines = new List<LineData>()
+            //        {
+            //            new LineData() { NameLine = "Первый", LinePoints = GetLinePoints() },
+            //            new LineData() { NameLine = "Второй", LinePoints = GetLinePoints2() },
+            //            new LineData() { NameLine = "Третий", LinePoints = GetLinePoints3() }
+            //        },
+            //        SettingChart = new SettingChart() { Name = "Line Chart", Dimension = Dimension.Two, SignatureX = "ff", SignatureY = "gg" }
+            //    }))
+            //};
 
             #endregion
 
-            //List<Action> actions = new List<Action>()
-            //{
-            //    () => clientReport.AddTable(GetTableData()),
-            //    //() => clientReport.AddChart(new Chart(new Histrogram() { HistrogramData = GetDataHistogram(), SettingChart = new SettingChart() { Name = "Histrogram Chart" } })),
-            //};
+            List<Action> actions = new List<Action>()
+            {
+                () => clientReport.AddTable(GetTableData()),
+                () => clientReport.AddTable(GetTableData3()),
+                () => clientReport.AddTable(GetTableData3()),
+                () => clientReport.AddTable(GetTableData2()),
+                () => clientReport.AddTable(GetTableData()),
+                () => clientReport.AddTable(GetTableData2()),
+                () => clientReport.AddTable(GetTableData()),
+                () => clientReport.AddTable(GetTableData3()),
+
+                //() => clientReport.AddChart(new Chart(new Histrogram() { HistrogramData = GetDataHistogram(), SettingChart = new SettingChart() { Name = "Histrogram Chart" } })),
+            };
 
             clientReport.GenerateReport(actions);
         }
@@ -134,9 +142,9 @@ namespace ExportDevExpress
                 {
                     "Minute",
                     "15",
-                    Math.Round(random.NextDouble() * 3.0, 7).ToString(),
-                    Math.Round(random.NextDouble(), 7).ToString(),
-                    random.Next(5, 50).ToString()
+                    Math.Round(random.NextDouble() * 3.0, 7),
+                    Math.Round(random.NextDouble(), 7),
+                    random.Next(5, 50)
                 });
             }
 

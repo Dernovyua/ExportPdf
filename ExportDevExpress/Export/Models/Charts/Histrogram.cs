@@ -65,8 +65,8 @@ namespace Export.Models.Charts
                 ((Bar3DSeriesView)histogram.View).AggregateFunction = SeriesAggregateFunction.Histogram;
                 ((Bar3DSeriesView)histogram.View).Color = SettingChart.Color;
 
-                ((Bar3DSeriesView)histogram.View).BarWidth = 10;
-                ((Bar3DSeriesView)histogram.View).BarDepthAuto = true;
+                ((Bar3DSeriesView)histogram.View).BarWidth = 30;
+                ((Bar3DSeriesView)histogram.View).BarDepth = 100;
 
                 XYDiagram3D diagram = (XYDiagram3D)chartControl.Diagram;
 

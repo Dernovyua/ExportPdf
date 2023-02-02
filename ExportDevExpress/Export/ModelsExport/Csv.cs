@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using Export.Models;
 using DevExpress.XtraPrinting;
-using System.IO;
 using System.Drawing;
 using System.Linq;
 
@@ -40,13 +39,12 @@ namespace Export.ModelsExport
         public void AddTable(TableModel table)
         {
             CustomTableStyle(_workbook, table);
-
-            _workbook.SaveDocument($@"../../{Guid.NewGuid()}.xlsx", DocumentFormat.Xlsx);
+            AddNewPage();
         }
 
         public void CreateTable(IWorkbook workbook, TableModel tableModel)
         {
-            _worksheet = workbook.Worksheets[0];
+            _worksheet = workbook.Worksheets[^1];
             _workbook.BeginUpdate();
 
             Table table = _worksheet.Tables.Add(_worksheet[0, 0], true);
@@ -101,7 +99,7 @@ namespace Export.ModelsExport
 
             workbook.BeginUpdate();
 
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet worksheet = workbook.Worksheets[^1];
 
             #region #CustomTableStyle
             // Access a table.
@@ -179,18 +177,12 @@ namespace Export.ModelsExport
 
         public void SaveDocument()
         {
-            using (FileStream fs = new FileStream($@"../../{Guid.NewGuid()}.xlsx", FileMode.OpenOrCreate, FileAccess.ReadWrite))
-            {
-                _link.Component = _workbook;
-
-                _link.CreateDocument();
-                _link.ExportToXlsx(fs);
-            }
+            _workbook.SaveDocument($@"../../{Guid.NewGuid()}.xlsx", DocumentFormat.Xlsx);
         }
 
         public void AddNewPage()
         {
-            throw new NotImplementedException();
+            _workbook.Worksheets.Add();
         }
     }
 }
