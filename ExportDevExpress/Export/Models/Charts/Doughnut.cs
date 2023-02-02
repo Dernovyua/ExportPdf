@@ -1,5 +1,6 @@
 ﻿using DevExpress.Utils;
 using DevExpress.XtraCharts;
+using Export.Enums;
 using Export.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -22,14 +23,14 @@ namespace Export.Models.Charts
 
         public Doughnut()
         {
-            
+
         }
 
         public Image CreateImageFromControl()
         {
             ChartControl pieChart = new ChartControl();
 
-            Series series = new Series("", ViewType.Doughnut);
+            Series series = new Series("", SettingChart.Dimension.Equals(Dimension.Two) ? ViewType.Doughnut : ViewType.Doughnut3D);
 
             foreach (PieData pie in PieData)
             {
@@ -42,18 +43,30 @@ namespace Export.Models.Charts
             series.SeriesPointsSorting = SortingMode.Ascending;
             series.SeriesPointsSortingKey = SeriesPointKey.Argument;
 
-            series.Label.TextPattern = "{A}: {VP:P2}";
+            series.Label.TextPattern = "{A}:{VP:P2}";
 
             pieChart.Series.Add(series);
 
-            ((DoughnutSeriesLabel)series.Label).Position = PieSeriesLabelPosition.TwoColumns;
-            ((DoughnutSeriesLabel)series.Label).ResolveOverlappingMode = ResolveOverlappingMode.Default;
-            ((DoughnutSeriesLabel)series.Label).ResolveOverlappingMinIndent = 5;
+            if (SettingChart.Dimension.Equals(Dimension.Two))
+            {
+                ((DoughnutSeriesLabel)series.Label).Position = PieSeriesLabelPosition.TwoColumns;
+                ((DoughnutSeriesLabel)series.Label).ResolveOverlappingMode = ResolveOverlappingMode.Default;
+                ((DoughnutSeriesLabel)series.Label).ResolveOverlappingMinIndent = 5;
 
-            //((DoughnutSeriesView)series.View).ExplodedPoints.Add(series.Points[0]);
-            ((DoughnutSeriesView)series.View).ExplodedDistancePercentage = 30;
+                ((DoughnutSeriesView)series.View).ExplodedDistancePercentage = 30;
 
-            ((SimpleDiagram)pieChart.Diagram).Dimension = 2;
+                ((SimpleDiagram)pieChart.Diagram).Dimension = 2;
+            }
+            else
+            {
+                ((Doughnut3DSeriesLabel)series.Label).Position = PieSeriesLabelPosition.TwoColumns;
+                ((Doughnut3DSeriesLabel)series.Label).ResolveOverlappingMode = ResolveOverlappingMode.Default;
+                ((Doughnut3DSeriesLabel)series.Label).ResolveOverlappingMinIndent = 5;
+
+                ((Doughnut3DSeriesView)series.View).ExplodedDistancePercentage = 30;
+
+                ((SimpleDiagram3D)pieChart.Diagram).Dimension = 3;
+            }
 
             pieChart.Titles.Add(new ChartTitle() 
             { 

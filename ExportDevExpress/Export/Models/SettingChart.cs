@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using Export.Enums;
+using System.Drawing;
 
 namespace Export.Models
 {
@@ -11,6 +12,11 @@ namespace Export.Models
         /// Название графика
         /// </summary>
         public string Name { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Измерение графика (2D или 3D)
+        /// </summary>
+        public Dimension Dimension { get; set; } = Dimension.Two;
 
         public SettingText SettingText { get; set; } = default!;
 

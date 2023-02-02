@@ -1,5 +1,6 @@
 ﻿using DevExpress.Utils;
 using DevExpress.XtraCharts;
+using Export.Enums;
 using Export.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -31,7 +32,7 @@ namespace Export.Models.Charts
 
             foreach (LineData line in Lines)
             {
-                series.Add(new Series(line.NameLine, ViewType.Line));
+                series.Add(new Series(line.NameLine, SettingChart.Dimension.Equals(Dimension.Two) ? ViewType.Line : ViewType.Line3D));
 
                 foreach (var item in line.LinePoints)
                 {
@@ -40,21 +41,45 @@ namespace Export.Models.Charts
 
                 series[series.Count - 1].ArgumentScaleType = ScaleType.Numerical;
 
-                ((LineSeriesView)series[^1].View).MarkerVisibility = DefaultBoolean.True;
-                ((LineSeriesView)series[^1].View).LineMarkerOptions.Size = 5;
-                ((LineSeriesView)series[^1].View).LineMarkerOptions.Kind = MarkerKind.Circle;
-                ((LineSeriesView)series[^1].View).LineStyle.DashStyle = DashStyle.Dash;
+                if (SettingChart.Dimension.Equals(Dimension.Two))
+                {
+                    ((LineSeriesView)series[^1].View).MarkerVisibility = DefaultBoolean.True;
+                    ((LineSeriesView)series[^1].View).LineMarkerOptions.Size = 5;
+                    ((LineSeriesView)series[^1].View).LineMarkerOptions.Kind = MarkerKind.Circle;
+                    ((LineSeriesView)series[^1].View).LineStyle.DashStyle = DashStyle.Dash;
+                }
+                else
+                {
+                    ((Line3DSeriesView)series[^1].View).LineWidth = 5;
+                    ((Line3DSeriesView)series[^1].View).LineThickness = 1;
+                }
             }
 
             lineChart.Series.AddRange(series.ToArray());
 
-            ((XYDiagram)lineChart.Diagram).AxisY.Interlaced = true;
-            ((XYDiagram)lineChart.Diagram).AxisY.InterlacedColor = Color.FromArgb(20, 60, 60, 60);
-            ((XYDiagram)lineChart.Diagram).AxisX.NumericScaleOptions.AutoGrid = false;
-            ((XYDiagram)lineChart.Diagram).AxisX.NumericScaleOptions.GridSpacing = 1;
+            if (SettingChart.Dimension.Equals(Dimension.Two))
+            {
+                ((XYDiagram)lineChart.Diagram).AxisY.Interlaced = true;
+                ((XYDiagram)lineChart.Diagram).AxisY.InterlacedColor = Color.FromArgb(20, 60, 60, 60);
+                ((XYDiagram)lineChart.Diagram).AxisX.NumericScaleOptions.AutoGrid = false;
+                ((XYDiagram)lineChart.Diagram).AxisX.NumericScaleOptions.GridSpacing = 1;
 
-            lineChart.Width = 600;
-            lineChart.Height = 350;
+                ((XYDiagram)lineChart.Diagram).AxisX.Title.Visibility = DefaultBoolean.True;
+                ((XYDiagram)lineChart.Diagram).AxisY.Title.Visibility = DefaultBoolean.True;
+
+                ((XYDiagram)lineChart.Diagram).AxisX.Title.Text = SettingChart.SignatureX;
+                ((XYDiagram)lineChart.Diagram).AxisY.Title.Text = SettingChart.SignatureY;
+            }
+            else
+            {
+                ((XYDiagram3D)lineChart.Diagram).AxisY.Interlaced = true;
+                ((XYDiagram3D)lineChart.Diagram).AxisY.InterlacedColor = Color.FromArgb(20, 60, 60, 60);
+                ((XYDiagram3D)lineChart.Diagram).AxisX.NumericScaleOptions.AutoGrid = false;
+                ((XYDiagram3D)lineChart.Diagram).AxisX.NumericScaleOptions.GridSpacing = 1;
+            }
+
+            lineChart.Width = SettingChart.Width;
+            lineChart.Height = SettingChart.Height;
 
             lineChart.Titles.Add(new ChartTitle() { Text = SettingChart.Name, Alignment = StringAlignment.Center, TextColor = SettingChart.SettingText.Color });
 
