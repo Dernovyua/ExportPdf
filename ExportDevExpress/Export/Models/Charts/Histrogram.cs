@@ -1,4 +1,5 @@
-﻿using DevExpress.XtraCharts;
+﻿using DevExpress.Utils;
+using DevExpress.XtraCharts;
 using Export.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -42,18 +43,21 @@ namespace Export.Models.Charts
             ((BarSeriesView)histogram.View).AxisX.Title.Text = SettingChart.SignatureX;
             ((BarSeriesView)histogram.View).AxisY.Title.Text = SettingChart.SignatureY;
 
+            ((BarSeriesView)histogram.View).AxisX.Title.Visibility = DefaultBoolean.True;
+            ((BarSeriesView)histogram.View).AxisY.Title.Visibility = DefaultBoolean.True;
+
+            ((BarSeriesView)histogram.View).Color = SettingChart.Color;
+
             XYDiagram diagram = (XYDiagram)chartControl.Diagram;
 
             diagram.AxisX.NumericScaleOptions.ScaleMode = ScaleMode.Interval;
-            diagram.AxisX.Visibility = DevExpress.Utils.DefaultBoolean.True;
-            //diagram.AxisX.WholeRange.SideMarginsValue = 0;
-            //diagram.AxisX.NumericScaleOptions.IntervalOptions.Count = 20;
+            diagram.AxisX.Visibility = DefaultBoolean.True;
+            diagram.AxisY.Title.Text = SettingChart.SignatureY;
+            diagram.AxisX.Title.Text = SettingChart.SignatureX;
+
             diagram.AxisX.NumericScaleOptions.IntervalOptions.DivisionMode = IntervalDivisionMode.Auto;
-            diagram.AxisX.Label.TextPattern = "{}{OB}{A1:F1}, {A2:F1}{CB}";
 
             chartControl.Titles.Add(new ChartTitle() { Text = SettingChart.Name, Alignment = StringAlignment.Center, TextColor = SettingChart.SettingText.Color });
-
-            chartControl.Legend.Visibility = DevExpress.Utils.DefaultBoolean.False;
 
             using (MemoryStream s = new MemoryStream())
             {

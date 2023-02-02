@@ -7,7 +7,6 @@ using Export.Models;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Printing;
 using System.IO;
 
 namespace Export.ModelsExport
@@ -30,7 +29,7 @@ namespace Export.ModelsExport
 
             #region Настройки файла
 
-            _richServer.Document.Sections[0].Page.PaperKind = PaperKind.A4;
+            //_richServer.Document.Sections[0].Page.PaperKind = PaperKind.A4;
 
             #endregion
         }
@@ -55,7 +54,7 @@ namespace Export.ModelsExport
 
             AddText(new Text(""));
 
-            Table tablePdf = _richServer.Document.Tables.Create(_richServer.Document.Selection.Start, table.TableData.Count, table.HeaderTable.Headers.Count, AutoFitBehaviorType.AutoFitToContents);
+            Table tablePdf = _richServer.Document.Tables.Create(_richServer.Document.Selection.Start, table.TableData.Count, table.HeaderTable.Headers.Count, AutoFitBehaviorType.AutoFitToWindow);
 
             DocumentRange range = _richServer.Document.Tables[_richServer.Document.Tables.Count - 1].Range;
             CharacterProperties titleFormatting = _richServer.Document.BeginUpdateCharacters(range);
@@ -76,26 +75,28 @@ namespace Export.ModelsExport
 
             #region Настройки таблицы
 
-            tablePdf.Borders.InsideHorizontalBorder.LineThickness = table.TableSetting.TableBorderInsideSetting.LineThickness;
-            tablePdf.Borders.InsideHorizontalBorder.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderInsideSetting.BorderLineStyle;
-            tablePdf.Borders.InsideVerticalBorder.LineThickness = table.TableSetting.TableBorderInsideSetting.LineThickness;
-            tablePdf.Borders.InsideVerticalBorder.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderInsideSetting.BorderLineStyle;
+            TableStyle tStyleMain = _richServer.Document.TableStyles.CreateNew();
 
-            tablePdf.TableAlignment = (TableRowAlignment)table.TableSetting.TableAligment.RowAlignment;
-            tablePdf.HorizontalAlignment = (TableHorizontalAlignment)table.TableSetting.TableAligment.HorizontalAlignment;
-            tablePdf.VerticalAlignment = (TableVerticalAlignment)table.TableSetting.TableAligment.VerticalAlignment;
+            tStyleMain.Alignment = (ParagraphAlignment)table.TableSetting.TableAligment.ParagraphAlignment;
+            //tStyleMain.Alignment = ParagraphAlignment.Center;
 
-            tablePdf.Borders.Left.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderSetting.BorderLineStyle;
-            tablePdf.Borders.Left.LineThickness = table.TableSetting.TableBorderSetting.LineThickness;
+            tStyleMain.TableBorders.InsideHorizontalBorder.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderInsideSetting.BorderLineStyle;
+            tStyleMain.TableBorders.InsideHorizontalBorder.LineThickness = table.TableSetting.TableBorderInsideSetting.LineThickness;
+            tStyleMain.TableBorders.InsideVerticalBorder.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderInsideSetting.BorderLineStyle;
+            tStyleMain.TableBorders.InsideVerticalBorder.LineThickness = table.TableSetting.TableBorderInsideSetting.LineThickness;
 
-            tablePdf.Borders.Right.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderSetting.BorderLineStyle;
-            tablePdf.Borders.Right.LineThickness = table.TableSetting.TableBorderSetting.LineThickness;
+            tStyleMain.TableBorders.Left.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderSetting.BorderLineStyle;
+            tStyleMain.TableBorders.Left.LineThickness = table.TableSetting.TableBorderSetting.LineThickness;
+            tStyleMain.TableBorders.Right.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderSetting.BorderLineStyle;
+            tStyleMain.TableBorders.Right.LineThickness = table.TableSetting.TableBorderSetting.LineThickness;
+            tStyleMain.TableBorders.Top.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderSetting.BorderLineStyle;
+            tStyleMain.TableBorders.Top.LineThickness = table.TableSetting.TableBorderSetting.LineThickness;
+            tStyleMain.TableBorders.Bottom.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderSetting.BorderLineStyle;
+            tStyleMain.TableBorders.Bottom.LineThickness = table.TableSetting.TableBorderSetting.LineThickness;
 
-            tablePdf.Borders.Top.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderSetting.BorderLineStyle;
-            tablePdf.Borders.Top.LineThickness = table.TableSetting.TableBorderSetting.LineThickness;
+            _richServer.Document.TableStyles.Add(tStyleMain);
 
-            tablePdf.Borders.Bottom.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderSetting.BorderLineStyle;
-            tablePdf.Borders.Bottom.LineThickness = table.TableSetting.TableBorderSetting.LineThickness;
+            tablePdf.Style = tStyleMain;
 
             tablePdf.Rows[0].RepeatAsHeaderRow = table.TableSetting.RepeatHeaderEveryPage;
 
@@ -169,6 +170,11 @@ namespace Export.ModelsExport
             {
                 action();
             }
+        }
+
+        public void AddNewPage()
+        {
+            _richServer.Document.AppendSection();
         }
     }
 }

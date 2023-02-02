@@ -7,6 +7,7 @@ namespace Export.Interfaces
         void AddText(Text text);
         void AddChart(Chart chart);
         void AddTable(TableModel table);
+        void AddNewPage();
         void SaveDocument();
         void OpenPreview();
     }

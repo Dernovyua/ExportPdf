@@ -1,3 +1,4 @@
+using DevExpress.Utils.DirectXPaint;
 using Export.Interfaces;
 using Export.Models;
 using System;
@@ -58,6 +59,11 @@ namespace Export
         public void OpenPreview()
         {
             _sequence.OpenPreview();
+        }
+
+        public void AddNewPage()
+        {
+            _sequence.AddNewPage();
         }
     }
 }

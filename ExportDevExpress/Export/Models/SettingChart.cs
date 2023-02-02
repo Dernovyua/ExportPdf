@@ -1,4 +1,6 @@
-﻿namespace Export.Models
+﻿using System.Drawing;
+
+namespace Export.Models
 {
     /// <summary>
     /// Настройки графика
@@ -21,6 +23,11 @@
         /// Высота графика
         /// </summary>
         public int Height { get; set; } = 350;
+
+        /// <summary>
+        /// Цвет столбцов гистограммы
+        /// </summary>
+        public Color Color { get; set; } =  Color.Blue;
 
         /// <summary>
         /// Подпись графика по оси Y

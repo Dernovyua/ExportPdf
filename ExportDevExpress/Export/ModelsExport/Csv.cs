@@ -187,5 +187,10 @@ namespace Export.ModelsExport
                 _link.ExportToXlsx(fs);
             }
         }
+
+        public void AddNewPage()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

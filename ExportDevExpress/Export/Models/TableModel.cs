@@ -79,16 +79,14 @@ namespace Export.Models
 
             TableAligment = new TableAligment()
             {
-                HorizontalAlignment = HorizontalAlignment.Center,
-                RowAlignment = RowAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
+                ParagraphAlignment = ParagraphAlignment.Center,
             };
         }
     }
 
     public class TableBorderSetting
     {
-        public BorderLineStyle BorderLineStyle { get; set; } = BorderLineStyle.Single;
+        public BorderLineStyle BorderLineStyle { get; set; }
         public float LineThickness { get; set; } = 0.0f;
     }
 
@@ -99,8 +97,6 @@ namespace Export.Models
 
     public class TableAligment
     {
-        public RowAlignment RowAlignment { get; set; } = RowAlignment.Center;
-        public HorizontalAlignment HorizontalAlignment { get; set; } = HorizontalAlignment.Center;
-        public VerticalAlignment VerticalAlignment { get; set; } = VerticalAlignment.Center;
+        public ParagraphAlignment ParagraphAlignment { get; set; }
     }
 }
