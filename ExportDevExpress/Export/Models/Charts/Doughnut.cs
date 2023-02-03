@@ -12,12 +12,19 @@ namespace Export.Models.Charts
 {
     public class Doughnut : IChart
     {
-        public IEnumerable<PieData> PieData { get; set; } = Array.Empty<PieData>();
+        /// <summary>
+        /// Список данных для построения графика
+        /// </summary>
+        public IEnumerable<DoughnutData> DoughnutData { get; set; } = Array.Empty<DoughnutData>();
+
+        /// <summary>
+        /// Настройки графика
+        /// </summary>
         public SettingChart SettingChart { get; set; }
 
-        public Doughnut(IEnumerable<PieData> pieData, SettingChart settingChart)
+        public Doughnut(IEnumerable<DoughnutData> doughnutData, SettingChart settingChart)
         {
-            PieData = pieData;
+            DoughnutData = doughnutData;
             SettingChart = settingChart;
         }
 
@@ -30,12 +37,18 @@ namespace Export.Models.Charts
         {
             ChartControl pieChart = new ChartControl();
 
+            #region Создание графика и добавление в контрол
+
             Series series = new Series("", SettingChart.Dimension.Equals(Dimension.Two) ? ViewType.Doughnut : ViewType.Doughnut3D);
 
-            foreach (PieData pie in PieData)
+            #region Заполнение данными
+
+            foreach (DoughnutData pie in DoughnutData)
             {
                 series.Points.Add(new SeriesPoint(pie.Argument, pie.Value));
             }
+
+            #endregion
 
             series.ArgumentDataMember = "Argument";
             series.ValueDataMembers.AddRange(new string[] { "Value" });
@@ -46,6 +59,10 @@ namespace Export.Models.Charts
             series.Label.TextPattern = "{A}:{VP:P2}";
 
             pieChart.Series.Add(series);
+
+            #endregion
+
+            #region Насйтроки графика
 
             if (SettingChart.Dimension.Equals(Dimension.Two))
             {
@@ -79,17 +96,33 @@ namespace Export.Models.Charts
             pieChart.Width = SettingChart.Width;
             pieChart.Height = SettingChart.Height;
 
+            #endregion
+
+            #region Экспорт контрола в Image формата Png
+
             using (MemoryStream s = new MemoryStream())
             {
                 pieChart.ExportToImage(s, ImageFormat.Png);
                 return Image.FromStream(s);
             }
+
+            #endregion
         }
     }
 
-    public class PieData
+    /// <summary>
+    /// Данные графика
+    /// </summary>
+    public class DoughnutData
     {
+        /// <summary>
+        /// По оси X
+        /// </summary>
         public string Argument { get; set; } = string.Empty;
+
+        /// <summary>
+        /// По оси Y
+        /// </summary>
         public double Value { get; set; }
     }
 }

@@ -30,14 +30,20 @@ namespace Export.Models.Charts
 
             List<Series> series = new List<Series>();
 
+            #region Создание серий (графиков Line) и добавление в контрол
+
             foreach (LineData line in Lines)
             {
                 series.Add(new Series(line.NameLine, SettingChart.Dimension.Equals(Dimension.Two) ? ViewType.Line : ViewType.Line3D));
+
+                #region Добавление серии (графика Line) данными
 
                 foreach (var item in line.LinePoints)
                 {
                     series[^1].Points.Add(new SeriesPoint(item.XValue, item.YValue));
                 }
+
+                #endregion
 
                 series[series.Count - 1].ArgumentScaleType = ScaleType.Numerical;
 
@@ -57,7 +63,11 @@ namespace Export.Models.Charts
 
             lineChart.Series.AddRange(series.ToArray());
 
-            if (SettingChart.Dimension.Equals(Dimension.Two))
+            #endregion
+
+            #region Настройка графика
+
+            if (SettingChart.Dimension.Equals(Dimension.Two)) // при двумерном графике
             {
                 ((XYDiagram)lineChart.Diagram).AxisY.Interlaced = true;
                 ((XYDiagram)lineChart.Diagram).AxisY.InterlacedColor = Color.FromArgb(20, 60, 60, 60);
@@ -70,7 +80,7 @@ namespace Export.Models.Charts
                 ((XYDiagram)lineChart.Diagram).AxisX.Title.Text = SettingChart.SignatureX;
                 ((XYDiagram)lineChart.Diagram).AxisY.Title.Text = SettingChart.SignatureY;
             }
-            else
+            else // при трехмерном
             {
                 ((XYDiagram3D)lineChart.Diagram).AxisY.Interlaced = true;
                 ((XYDiagram3D)lineChart.Diagram).AxisY.InterlacedColor = Color.FromArgb(20, 60, 60, 60);
@@ -83,11 +93,17 @@ namespace Export.Models.Charts
 
             lineChart.Titles.Add(new ChartTitle() { Text = SettingChart.Name, Alignment = StringAlignment.Center, TextColor = SettingChart.SettingText.Color });
 
+            #endregion
+
+            #region Экспорт контрола в Image формата Png
+
             using (MemoryStream s = new MemoryStream())
             {
                 lineChart.ExportToImage(s, ImageFormat.Png);
                 return Image.FromStream(s);
             }
+
+            #endregion
         }
     }
 
@@ -112,7 +128,14 @@ namespace Export.Models.Charts
     /// </summary>
     public class LinePoint
     {
+        /// <summary>
+        /// Данные по оси X
+        /// </summary>
         public double XValue { get; set; }
+
+        /// <summary>
+        /// Данные по оси X
+        /// </summary>
         public double YValue { get; set; }
     }
 }

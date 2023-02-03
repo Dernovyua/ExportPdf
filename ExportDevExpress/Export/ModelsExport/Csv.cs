@@ -11,10 +11,22 @@ namespace Export.ModelsExport
 {
     public class Csv : ISequence
     {
+        /// <summary>
+        /// Класс для работы с таблицей эксель
+        /// </summary>
         private Workbook _workbook { get; set; }
+
+        /// <summary>
+        /// Таблица страницы экселя
+        /// </summary>
         private Worksheet _worksheet { get; set; }
+
+        #region Необходимо для превью и создания документа
+
         private PrintingSystem _printingSystem { get; set; }
         private PrintableComponentLink _link { get; set; }
+
+        #endregion
 
         public Csv()
         {
@@ -26,14 +38,7 @@ namespace Export.ModelsExport
 
         public void AddChart(Chart chart)
         {
-            //Image image = chart.CreateImage();
-
-            //_worksheet = _workbook.Worksheets[0];
-            //_workbook.BeginUpdate();
-
-            //_worksheet.Pictures.AddPicture(@"C:\Users\Flax\Desktop\photo_2023-01-27_01-10-57.jpg", _worksheet[23, 0]);
-
-            //_workbook.EndUpdate();
+           // не используется, т.к не добавляем графику в эксель
         }
 
         public void AddTable(TableModel table)
@@ -42,14 +47,23 @@ namespace Export.ModelsExport
             AddNewPage();
         }
 
-        public void CreateTable(IWorkbook workbook, TableModel tableModel)
+        public void AddText(Text text)
+        {
+            // не используется, т.к не добавляем текст в эксель
+        }
+
+        public void AddNewPage()
+        {
+            _workbook.Worksheets.Add();
+        }
+
+        private void CreateTable(IWorkbook workbook, TableModel tableModel)
         {
             _worksheet = workbook.Worksheets[^1];
             _workbook.BeginUpdate();
 
             Table table = _worksheet.Tables.Add(_worksheet[0, 0], true);
 
-            // Format the table by applying a built-in table style.
             table.Style = workbook.TableStyles[BuiltInTableStyleId.TableStyleDark10];
 
             for (int i = 0; i < tableModel.HeaderTable.Headers.Count; i++)
@@ -69,7 +83,6 @@ namespace Export.ModelsExport
                 table.Rows.Add();
             }
 
-            // Specify horizontal alignment for header and total rows of the table.
             table.HeaderRowRange.Alignment.Horizontal = SpreadsheetHorizontalAlignment.Center;
             table.HeaderRowRange.Alignment.Vertical = SpreadsheetVerticalAlignment.Center;
 
@@ -78,10 +91,13 @@ namespace Export.ModelsExport
             InsertTable(_worksheet, tableModel);
 
             workbook.EndUpdate();
-
-            //_worksheet.Pictures.AddPicture(@"C:\Users\Flax\Desktop\photo_2023-01-27_01-10-57.jpg", _worksheet[23, 0]);
         }
 
+        /// <summary>
+        /// Заполнение таблицы данными
+        /// </summary>
+        /// <param name="sheet">Страница</param>
+        /// <param name="tableModel">данные по которым идет заполнение</param>
         static void InsertTable(Worksheet sheet, TableModel tableModel)
         {
             for (int i = 0; i < tableModel.TableData.Count; i++)
@@ -93,6 +109,11 @@ namespace Export.ModelsExport
             }
         }
 
+        /// <summary>
+        /// Создание таблицы с настраиваемым стилем таблицы
+        /// </summary>
+        /// <param name="workbook"></param>
+        /// <param name="tableModel"></param>
         public void CustomTableStyle(IWorkbook workbook, TableModel tableModel)
         {
             CreateTable(workbook, tableModel);
@@ -101,45 +122,36 @@ namespace Export.ModelsExport
 
             Worksheet worksheet = workbook.Worksheets[^1];
 
-            #region #CustomTableStyle
-            // Access a table.
+            #region Создание стиля таблицы
+
             Table table = worksheet.Tables[0];
 
             string styleName = "testTableStyle";
 
-            // If the style under the specified name already exists in the collection,
             if (workbook.TableStyles.Contains(styleName))
             {
-                // apply this style to the table.
                 table.Style = workbook.TableStyles[styleName];
             }
             else
             {
-                // Add a new table style under the "testTableStyle" name to the TableStyles collection.
                 TableStyle customTableStyle = workbook.TableStyles.Add("testTableStyle");
 
-                // Modify the required formatting characteristics of the table style. 
-                // Specify the format for different table elements.
                 customTableStyle.BeginUpdate();
                 try
                 {
                     customTableStyle.TableStyleElements[TableStyleElementType.WholeTable].Font.Color = Color.FromArgb(107, 107, 107);
 
-                    // Specify formatting characteristics for the table header row. 
                     TableStyleElement headerRowStyle = customTableStyle.TableStyleElements[TableStyleElementType.HeaderRow];
                     headerRowStyle.Fill.BackgroundColor = Color.FromArgb(64, 66, 166);
                     headerRowStyle.Font.Color = Color.White;
                     headerRowStyle.Font.Bold = true;
 
-                    // Specify formatting characteristics for the table total row. 
                     TableStyleElement totalRowStyle = customTableStyle.TableStyleElements[TableStyleElementType.TotalRow];
                     totalRowStyle.Fill.BackgroundColor = Color.FromArgb(115, 193, 211);
                     totalRowStyle.Font.Color = Color.White;
                     totalRowStyle.Font.Bold = true;
 
-                    // Specify banded row formatting for the table.
                     TableStyleElement secondRowStripeStyle = customTableStyle.TableStyleElements[TableStyleElementType.SecondRowStripe];
-                    //secondRowStripeStyle.Fill.BackgroundColor = Color.FromArgb(234, 234, 234);
                     secondRowStripeStyle.Fill.BackgroundColor = Color.FromArgb(220, 230, 242);
                     secondRowStripeStyle.StripeSize = 1;
                 }
@@ -147,19 +159,18 @@ namespace Export.ModelsExport
                 {
                     customTableStyle.EndUpdate();
                 }
-                // Apply the created custom style to the table.
                 table.Style = customTableStyle;
             }
+
             #endregion #CustomTableStyle
 
             workbook.EndUpdate();
         }
 
-        public void AddText(Text text)
-        {
-
-        }
-
+        /// <summary>
+        /// Вызов методов в нужной последовательности (который заложит пользователь при добавлении в список)
+        /// </summary>
+        /// <param name="actions">Список методов</param>
         public void GetCallSequenceMethods(IEnumerable<Action> actions)
         {
             foreach (var action in actions)
@@ -180,9 +191,6 @@ namespace Export.ModelsExport
             _workbook.SaveDocument($@"../../{Guid.NewGuid()}.xlsx", DocumentFormat.Xlsx);
         }
 
-        public void AddNewPage()
-        {
-            _workbook.Worksheets.Add();
-        }
+        
     }
 }

@@ -10,6 +10,9 @@ using System.IO;
 
 namespace Export.Models.Charts
 {
+    /// <summary>
+    /// Гистограмма
+    /// </summary>
     public class Histrogram : IChart
     {
         public IEnumerable<HistrogramData> HistrogramData { get; set; } = Array.Empty<HistrogramData>();
@@ -30,7 +33,10 @@ namespace Export.Models.Charts
         {
             ChartControl chartControl = new ChartControl();
 
+            #region Создание графика
+
             Series histogram = new Series("", SettingChart.Dimension.Equals(Dimension.Two) ? ViewType.Bar : ViewType.Bar3D);
+
             histogram.ArgumentDataMember = "XValue";
             histogram.ValueDataMembers[0] = "YValue";
             histogram.DataSource = HistrogramData;
@@ -39,6 +45,10 @@ namespace Export.Models.Charts
             chartControl.Width = SettingChart.Width;
 
             chartControl.Series.Add(histogram);
+
+            #endregion
+
+            #region Насйтрока графика
 
             if (SettingChart.Dimension.Equals(Dimension.Two))
             {
@@ -76,17 +86,33 @@ namespace Export.Models.Charts
 
             chartControl.Titles.Add(new ChartTitle() { Text = SettingChart.Name, Alignment = StringAlignment.Center, TextColor = SettingChart.SettingText.Color });
 
+            #endregion
+
+            #region Экспорт контрола в Image формата Png
+
             using (MemoryStream s = new MemoryStream())
             {
                 chartControl.ExportToImage(s, ImageFormat.Png);
                 return Image.FromStream(s);
             }
+
+            #endregion
         }
     }
 
+    /// <summary>
+    /// Данные для построения диаграммы
+    /// </summary>
     public class HistrogramData
     {
+        /// <summary>
+        /// Данные по оси X
+        /// </summary>
         public double XValue { get; set; }
+
+        /// <summary>
+        /// Данные по оси Y
+        /// </summary>
         public double YValue { get; set; }
 
         public HistrogramData(double xValue, double yValue)

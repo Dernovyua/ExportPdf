@@ -45,7 +45,7 @@ namespace ExportDevExpress
 
             //    () => clientReport.AddChart(new Chart(new Histrogram() { HistrogramData = GetDataHistogram(), SettingChart = new SettingChart() { Dimension = Dimension.Three, Name = "Histrogram Chart", SignatureX = "fgf", SignatureY = "yoyo" } })),
             //    () => clientReport.AddChart(new Chart(new Histrogram() { HistrogramData = GetDataHistogram(), SettingChart = new SettingChart() { Name = "Histrogram Chart 2" } })),
-            //    () => clientReport.AddChart(new Chart(new Doughnut() { PieData = GetPieData(), SettingChart = new SettingChart() { Name = "Doughnut", Dimension = Dimension.Three }})),
+            //    () => clientReport.AddChart(new Chart(new Doughnut() { DoughnutData = GetDoughnutData(), SettingChart = new SettingChart() { Name = "Doughnut", Dimension = Dimension.Three }})),
             //    () => clientReport.AddChart(new Chart(new Area()
             //    {
             //        Areas = new List<AreaData>()
@@ -198,15 +198,15 @@ namespace ExportDevExpress
 
         #region Генерация данных для Pie charts
 
-        public IEnumerable<PieData> GetPieData()
+        public IEnumerable<DoughnutData> GetDoughnutData()
         {
-            return new List<PieData>()
+            return new List<DoughnutData>()
             {
-                new PieData() { Argument = "BTC", Value = 10 },
-                new PieData() { Argument = "ETH", Value = 36 },
-                new PieData() { Argument = "Doge", Value = 50 },
-                new PieData() { Argument = "EOS", Value = 61 },
-                new PieData() { Argument = "AVAX", Value = 89 },
+                new DoughnutData() { Argument = "BTC", Value = 10 },
+                new DoughnutData() { Argument = "ETH", Value = 36 },
+                new DoughnutData() { Argument = "Doge", Value = 50 },
+                new DoughnutData() { Argument = "EOS", Value = 61 },
+                new DoughnutData() { Argument = "AVAX", Value = 89 },
             };
         }
 

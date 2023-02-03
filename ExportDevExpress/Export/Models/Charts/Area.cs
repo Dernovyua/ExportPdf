@@ -12,8 +12,14 @@ namespace Export.Models.Charts
 {
     public class Area : IChart
     {
+        /// <summary>
+        /// Список графиков Area
+        /// </summary>
         public IEnumerable<AreaData> Areas { get; set; } = Array.Empty<AreaData>();
 
+        /// <summary>
+        /// Настройки графика
+        /// </summary>
         public SettingChart SettingChart { get; set; }
 
         public Area(IEnumerable<AreaData> areas, SettingChart settingChart)
@@ -81,23 +87,47 @@ namespace Export.Models.Charts
 
             areaChart.Titles.Add(new ChartTitle() { Text = SettingChart.Name, Alignment = StringAlignment.Center, TextColor = SettingChart.SettingText.Color });
 
+            #region Экспорт контрола в Image формата Png
+
             using (MemoryStream s = new MemoryStream())
             {
                 areaChart.ExportToImage(s, ImageFormat.Png);
                 return Image.FromStream(s);
             }
+
+            #endregion
         }
     }
 
+    /// <summary>
+    /// Данные для построения Area
+    /// </summary>
     public class AreaData
     {
+        /// <summary>
+        /// Название графика
+        /// </summary>
         public string NameArea { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Список точек по осям
+        /// </summary>
         public IEnumerable<AreaPoint> AreaPoints { get; set; } = Array.Empty<AreaPoint>();
     }
 
+    /// <summary>
+    /// Точки Area по оси X & Y
+    /// </summary>
     public class AreaPoint
     {
+        /// <summary>
+        /// Данные по оси X
+        /// </summary>
         public double XValue { get; set; }
+
+        /// <summary>
+        /// Данные по оси Y
+        /// </summary>
         public double YValue { get; set; }
     }
 }

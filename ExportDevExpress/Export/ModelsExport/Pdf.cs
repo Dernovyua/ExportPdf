@@ -15,10 +15,19 @@ namespace Export.ModelsExport
     {
         #region Свойства DevExpress
 
+        /// <summary>
+        /// Класс для взаимодействия с файлом
+        /// </summary>
         private RichEditDocumentServer _richServer { get; set; }
+
+        #region Необходимо для превью и создания документа
 
         private PrintingSystem _printingSystem { get; set; }
         private PrintableComponentLink _link { get; set; }
+
+        #endregion
+
+        #endregion
 
         public Pdf()
         {
@@ -26,15 +35,8 @@ namespace Export.ModelsExport
 
             _printingSystem = new PrintingSystem();
             _link = new PrintableComponentLink(_printingSystem);
-
-            #region Настройки файла
-
-            //_richServer.Document.Sections[0].Page.PaperKind = PaperKind.A4;
-
-            #endregion
         }
 
-        #endregion
         public void AddChart(Chart chart)
         {
             // Логика формирования графика
@@ -78,7 +80,6 @@ namespace Export.ModelsExport
             TableStyle tStyleMain = _richServer.Document.TableStyles.CreateNew();
 
             tStyleMain.Alignment = (ParagraphAlignment)table.TableSetting.TableAligment.ParagraphAlignment;
-            //tStyleMain.Alignment = ParagraphAlignment.Center;
 
             tStyleMain.TableBorders.InsideHorizontalBorder.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderInsideSetting.BorderLineStyle;
             tStyleMain.TableBorders.InsideHorizontalBorder.LineThickness = table.TableSetting.TableBorderInsideSetting.LineThickness;
@@ -141,6 +142,11 @@ namespace Export.ModelsExport
             _richServer.Document.EndUpdateCharacters(titleFormatting);
         }
 
+        public void AddNewPage()
+        {
+            _richServer.Document.AppendSection();
+        }
+
         public void OpenPreview()
         {
             _link.Component = _richServer;
@@ -163,18 +169,13 @@ namespace Export.ModelsExport
         /// <summary>
         /// Вызов методов в нужной последовательности (который заложит пользователь при добавлении в список)
         /// </summary>
-        /// <param name="actions"></param>
+        /// <param name="actions">Список методов</param>
         public void GetCallSequenceMethods(IEnumerable<Action> actions)
         {
             foreach (var action in actions)
             {
                 action();
             }
-        }
-
-        public void AddNewPage()
-        {
-            _richServer.Document.AppendSection();
         }
     }
 }
