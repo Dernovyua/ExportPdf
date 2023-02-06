@@ -26,7 +26,7 @@ namespace Export.Models.Charts
 
         public Histrogram()
         {
-            
+
         }
 
         public Image CreateImageFromControl()
@@ -46,13 +46,23 @@ namespace Export.Models.Charts
 
             chartControl.Series.Add(histogram);
 
+            //Series line = new Series("", ViewType.Line);
+
+            //line.Points.Add(new SeriesPoint(30, 0));
+            //line.Points.Add(new SeriesPoint(30, 750));
+
+            //line.Points.Add(new SeriesPoint(100, 750));
+            //line.Points.Add(new SeriesPoint(100, 0));
+
+            //chartControl.Series.Add(line);
+
             #endregion
 
             #region Насйтрока графика
 
             if (SettingChart.Dimension.Equals(Dimension.Two))
             {
-                ((BarSeriesView)histogram.View).AggregateFunction = SeriesAggregateFunction.Histogram;
+                ((BarSeriesView)histogram.View).AggregateFunction = SeriesAggregateFunction.Default;
                 ((BarSeriesView)histogram.View).Color = SettingChart.Color;
 
                 ((BarSeriesView)histogram.View).AxisX.Title.Text = SettingChart.SignatureX;
@@ -63,12 +73,23 @@ namespace Export.Models.Charts
 
                 XYDiagram diagram = (XYDiagram)chartControl.Diagram;
 
-                diagram.AxisX.NumericScaleOptions.ScaleMode = ScaleMode.Interval;
                 diagram.AxisX.Visibility = DefaultBoolean.True;
                 diagram.AxisY.Title.Text = SettingChart.SignatureY;
                 diagram.AxisX.Title.Text = SettingChart.SignatureX;
 
-                diagram.AxisX.NumericScaleOptions.IntervalOptions.DivisionMode = IntervalDivisionMode.Auto;
+                diagram.AxisX.GridLines.Visible = true;
+                diagram.AxisX.Tickmarks.Visible = true;
+
+                diagram.AxisX.NumericScaleOptions.ScaleMode = ScaleMode.Manual;
+                //diagram.AxisX.NumericScaleOptions.IntervalOptions.DivisionMode = IntervalDivisionMode.Count;
+
+                //diagram.AxisX.NumericScaleOptions.IntervalOptions.OverflowValue = 800;
+                //diagram.AxisX.NumericScaleOptions.IntervalOptions.UnderflowValue = 50;
+
+                //diagram.AxisX.NumericScaleOptions.IntervalOptions.OverflowValuePattern = "{A2}";
+                //diagram.AxisX.NumericScaleOptions.IntervalOptions.UnderflowValuePattern = "{A2}";
+
+                //diagram.RangeControlTimeSpanGridOptions.GridMode = ChartRangeControlClientGridMode.Manual;
             }
             else
             {
@@ -80,8 +101,8 @@ namespace Export.Models.Charts
 
                 XYDiagram3D diagram = (XYDiagram3D)chartControl.Diagram;
 
-                diagram.AxisX.NumericScaleOptions.ScaleMode = ScaleMode.Interval;
-                diagram.AxisX.NumericScaleOptions.IntervalOptions.DivisionMode = IntervalDivisionMode.Auto;
+                diagram.AxisX.NumericScaleOptions.ScaleMode = ScaleMode.Continuous;
+                diagram.AxisX.NumericScaleOptions.IntervalOptions.DivisionMode = IntervalDivisionMode.Count;
             }
 
             chartControl.Titles.Add(new ChartTitle() { Text = SettingChart.Name, Alignment = StringAlignment.Center, TextColor = SettingChart.SettingText.Color });

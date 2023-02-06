@@ -52,6 +52,7 @@ namespace Export.ModelsExport
             Image image = chart.CreateImage();
 
             _richServer.Document.Images.Append(DocumentImageSource.FromImage(image));
+            //_richServer.Document.Images[^1].Size = new SizeF(_richServer.Document.Sections[^1].Page.Width, 350);
 
             _richServer.Document.AppendText("\n");
         }
@@ -151,6 +152,8 @@ namespace Export.ModelsExport
         public void AddNewPage()
         {
             _richServer.Document.AppendSection();
+            _richServer.Document.Sections[^1].Page.PaperKind = System.Drawing.Printing.PaperKind.A4;
+            //_richServer.Document.Sections[^1].Page.Width = 20000;
         }
 
         public void OpenPreview()
