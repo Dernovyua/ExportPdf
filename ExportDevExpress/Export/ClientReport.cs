@@ -12,7 +12,9 @@ namespace Export
 
         #region constructors
 
-        public ClientReport() { }
+        public ClientReport()
+        {
+        }
 
         public ClientReport(ISequence sequence)
         {

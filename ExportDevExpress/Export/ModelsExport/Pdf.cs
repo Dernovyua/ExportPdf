@@ -29,12 +29,18 @@ namespace Export.ModelsExport
 
         #endregion
 
-        public Pdf()
+        private string _path { get; set; }
+        private string _nameFile { get; set; }
+
+        public Pdf(string path, string nameFile)
         {
             _richServer = new RichEditDocumentServer();
 
             _printingSystem = new PrintingSystem();
             _link = new PrintableComponentLink(_printingSystem);
+
+            _path = path;
+            _nameFile = nameFile;
         }
 
         public void AddChart(Chart chart)
@@ -157,7 +163,8 @@ namespace Export.ModelsExport
 
         public void SaveDocument()
         {
-            using (FileStream fs = new FileStream($@"../../{Guid.NewGuid()}.pdf", FileMode.OpenOrCreate))
+            //using (FileStream fs = new FileStream($@"../../{Guid.NewGuid()}.pdf", FileMode.OpenOrCreate))
+            using (FileStream fs = new FileStream($@"{_path}/{_nameFile}.pdf", FileMode.OpenOrCreate))
             {
                 _link.Component = _richServer;
 

@@ -28,12 +28,18 @@ namespace Export.ModelsExport
 
         #endregion
 
-        public Csv()
+        private string _path { get; set; }
+        private string _nameFile { get; set; }
+
+        public Csv(string path, string nameFile)
         {
             _workbook = new Workbook();
 
             _printingSystem = new PrintingSystem();
             _link = new PrintableComponentLink(_printingSystem);
+
+            _path = path;
+            _nameFile = nameFile;
         }
 
         public void AddChart(Chart chart)
@@ -188,9 +194,8 @@ namespace Export.ModelsExport
 
         public void SaveDocument()
         {
-            _workbook.SaveDocument($@"../../{Guid.NewGuid()}.xlsx", DocumentFormat.Xlsx);
+            //_workbook.SaveDocument($@"../../{Guid.NewGuid()}.xlsx", DocumentFormat.Xlsx);
+            _workbook.SaveDocument($@"{_path}/{_nameFile}.xlsx", DocumentFormat.Xlsx);
         }
-
-        
     }
 }
