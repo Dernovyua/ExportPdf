@@ -16,11 +16,14 @@ namespace Export.Models.Charts
     public class Histrogram : IChart
     {
         public IEnumerable<HistrogramData> HistrogramData { get; set; } = Array.Empty<HistrogramData>();
+        public IEnumerable<AreaHistrogram> AreasHistrogram { get; set; } = Array.Empty<AreaHistrogram>();
         public SettingChart SettingChart { get; set; }
 
-        public Histrogram(IEnumerable<HistrogramData> histrogramData, SettingChart settingChart)
+        public Histrogram(IEnumerable<HistrogramData> histrogramData, IEnumerable<AreaHistrogram> areasHistrogram, SettingChart settingChart)
         {
             HistrogramData = histrogramData;
+            AreasHistrogram = areasHistrogram;
+
             SettingChart = settingChart;
         }
 
@@ -46,15 +49,28 @@ namespace Export.Models.Charts
 
             chartControl.Series.Add(histogram);
 
-            //Series line = new Series("", ViewType.Line);
+            #region Отрисвока выделения областей на гистограмме
 
-            //line.Points.Add(new SeriesPoint(30, 0));
-            //line.Points.Add(new SeriesPoint(30, 750));
+            List<Series> seriesArea = new List<Series>();
 
-            //line.Points.Add(new SeriesPoint(100, 750));
-            //line.Points.Add(new SeriesPoint(100, 0));
+            foreach (AreaHistrogram areaHistogram in AreasHistrogram)
+            {
+                seriesArea.Add(new Series("", SettingChart.Dimension.Equals(Dimension.Two) ? ViewType.Area : ViewType.Area3D));
 
-            //chartControl.Series.Add(line);
+                foreach (HistrogramData dataHistrogram in areaHistogram.AreaHistogramData)
+                {
+                    seriesArea[^1].Points.Add(new SeriesPoint(dataHistrogram.XValue, dataHistrogram.YValue));
+                }
+
+                if (SettingChart.Dimension.Equals(Dimension.Two))
+                    ((AreaSeriesView)seriesArea[^1].View).Transparency = 95;
+                else
+                    ((Area3DSeriesView)seriesArea[^1].View).Transparency = 95;
+            }
+
+            chartControl.Series.AddRange(seriesArea.ToArray());
+
+            #endregion
 
             #endregion
 
@@ -141,5 +157,13 @@ namespace Export.Models.Charts
             XValue = xValue;
             YValue = yValue;
         }
+    }
+
+    /// <summary>
+    /// Класс для выделения областей на гистограмме
+    /// </summary>
+    public class AreaHistrogram
+    {
+        public IEnumerable<HistrogramData> AreaHistogramData { get; set; } = Array.Empty<HistrogramData>();
     }
 }
