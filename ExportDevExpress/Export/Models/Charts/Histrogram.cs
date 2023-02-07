@@ -16,10 +16,10 @@ namespace Export.Models.Charts
     public class Histrogram : IChart
     {
         public IEnumerable<HistrogramData> HistrogramData { get; set; } = Array.Empty<HistrogramData>();
-        public IEnumerable<AreaHistrogram> AreasHistrogram { get; set; } = Array.Empty<AreaHistrogram>();
+        public IEnumerable<AreaHistrogram>? AreasHistrogram { get; set; } = Array.Empty<AreaHistrogram>();
         public SettingChart SettingChart { get; set; }
 
-        public Histrogram(IEnumerable<HistrogramData> histrogramData, IEnumerable<AreaHistrogram> areasHistrogram, SettingChart settingChart)
+        public Histrogram(IEnumerable<HistrogramData> histrogramData, SettingChart settingChart, IEnumerable<AreaHistrogram>? areasHistrogram = null)
         {
             HistrogramData = histrogramData;
             AreasHistrogram = areasHistrogram;
