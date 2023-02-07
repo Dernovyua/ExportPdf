@@ -43,7 +43,25 @@ namespace ExportDevExpress
                 //() => clientReport.AddTable(GetTableData3()),
                 //() => clientReport.AddNewPage(),
 
-                () => clientReport.AddChart(new Chart(new Histrogram() { HistrogramData = GetDataHistogram(), SettingChart = new SettingChart() { Dimension = Dimension.Two, Name = "Histrogram Chart", SignatureX = "fgf", SignatureY = "yoyo" } })),
+                () => clientReport.AddChart(new Chart(new Histrogram() 
+                {
+                    HistrogramData = GetDataHistogram(), 
+                    AreasHistrogram = new List<AreaHistrogram>() 
+                    { 
+                        // Первая область выделения
+                        new AreaHistrogram() { AreaHistogramData = new List<HistrogramData>() { new HistrogramData(55, 900), new HistrogramData(65, 900) } } ,
+
+                        // Вторая область выделения
+                        new AreaHistrogram() { AreaHistogramData = new List<HistrogramData>() { new HistrogramData(10, 500), new HistrogramData(35, 500) }} ,
+
+                        // Третья область выделения
+                        new AreaHistrogram() { AreaHistogramData = new List<HistrogramData>() { new HistrogramData(0, 300), new HistrogramData(5, 300) }} ,
+                    },
+                    SettingChart = new SettingChart()
+                    {
+                        Dimension = Dimension.Two, Name = "Histrogram Chart", SignatureX = "fgf", SignatureY = "yoyo"
+                    } 
+                })),
                 //() => clientReport.AddChart(new Chart(new Histrogram() { HistrogramData = GetDataHistogram(), SettingChart = new SettingChart() { Name = "Histrogram Chart 2" } })),
                 //() => clientReport.AddChart(new Chart(new Doughnut() { DoughnutData = GetDoughnutData(), SettingChart = new SettingChart() { Name = "Doughnut", Dimension = Dimension.Three }})),
                 //() => clientReport.AddChart(new Chart(new Area()
@@ -183,7 +201,7 @@ namespace ExportDevExpress
 
             Random random = new Random();
 
-            for (int i = 0; i < 345; i++)
+            for (int i = 0; i < 67; i++)
             {
                 histrogramDatas.Add(new HistrogramData(i + 1, random.Next(1, 1000)));
             }
