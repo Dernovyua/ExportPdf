@@ -28,7 +28,7 @@ namespace Export.Models
         /// <summary>
         /// Высота графика
         /// </summary>
-        public int Height { get; set; } = 350;
+        public int Height { get; set; } = (int)(600.0 * (297.0 / 210.0) / 1.2);
 
         /// <summary>
         /// Цвет столбцов гистограммы

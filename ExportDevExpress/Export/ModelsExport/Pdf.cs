@@ -2,12 +2,15 @@
 using DevExpress.XtraPrinting;
 using DevExpress.XtraRichEdit;
 using DevExpress.XtraRichEdit.API.Native;
+using Export.Enums;
 using Export.Interfaces;
 using Export.Models;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Printing;
 using System.IO;
+using ParagraphAlignment = DevExpress.XtraRichEdit.API.Native.ParagraphAlignment;
 
 namespace Export.ModelsExport
 {
@@ -35,6 +38,7 @@ namespace Export.ModelsExport
         public Pdf(string path, string nameFile)
         {
             _richServer = new RichEditDocumentServer();
+            _richServer.Document.Sections[^1].Page.PaperKind = PaperKind.A4;
 
             _printingSystem = new PrintingSystem();
             _link = new PrintableComponentLink(_printingSystem);
@@ -47,25 +51,31 @@ namespace Export.ModelsExport
         {
             // Логика формирования графика
 
-            AddText(new Text(""));
+            AddText(new Text("", new SettingText() { TextAligment = Aligment.Center }));
 
             Image image = chart.CreateImage();
 
             _richServer.Document.Images.Append(DocumentImageSource.FromImage(image));
-            //_richServer.Document.Images[^1].Size = new SizeF(_richServer.Document.Sections[^1].Page.Width, 350);
-
-            _richServer.Document.AppendText("\n");
         }
 
         public void AddTable(TableModel table)
         {
             // Логика формирования/заполнения таблицы
 
-            AddText(new Text(""));
+            _richServer.Document.Paragraphs.Append();
 
-            Table tablePdf = _richServer.Document.Tables.Create(_richServer.Document.Selection.Start, table.TableData.Count, table.HeaderTable.Headers.Count, AutoFitBehaviorType.AutoFitToWindow);
+            DocumentRange rangeParagraph = _richServer.Document.Paragraphs[^1].Range;
 
-            DocumentRange range = _richServer.Document.Tables[_richServer.Document.Tables.Count - 1].Range;
+            ParagraphProperties paragraph = _richServer.Document.BeginUpdateParagraphs(rangeParagraph);
+
+            paragraph.Alignment = table.TableSetting.SettingText.TextAligment.Equals(Aligment.Center) ? ParagraphAlignment.Center
+                : table.TableSetting.SettingText.TextAligment.Equals(Aligment.Left) ? ParagraphAlignment.Left
+                : table.TableSetting.SettingText.TextAligment.Equals(Aligment.Right) ? ParagraphAlignment.Right
+                : ParagraphAlignment.Justify;
+
+           Table tablePdf = _richServer.Document.Tables.Create(_richServer.Document.Selection.Start, table.TableData.Count + 1, table.HeaderTable.Headers.Count, AutoFitBehaviorType.AutoFitToWindow);
+
+            DocumentRange range = _richServer.Document.Tables[^1].Range;
             CharacterProperties titleFormatting = _richServer.Document.BeginUpdateCharacters(range);
 
             #region Настройки текста в таблице
@@ -117,7 +127,7 @@ namespace Export.ModelsExport
                 _richServer.Document.InsertText(tablePdf[0, i].Range.Start, headreName);
             });
 
-            for (int i = 0; i < table.TableData.Count - 1; i++)
+            for (int i = 0; i < table.TableData.Count; i++)
             {
                 for (int j = 0; j < table.HeaderTable.Headers.Count; j++)
                 {
@@ -128,13 +138,17 @@ namespace Export.ModelsExport
             tablePdf.EndUpdate();
 
             #endregion
+
+            _richServer.Document.EndUpdateParagraphs(paragraph);
         }
 
         public void AddText(Text text)
         {
             // Логика добавления текста
 
-            DocumentRange range = _richServer.Document.Paragraphs[_richServer.Document.Paragraphs.Count - 1].Range;
+            _richServer.Document.Paragraphs.Append();
+
+            DocumentRange range = _richServer.Document.Paragraphs[^1].Range;
 
             CharacterProperties titleFormatting = _richServer.Document.BeginUpdateCharacters(range);
 
@@ -144,7 +158,16 @@ namespace Export.ModelsExport
             titleFormatting.Bold = text.SettingText.Bold;
             titleFormatting.Italic = text.SettingText.Italic;
 
-            _richServer.Document.AppendText(text.Letter + "\n");
+            _richServer.Document.AppendText(text.Letter);
+
+            ParagraphProperties paragraphProperties = _richServer.Document.BeginUpdateParagraphs(range);
+
+            paragraphProperties.Alignment = text.SettingText.TextAligment.Equals(Aligment.Center) ? ParagraphAlignment.Center
+                : text.SettingText.TextAligment.Equals(Aligment.Left) ? ParagraphAlignment.Left
+                : text.SettingText.TextAligment.Equals(Aligment.Right) ? ParagraphAlignment.Right
+                : ParagraphAlignment.Justify;
+
+            _richServer.Document.EndUpdateParagraphs(paragraphProperties);
 
             _richServer.Document.EndUpdateCharacters(titleFormatting);
         }
@@ -152,8 +175,10 @@ namespace Export.ModelsExport
         public void AddNewPage()
         {
             _richServer.Document.AppendSection();
-            _richServer.Document.Sections[^1].Page.PaperKind = System.Drawing.Printing.PaperKind.A4;
-            //_richServer.Document.Sections[^1].Page.Width = 20000;
+            _richServer.Document.Sections[^1].Page.PaperKind = PaperKind.A4;
+            _richServer.Document.Sections[^1].Page.Landscape = false;
+
+            _richServer.Document.Unit = DevExpress.Office.DocumentUnit.Inch;
         }
 
         public void OpenPreview()
@@ -166,7 +191,6 @@ namespace Export.ModelsExport
 
         public void SaveDocument()
         {
-            //using (FileStream fs = new FileStream($@"../../{Guid.NewGuid()}.pdf", FileMode.OpenOrCreate))
             using (FileStream fs = new FileStream($@"{_path}/{_nameFile}.pdf", FileMode.OpenOrCreate))
             {
                 _link.Component = _richServer;

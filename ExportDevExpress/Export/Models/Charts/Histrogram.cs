@@ -95,17 +95,6 @@ namespace Export.Models.Charts
 
                 diagram.AxisX.GridLines.Visible = true;
                 diagram.AxisX.Tickmarks.Visible = true;
-
-                diagram.AxisX.NumericScaleOptions.ScaleMode = ScaleMode.Manual;
-                //diagram.AxisX.NumericScaleOptions.IntervalOptions.DivisionMode = IntervalDivisionMode.Count;
-
-                //diagram.AxisX.NumericScaleOptions.IntervalOptions.OverflowValue = 800;
-                //diagram.AxisX.NumericScaleOptions.IntervalOptions.UnderflowValue = 50;
-
-                //diagram.AxisX.NumericScaleOptions.IntervalOptions.OverflowValuePattern = "{A2}";
-                //diagram.AxisX.NumericScaleOptions.IntervalOptions.UnderflowValuePattern = "{A2}";
-
-                //diagram.RangeControlTimeSpanGridOptions.GridMode = ChartRangeControlClientGridMode.Manual;
             }
             else
             {
