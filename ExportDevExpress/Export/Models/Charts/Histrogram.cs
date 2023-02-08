@@ -57,9 +57,9 @@ namespace Export.Models.Charts
             {
                 seriesArea.Add(new Series("", SettingChart.Dimension.Equals(Dimension.Two) ? ViewType.Area : ViewType.Area3D));
 
-                foreach (HistrogramData dataHistrogram in areaHistogram.AreaHistogramData)
+                foreach (AreaPoint areaPoint in areaHistogram.AreaHistogramData)
                 {
-                    seriesArea[^1].Points.Add(new SeriesPoint(dataHistrogram.XValue, dataHistrogram.YValue));
+                    seriesArea[^1].Points.Add(new SeriesPoint(areaPoint.XValue, areaPoint.YValue));
                 }
 
                 if (SettingChart.Dimension.Equals(Dimension.Two))
@@ -153,6 +153,6 @@ namespace Export.Models.Charts
     /// </summary>
     public class AreaHistrogram
     {
-        public IEnumerable<HistrogramData> AreaHistogramData { get; set; } = Array.Empty<HistrogramData>();
+        public IEnumerable<AreaPoint> AreaHistogramData { get; set; } = Array.Empty<AreaPoint>();
     }
 }

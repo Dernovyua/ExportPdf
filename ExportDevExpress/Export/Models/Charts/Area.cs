@@ -129,5 +129,16 @@ namespace Export.Models.Charts
         /// Данные по оси Y
         /// </summary>
         public double YValue { get; set; }
+
+        public AreaPoint(double xValue, double yValue)
+        {
+            XValue = xValue;
+            YValue = yValue;
+        }
+
+        public AreaPoint()
+        {
+            
+        }
     }
 }
