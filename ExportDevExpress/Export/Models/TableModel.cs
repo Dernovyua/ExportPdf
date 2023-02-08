@@ -10,7 +10,7 @@ namespace Export.Models
     {
         public HeaderTable HeaderTable { get; set; } = default!;
 
-        public TableSetting TableSetting { get; set; } = default!;
+        public TableSetting TableSetting { get; set; }
 
         public List<List<object>> TableData { get; set; } = new();
 
@@ -19,6 +19,11 @@ namespace Export.Models
             HeaderTable = headerTable;
             TableData = tableData;
             TableSetting = tableSetting;
+        }
+
+        public TableModel()
+        {
+            TableSetting = new TableSetting();
         }
     }
 
@@ -97,6 +102,6 @@ namespace Export.Models
 
     public class TableAligment
     {
-        public ParagraphAlignment ParagraphAlignment { get; set; }
+        public ParagraphAlignment ParagraphAlignment { get; set; } = ParagraphAlignment.Center;
     }
 }

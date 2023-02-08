@@ -14,13 +14,13 @@ namespace Export.Models.Charts
     /// <summary>
     /// Гистограмма
     /// </summary>
-    public class Histrogram : IChart
+    public class Histogram : IChart
     {
         public IEnumerable<HistrogramData> HistrogramData { get; set; } = Array.Empty<HistrogramData>();
         public IEnumerable<AreaHistrogram>? AreasHistrogram { get; set; } = Array.Empty<AreaHistrogram>();
         public SettingChart SettingChart { get; set; }
 
-        public Histrogram(IEnumerable<HistrogramData> histrogramData, SettingChart settingChart, IEnumerable<AreaHistrogram>? areasHistrogram = null)
+        public Histogram(IEnumerable<HistrogramData> histrogramData, SettingChart settingChart, IEnumerable<AreaHistrogram>? areasHistrogram = null)
         {
             HistrogramData = histrogramData;
             AreasHistrogram = areasHistrogram;
@@ -28,7 +28,7 @@ namespace Export.Models.Charts
             SettingChart = settingChart;
         }
 
-        public Histrogram()
+        public Histogram()
         {
 
         }

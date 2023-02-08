@@ -124,5 +124,16 @@ namespace Export.Models.Charts
         /// По оси Y
         /// </summary>
         public double Value { get; set; }
+
+        public DoughnutData(string argument, double value)
+        {
+            Argument = argument;
+            Value = value;
+        }
+
+        public DoughnutData()
+        {
+            
+        }
     }
 }
