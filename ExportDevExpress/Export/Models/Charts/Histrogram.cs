@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 
 namespace Export.Models.Charts
 {
@@ -51,24 +52,27 @@ namespace Export.Models.Charts
 
             #region Отрисвока выделения областей на гистограмме
 
-            List<Series> seriesArea = new List<Series>();
-
-            foreach (AreaHistrogram areaHistogram in AreasHistrogram)
+            if (AreasHistrogram != null && AreasHistrogram.Any())
             {
-                seriesArea.Add(new Series("", SettingChart.Dimension.Equals(Dimension.Two) ? ViewType.Area : ViewType.Area3D));
+                List<Series> seriesArea = new List<Series>();
 
-                foreach (AreaPoint areaPoint in areaHistogram.AreaHistogramData)
+                foreach (AreaHistrogram areaHistogram in AreasHistrogram)
                 {
-                    seriesArea[^1].Points.Add(new SeriesPoint(areaPoint.XValue, areaPoint.YValue));
+                    seriesArea.Add(new Series("", SettingChart.Dimension.Equals(Dimension.Two) ? ViewType.Area : ViewType.Area3D));
+
+                    foreach (AreaPoint areaPoint in areaHistogram.AreaHistogramData)
+                    {
+                        seriesArea[^1].Points.Add(new SeriesPoint(areaPoint.XValue, areaPoint.YValue));
+                    }
+
+                    if (SettingChart.Dimension.Equals(Dimension.Two))
+                        ((AreaSeriesView)seriesArea[^1].View).Transparency = 95;
+                    else
+                        ((Area3DSeriesView)seriesArea[^1].View).Transparency = 95;
                 }
 
-                if (SettingChart.Dimension.Equals(Dimension.Two))
-                    ((AreaSeriesView)seriesArea[^1].View).Transparency = 95;
-                else
-                    ((Area3DSeriesView)seriesArea[^1].View).Transparency = 95;
+                chartControl.Series.AddRange(seriesArea.ToArray());
             }
-
-            chartControl.Series.AddRange(seriesArea.ToArray());
 
             #endregion
 
