@@ -18,7 +18,7 @@ namespace Export.Models
         /// </summary>
         public Dimension Dimension { get; set; } = Dimension.Two;
 
-        public SettingText SettingText { get; set; } = default!;
+        public SettingText SettingText { get; set; }
 
         /// <summary>
         /// Ширина графика

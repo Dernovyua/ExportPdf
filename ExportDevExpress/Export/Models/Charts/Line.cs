@@ -21,7 +21,7 @@ namespace Export.Models.Charts
 
         public Line()
         {
-
+            SettingChart = new SettingChart();
         }
 
         public Image CreateImageFromControl()

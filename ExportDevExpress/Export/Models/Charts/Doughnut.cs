@@ -30,7 +30,7 @@ namespace Export.Models.Charts
 
         public Doughnut()
         {
-
+            SettingChart = new SettingChart();
         }
 
         public Image CreateImageFromControl()

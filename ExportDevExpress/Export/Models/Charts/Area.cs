@@ -29,7 +29,7 @@ namespace Export.Models.Charts
         }
         public Area()
         {
-
+            SettingChart = new SettingChart();
         }
 
         public Image CreateImageFromControl()

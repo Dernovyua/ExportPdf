@@ -30,7 +30,7 @@ namespace Export.Models.Charts
 
         public Histogram()
         {
-
+            SettingChart = new SettingChart();
         }
 
         public Image CreateImageFromControl()
