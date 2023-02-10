@@ -1,4 +1,3 @@
-using DevExpress.Utils.DirectXPaint;
 using Export.Interfaces;
 using Export.Models;
 using System;
@@ -6,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Export
 {
-    public class ClientReport : IExport
+    public class ClientReport : IExport, IDisposable
     {
         private ISequence _sequence { get; set; }
 
@@ -66,6 +65,11 @@ namespace Export
         public void AddNewPage()
         {
             _sequence.AddNewPage();
+        }
+
+        public void Dispose()
+        {
+            
         }
     }
 }
