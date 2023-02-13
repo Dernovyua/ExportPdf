@@ -90,7 +90,6 @@ namespace Export.DrawingCharts
                 y = _bmp.Height - (float)(_border + yOriginal * _hChart);
             }
 
-
             _g.Transform = m;
         }
 
@@ -110,7 +109,6 @@ namespace Export.DrawingCharts
 
                 _g.FillRectangle(brush, x, y, _step - _barDelta, _chartData[i]);
                 x += _step;
-
             }
         }
 

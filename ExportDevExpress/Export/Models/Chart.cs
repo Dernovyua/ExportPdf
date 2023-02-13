@@ -22,9 +22,9 @@ namespace Export.Models
         /// Создание изображения
         /// </summary>
         /// <returns></returns>
-        public Image CreateImage()
+        public Image GetImage()
         {
-            return _chart.CreateImage();
+            return _chart.CreateChartImage();
         }
     }
 }

@@ -41,7 +41,7 @@ namespace Export.Models.Charts
             });
         }
 
-        public Image CreateImage()
+        public Image CreateChartImage()
         {
             histogramETS.DrawChart();
 

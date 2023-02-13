@@ -53,7 +53,7 @@ namespace Export.ModelsExport
 
             AddText(new Text("", new SettingText() { TextAligment = Aligment.Center }));
 
-            Image image = chart.CreateImage();
+            Image image = chart.GetImage();
 
             _richServer.Document.Images.Append(DocumentImageSource.FromImage(image));
         }
