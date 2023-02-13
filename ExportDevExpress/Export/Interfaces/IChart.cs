@@ -8,6 +8,6 @@ namespace Export.Interfaces
         /// Создание изображения по графическому контролу
         /// </summary>
         /// <returns></returns>
-        Image CreateImageFromControl();
+        Image CreateImage();
     }
 }

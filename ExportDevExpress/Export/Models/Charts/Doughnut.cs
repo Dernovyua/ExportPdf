@@ -33,80 +33,82 @@ namespace Export.Models.Charts
             SettingChart = new SettingChart();
         }
 
-        public Image CreateImageFromControl()
+        public Image CreateImage()
         {
-            ChartControl pieChart = new ChartControl();
+            //ChartControl pieChart = new ChartControl();
 
-            #region Создание графика и добавление в контрол
+            //#region Создание графика и добавление в контрол
 
-            Series series = new Series("", SettingChart.Dimension.Equals(Dimension.Two) ? ViewType.Doughnut : ViewType.Doughnut3D);
+            //Series series = new Series("", SettingChart.Dimension.Equals(Dimension.Two) ? ViewType.Doughnut : ViewType.Doughnut3D);
 
-            #region Заполнение данными
+            //#region Заполнение данными
 
-            foreach (DoughnutData pie in DoughnutData)
-            {
-                series.Points.Add(new SeriesPoint(pie.Argument, pie.Value));
-            }
+            //foreach (DoughnutData pie in DoughnutData)
+            //{
+            //    series.Points.Add(new SeriesPoint(pie.Argument, pie.Value));
+            //}
 
-            #endregion
+            //#endregion
 
-            series.ArgumentDataMember = "Argument";
-            series.ValueDataMembers.AddRange(new string[] { "Value" });
+            //series.ArgumentDataMember = "Argument";
+            //series.ValueDataMembers.AddRange(new string[] { "Value" });
 
-            series.SeriesPointsSorting = SortingMode.Ascending;
-            series.SeriesPointsSortingKey = SeriesPointKey.Argument;
+            //series.SeriesPointsSorting = SortingMode.Ascending;
+            //series.SeriesPointsSortingKey = SeriesPointKey.Argument;
 
-            series.Label.TextPattern = "{A}:{VP:P2}";
+            //series.Label.TextPattern = "{A}:{VP:P2}";
 
-            pieChart.Series.Add(series);
+            //pieChart.Series.Add(series);
 
-            #endregion
+            //#endregion
 
-            #region Насйтроки графика
+            //#region Насйтроки графика
 
-            if (SettingChart.Dimension.Equals(Dimension.Two))
-            {
-                ((DoughnutSeriesLabel)series.Label).Position = PieSeriesLabelPosition.TwoColumns;
-                ((DoughnutSeriesLabel)series.Label).ResolveOverlappingMode = ResolveOverlappingMode.Default;
-                ((DoughnutSeriesLabel)series.Label).ResolveOverlappingMinIndent = 5;
+            //if (SettingChart.Dimension.Equals(Dimension.Two))
+            //{
+            //    ((DoughnutSeriesLabel)series.Label).Position = PieSeriesLabelPosition.TwoColumns;
+            //    ((DoughnutSeriesLabel)series.Label).ResolveOverlappingMode = ResolveOverlappingMode.Default;
+            //    ((DoughnutSeriesLabel)series.Label).ResolveOverlappingMinIndent = 5;
 
-                ((DoughnutSeriesView)series.View).ExplodedDistancePercentage = 30;
+            //    ((DoughnutSeriesView)series.View).ExplodedDistancePercentage = 30;
 
-                ((SimpleDiagram)pieChart.Diagram).Dimension = 2;
-            }
-            else
-            {
-                ((Doughnut3DSeriesLabel)series.Label).Position = PieSeriesLabelPosition.TwoColumns;
-                ((Doughnut3DSeriesLabel)series.Label).ResolveOverlappingMode = ResolveOverlappingMode.Default;
-                ((Doughnut3DSeriesLabel)series.Label).ResolveOverlappingMinIndent = 5;
+            //    ((SimpleDiagram)pieChart.Diagram).Dimension = 2;
+            //}
+            //else
+            //{
+            //    ((Doughnut3DSeriesLabel)series.Label).Position = PieSeriesLabelPosition.TwoColumns;
+            //    ((Doughnut3DSeriesLabel)series.Label).ResolveOverlappingMode = ResolveOverlappingMode.Default;
+            //    ((Doughnut3DSeriesLabel)series.Label).ResolveOverlappingMinIndent = 5;
 
-                ((Doughnut3DSeriesView)series.View).ExplodedDistancePercentage = 30;
+            //    ((Doughnut3DSeriesView)series.View).ExplodedDistancePercentage = 30;
 
-                ((SimpleDiagram3D)pieChart.Diagram).Dimension = 3;
-            }
+            //    ((SimpleDiagram3D)pieChart.Diagram).Dimension = 3;
+            //}
 
-            pieChart.Titles.Add(new ChartTitle() 
-            { 
-                Text = SettingChart.Name, 
-                Alignment = StringAlignment.Center,
-                TextColor = SettingChart.SettingText.Color,
-            });
-            pieChart.Legend.Visibility = DefaultBoolean.False;
+            //pieChart.Titles.Add(new ChartTitle() 
+            //{ 
+            //    Text = SettingChart.Name, 
+            //    Alignment = StringAlignment.Center,
+            //    TextColor = SettingChart.SettingText.Color,
+            //});
+            //pieChart.Legend.Visibility = DefaultBoolean.False;
 
-            pieChart.Width = SettingChart.Width;
-            pieChart.Height = SettingChart.Height;
+            //pieChart.Width = SettingChart.Width;
+            //pieChart.Height = SettingChart.Height;
 
-            #endregion
+            //#endregion
 
-            #region Экспорт контрола в Image формата Png
+            //#region Экспорт контрола в Image формата Png
 
-            using (MemoryStream s = new MemoryStream())
-            {
-                pieChart.ExportToImage(s, ImageFormat.Png);
-                return Image.FromStream(s);
-            }
+            //using (MemoryStream s = new MemoryStream())
+            //{
+            //    pieChart.ExportToImage(s, ImageFormat.Png);
+            //    return Image.FromStream(s);
+            //}
 
-            #endregion
+            //#endregion
+
+            return null;
         }
     }
 

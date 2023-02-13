@@ -24,86 +24,88 @@ namespace Export.Models.Charts
             SettingChart = new SettingChart();
         }
 
-        public Image CreateImageFromControl()
+        public Image CreateImage()
         {
-            ChartControl lineChart = new ChartControl();
+            //ChartControl lineChart = new ChartControl();
 
-            List<Series> series = new List<Series>();
+            //List<Series> series = new List<Series>();
 
-            #region Создание серий (графиков Line) и добавление в контрол
+            //#region Создание серий (графиков Line) и добавление в контрол
 
-            foreach (LineData line in Lines)
-            {
-                series.Add(new Series(line.NameLine, SettingChart.Dimension.Equals(Dimension.Two) ? ViewType.Line : ViewType.Line3D));
+            //foreach (LineData line in Lines)
+            //{
+            //    series.Add(new Series(line.NameLine, SettingChart.Dimension.Equals(Dimension.Two) ? ViewType.Line : ViewType.Line3D));
 
-                #region Добавление серии (графика Line) данными
+            //    #region Добавление серии (графика Line) данными
 
-                foreach (var item in line.LinePoints)
-                {
-                    series[^1].Points.Add(new SeriesPoint(item.XValue, item.YValue));
-                }
+            //    foreach (var item in line.LinePoints)
+            //    {
+            //        series[^1].Points.Add(new SeriesPoint(item.XValue, item.YValue));
+            //    }
 
-                #endregion
+            //    #endregion
 
-                series[series.Count - 1].ArgumentScaleType = ScaleType.Numerical;
+            //    series[series.Count - 1].ArgumentScaleType = ScaleType.Numerical;
 
-                if (SettingChart.Dimension.Equals(Dimension.Two))
-                {
-                    ((LineSeriesView)series[^1].View).MarkerVisibility = DefaultBoolean.True;
-                    ((LineSeriesView)series[^1].View).LineMarkerOptions.Size = 5;
-                    ((LineSeriesView)series[^1].View).LineMarkerOptions.Kind = MarkerKind.Circle;
-                    ((LineSeriesView)series[^1].View).LineStyle.DashStyle = DashStyle.Dash;
-                }
-                else
-                {
-                    ((Line3DSeriesView)series[^1].View).LineWidth = 5;
-                    ((Line3DSeriesView)series[^1].View).LineThickness = 1;
-                }
-            }
+            //    if (SettingChart.Dimension.Equals(Dimension.Two))
+            //    {
+            //        ((LineSeriesView)series[^1].View).MarkerVisibility = DefaultBoolean.True;
+            //        ((LineSeriesView)series[^1].View).LineMarkerOptions.Size = 5;
+            //        ((LineSeriesView)series[^1].View).LineMarkerOptions.Kind = MarkerKind.Circle;
+            //        ((LineSeriesView)series[^1].View).LineStyle.DashStyle = DashStyle.Dash;
+            //    }
+            //    else
+            //    {
+            //        ((Line3DSeriesView)series[^1].View).LineWidth = 5;
+            //        ((Line3DSeriesView)series[^1].View).LineThickness = 1;
+            //    }
+            //}
 
-            lineChart.Series.AddRange(series.ToArray());
+            //lineChart.Series.AddRange(series.ToArray());
 
-            #endregion
+            //#endregion
 
-            #region Настройка графика
+            //#region Настройка графика
 
-            if (SettingChart.Dimension.Equals(Dimension.Two)) // при двумерном графике
-            {
-                ((XYDiagram)lineChart.Diagram).AxisY.Interlaced = true;
-                ((XYDiagram)lineChart.Diagram).AxisY.InterlacedColor = Color.FromArgb(20, 60, 60, 60);
-                ((XYDiagram)lineChart.Diagram).AxisX.NumericScaleOptions.AutoGrid = false;
-                ((XYDiagram)lineChart.Diagram).AxisX.NumericScaleOptions.GridSpacing = 1;
+            //if (SettingChart.Dimension.Equals(Dimension.Two)) // при двумерном графике
+            //{
+            //    ((XYDiagram)lineChart.Diagram).AxisY.Interlaced = true;
+            //    ((XYDiagram)lineChart.Diagram).AxisY.InterlacedColor = Color.FromArgb(20, 60, 60, 60);
+            //    ((XYDiagram)lineChart.Diagram).AxisX.NumericScaleOptions.AutoGrid = false;
+            //    ((XYDiagram)lineChart.Diagram).AxisX.NumericScaleOptions.GridSpacing = 1;
 
-                ((XYDiagram)lineChart.Diagram).AxisX.Title.Visibility = DefaultBoolean.True;
-                ((XYDiagram)lineChart.Diagram).AxisY.Title.Visibility = DefaultBoolean.True;
+            //    ((XYDiagram)lineChart.Diagram).AxisX.Title.Visibility = DefaultBoolean.True;
+            //    ((XYDiagram)lineChart.Diagram).AxisY.Title.Visibility = DefaultBoolean.True;
 
-                ((XYDiagram)lineChart.Diagram).AxisX.Title.Text = SettingChart.SignatureX;
-                ((XYDiagram)lineChart.Diagram).AxisY.Title.Text = SettingChart.SignatureY;
-            }
-            else // при трехмерном
-            {
-                ((XYDiagram3D)lineChart.Diagram).AxisY.Interlaced = true;
-                ((XYDiagram3D)lineChart.Diagram).AxisY.InterlacedColor = Color.FromArgb(20, 60, 60, 60);
-                ((XYDiagram3D)lineChart.Diagram).AxisX.NumericScaleOptions.AutoGrid = false;
-                ((XYDiagram3D)lineChart.Diagram).AxisX.NumericScaleOptions.GridSpacing = 1;
-            }
+            //    ((XYDiagram)lineChart.Diagram).AxisX.Title.Text = SettingChart.SignatureX;
+            //    ((XYDiagram)lineChart.Diagram).AxisY.Title.Text = SettingChart.SignatureY;
+            //}
+            //else // при трехмерном
+            //{
+            //    ((XYDiagram3D)lineChart.Diagram).AxisY.Interlaced = true;
+            //    ((XYDiagram3D)lineChart.Diagram).AxisY.InterlacedColor = Color.FromArgb(20, 60, 60, 60);
+            //    ((XYDiagram3D)lineChart.Diagram).AxisX.NumericScaleOptions.AutoGrid = false;
+            //    ((XYDiagram3D)lineChart.Diagram).AxisX.NumericScaleOptions.GridSpacing = 1;
+            //}
 
-            lineChart.Width = SettingChart.Width;
-            lineChart.Height = SettingChart.Height;
+            //lineChart.Width = SettingChart.Width;
+            //lineChart.Height = SettingChart.Height;
 
-            lineChart.Titles.Add(new ChartTitle() { Text = SettingChart.Name, Alignment = StringAlignment.Center, TextColor = SettingChart.SettingText.Color });
+            //lineChart.Titles.Add(new ChartTitle() { Text = SettingChart.Name, Alignment = StringAlignment.Center, TextColor = SettingChart.SettingText.Color });
 
-            #endregion
+            //#endregion
 
-            #region Экспорт контрола в Image формата Png
+            //#region Экспорт контрола в Image формата Png
 
-            using (MemoryStream s = new MemoryStream())
-            {
-                lineChart.ExportToImage(s, ImageFormat.Png);
-                return Image.FromStream(s);
-            }
+            //using (MemoryStream s = new MemoryStream())
+            //{
+            //    lineChart.ExportToImage(s, ImageFormat.Png);
+            //    return Image.FromStream(s);
+            //}
 
-            #endregion
+            //#endregion
+
+            return null;
         }
     }
 

@@ -24,7 +24,7 @@ namespace Export.Models
         /// <returns></returns>
         public Image CreateImage()
         {
-            return _chart.CreateImageFromControl();
+            return _chart.CreateImage();
         }
     }
 }
