@@ -15,16 +15,16 @@ namespace Export
         {
         }
 
-        public ClientReport(IReport sequence)
+        public ClientReport(IReport report)
         {
-            _report = sequence;
+            _report = report;
         }
 
         #endregion
 
-        public void SetExport(IReport sequence)
+        public void SetExport(IReport report)
         {
-            _report = sequence;
+            _report = report;
         }
 
         /// <summary>
