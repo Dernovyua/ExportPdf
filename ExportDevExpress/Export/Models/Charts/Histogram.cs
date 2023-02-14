@@ -1,9 +1,7 @@
 ﻿using Export.DrawingCharts;
 using Export.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 
 namespace Export.Models.Charts
 {
@@ -12,12 +10,22 @@ namespace Export.Models.Charts
     /// </summary>
     public class Histogram : IChart
     {
-        public IEnumerable<double> HistrogramData { get; set; } = Array.Empty<double>();
+        public List<double> HistrogramData { get; set; } = new();
         public SettingChart SettingChart { get; set; }
 
         private HistogramETS histogramETS { get; set; }
 
-        public Histogram(IEnumerable<double> histrogramData, SettingChart settingChart)
+        public Histogram(List<double> histrogramData, int markerStart, int markerCount)
+        {
+            histogramETS = new HistogramETS(new HistrogramEtsSettings()
+            {
+                _data = histrogramData,
+                _markerCount = markerCount,
+                _markerStart = markerStart
+            });
+        }
+
+        public Histogram(List<double> histrogramData, SettingChart settingChart)
         {
             HistrogramData = histrogramData;
 
@@ -25,7 +33,7 @@ namespace Export.Models.Charts
 
             histogramETS = new HistogramETS(new HistrogramEtsSettings()
             {
-                _data = histrogramData.ToList(),
+                _data = histrogramData,
 
                 _mapH = settingChart.Height,
                 _mapW = settingChart.Width,

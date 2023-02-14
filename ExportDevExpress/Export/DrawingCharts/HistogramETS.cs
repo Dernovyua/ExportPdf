@@ -16,31 +16,35 @@ namespace Export.DrawingCharts
         float _border = 0;
         float _wChart = 0;
         float _hChart = 0;
-        int _step = 0;
-        int _barDelta = 0;
+        float _step = 0;
+        float _barDelta = 0;
         Matrix _original = null;
 
         public HistogramETS(HistrogramEtsSettings chartSet)
         {
+            _chartData = new List<float>();
             _chartSet = chartSet;
             _bmp = new Bitmap(Convert.ToInt32(chartSet._mapW), Convert.ToInt32(chartSet._mapH), PixelFormat.Format32bppArgb);
             _g = Graphics.FromImage(_bmp);
             _original = _g.Transform;
-            Matrix m = new Matrix(1.0f, 0.0f, 0.0f, -1.0f, 0.0f, (float)_bmp.Height);
+            Matrix m = new Matrix(1.0f, 0.0f, 0.0f, -1.0f, 0.0f, (float)chartSet._mapH);
             _g.Transform = m;
             _g.Clear(Color.White);
-            _border = (float)_bmp.Width * _kBorder;
-            _wChart = _bmp.Width - _border * 2;
-            _hChart = _bmp.Height - _border * 2;
-            _chartData = new List<float>();
+            _border = (float)chartSet._mapW * _kBorder;
+            _wChart = chartSet._mapW - _border * 2;
+            _hChart = chartSet._mapH - _border * 2;
 
             // Предполагаем, что данные приходят в нормадизованном виде 
             foreach (float x in chartSet._data)
             {
                 _chartData.Add(x * _hChart);
             }
-            _step = (int)(Math.Round(_wChart / _chartData.Count, 0) - 1);
-            _barDelta = (int)(_step * 0.2f);
+            //_step = (int)( Math.Floor( _wChart / _chartData.Count ));
+            _step = _wChart / _chartData.Count;
+            _barDelta = _step * 0.2f;
+
+            if (_barDelta <= 0)
+                _barDelta = 1;
         }
 
         public void DrawAxis()
@@ -80,7 +84,7 @@ namespace Export.DrawingCharts
             }
             // Маркировка вертикальной оси
             yOriginal = 0.25f;
-            x = _border - 20f;
+            x = _border - 25f;
             y = _bmp.Height - (float)(_border + yOriginal * _hChart);
 
             for (int i = 0; i < 4; i++)
@@ -89,7 +93,6 @@ namespace Export.DrawingCharts
                 yOriginal += 0.25f;
                 y = _bmp.Height - (float)(_border + yOriginal * _hChart);
             }
-
             _g.Transform = m;
         }
 
@@ -106,8 +109,9 @@ namespace Export.DrawingCharts
 
                 if (_chartSet._markerCount > 0 && i >= _chartSet._markerStart && i < mEnd)
                     brush = new SolidBrush(_chartSet._markerColor);
+                float w = _step - _barDelta;
 
-                _g.FillRectangle(brush, x, y, _step - _barDelta, _chartData[i]);
+                _g.FillRectangle(brush, x, y, w, _chartData[i]);
                 x += _step;
             }
         }
@@ -120,9 +124,9 @@ namespace Export.DrawingCharts
 
     public class HistrogramEtsSettings
     {
-        public int _mapW = 600;
+        public int _mapW = 700;
         public int _mapH = 350;
-        public List<Double> _data;
+        public List<double> _data;
         public int _markerStart = 0;
         public int _markerCount = 0;
         public Color _chartColor = Color.Blue;
@@ -132,7 +136,7 @@ namespace Export.DrawingCharts
 
         public HistrogramEtsSettings()
         {
-            _data = new List<Double>();
+            _data = new List<double>();
             _chartColor = Color.Blue;
             _markerColor = Color.Red;
         }
