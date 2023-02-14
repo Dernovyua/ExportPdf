@@ -7,7 +7,7 @@ namespace Export
 {
     public class ClientReport : IExport, IDisposable
     {
-        private ISequence _sequence { get; set; }
+        private IReport _report { get; set; }
 
         #region constructors
 
@@ -15,16 +15,16 @@ namespace Export
         {
         }
 
-        public ClientReport(ISequence sequence)
+        public ClientReport(IReport sequence)
         {
-            _sequence = sequence;
+            _report = sequence;
         }
 
         #endregion
 
-        public void SetExport(ISequence sequence)
+        public void SetExport(IReport sequence)
         {
-            _sequence = sequence;
+            _report = sequence;
         }
 
         /// <summary>
@@ -34,37 +34,37 @@ namespace Export
         /// <param name="actions">Ìועמהû</param>
         public void GenerateReport(IEnumerable<Action> actions)
         {
-            _sequence.GetCallSequenceMethods(actions);
+            _report.GetCallSequenceMethods(actions);
         }
 
         public void AddText(Text text)
         {
-            _sequence.AddText(text);
+            _report.AddText(text);
         }
 
         public void AddChart(Chart chartData)
         {
-            _sequence.AddChart(chartData);
+            _report.AddChart(chartData);
         }
 
         public void AddTable(TableModel table)
         {
-            _sequence.AddTable(table);
+            _report.AddTable(table);
         }
 
         public void SaveDocument()
         {
-            _sequence.SaveDocument();
+            _report.SaveDocument();
         }
 
         public void OpenPreview()
         {
-            _sequence.OpenPreview();
+            _report.OpenPreview();
         }
 
         public void AddNewPage()
         {
-            _sequence.AddNewPage();
+            _report.AddNewPage();
         }
 
         public void Dispose()

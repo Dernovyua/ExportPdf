@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace Export.ModelsExport
 {
-    public class Csv : ISequence
+    public class Csv : IReport
     {
         /// <summary>
         /// Класс для работы с таблицей эксель

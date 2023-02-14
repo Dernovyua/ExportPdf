@@ -14,7 +14,7 @@ using ParagraphAlignment = DevExpress.XtraRichEdit.API.Native.ParagraphAlignment
 
 namespace Export.ModelsExport
 {
-    public class Pdf : ISequence
+    public class Pdf : IReport
     {
         #region Свойства DevExpress
 
