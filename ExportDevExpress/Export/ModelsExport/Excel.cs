@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace Export.ModelsExport
 {
-    public class Csv : IReport
+    public class Excel : IReport
     {
         /// <summary>
         /// Класс для работы с таблицей эксель
@@ -31,7 +31,7 @@ namespace Export.ModelsExport
         private string _path { get; set; }
         private string _nameFile { get; set; }
 
-        public Csv(string path, string nameFile)
+        public Excel(string path, string nameFile)
         {
             _workbook = new Workbook();
 
@@ -194,7 +194,9 @@ namespace Export.ModelsExport
 
         public void SaveDocument()
         {
-            //_workbook.SaveDocument($@"../../{Guid.NewGuid()}.xlsx", DocumentFormat.Xlsx);
+            _workbook.Worksheets.ActiveWorksheet = _workbook.Worksheets[0];
+            _workbook.Worksheets.RemoveAt(_workbook.Worksheets.Count - 1);
+
             _workbook.SaveDocument($@"{_path}/{_nameFile}.xlsx", DocumentFormat.Xlsx);
         }
     }
