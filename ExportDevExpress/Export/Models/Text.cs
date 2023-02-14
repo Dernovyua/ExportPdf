@@ -18,10 +18,13 @@ namespace Export.Models
         /// </summary>
         public SettingText SettingText { get; set; }
 
-        public Text(string letter, SettingText settingText)
+        public HyperLink HyperLink { get; set; }
+
+        public Text(string letter, SettingText settingText, HyperLink hyperLink = null)
         {
             Letter = letter;
             SettingText = settingText;
+            HyperLink = hyperLink;
         }
 
         public Text(string letter)
@@ -78,5 +81,26 @@ namespace Export.Models
         {
             
         }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class HyperLink
+    {
+        /// <summary>
+        /// Текст на который необходимо добавить ссылку
+        /// </summary>
+        public string LinkText { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Ссылка на файл (локальный путь или гипперсылка)
+        /// </summary>
+        public string TargetLink { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Строка, содержащая текст всплывающей подсказки.
+        /// </summary>
+        public string ToolTip { get; set; } = string.Empty;
     }
 }

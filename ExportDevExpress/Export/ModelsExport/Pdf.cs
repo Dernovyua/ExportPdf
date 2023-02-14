@@ -1,4 +1,5 @@
 ﻿using DevExpress.Mvvm.Native;
+using DevExpress.Utils.About;
 using DevExpress.XtraPrinting;
 using DevExpress.XtraRichEdit;
 using DevExpress.XtraRichEdit.API.Native;
@@ -73,7 +74,7 @@ namespace Export.ModelsExport
                 : table.TableSetting.SettingText.TextAligment.Equals(Aligment.Right) ? ParagraphAlignment.Right
                 : ParagraphAlignment.Justify;
 
-           Table tablePdf = _richServer.Document.Tables.Create(_richServer.Document.Selection.Start, table.TableData.Count + 1, table.HeaderTable.Headers.Count, AutoFitBehaviorType.AutoFitToWindow);
+            Table tablePdf = _richServer.Document.Tables.Create(_richServer.Document.Selection.Start, table.TableData.Count + 1, table.HeaderTable.Headers.Count, AutoFitBehaviorType.AutoFitToWindow);
 
             DocumentRange range = _richServer.Document.Tables[^1].Range;
             CharacterProperties titleFormatting = _richServer.Document.BeginUpdateCharacters(range);
@@ -158,7 +159,7 @@ namespace Export.ModelsExport
             titleFormatting.Bold = text.SettingText.Bold;
             titleFormatting.Italic = text.SettingText.Italic;
 
-            _richServer.Document.AppendText(text.Letter);
+            DocumentRange rangeText = _richServer.Document.AppendText(text.Letter);
 
             ParagraphProperties paragraphProperties = _richServer.Document.BeginUpdateParagraphs(range);
 
@@ -170,6 +171,22 @@ namespace Export.ModelsExport
             _richServer.Document.EndUpdateParagraphs(paragraphProperties);
 
             _richServer.Document.EndUpdateCharacters(titleFormatting);
+
+            #region Добавление ссылки на указанный текст
+
+            if (text.HyperLink != null && !string.IsNullOrEmpty(text.HyperLink.LinkText))
+            {
+                DocumentRange[] foundRanges = _richServer.Document.FindAll(text.HyperLink.LinkText, SearchOptions.CaseSensitive, rangeText);
+                if (foundRanges.Length > 0)
+                {
+                    _richServer.Document.Hyperlinks.Create(foundRanges[0]);
+
+                    _richServer.Document.Hyperlinks[^1].NavigateUri = text.HyperLink.TargetLink;
+                    _richServer.Document.Hyperlinks[^1].ToolTip = text.HyperLink.ToolTip;
+                }
+            }
+
+            #endregion
         }
 
         public void AddNewPage()
