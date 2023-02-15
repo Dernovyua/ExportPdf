@@ -1,7 +1,5 @@
 ﻿using Export;
-using Export.Enums;
 using Export.Models;
-using Export.Models.Charts;
 using Export.ModelsExport;
 using System;
 using System.Collections.Generic;
@@ -26,11 +24,23 @@ namespace ExportDevExpress
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            clientReport.SetExport(new Pdf(@"C:\Users\Flax\Desktop", "chartTest"));
+            //clientReport.SetExport(new Pdf(@"C:\Users\Flax\Desktop", "chartTest"));
 
+            //clientReport.GenerateReport(new List<Action>()
+            //{
+            //    () => clientReport.AddText(new Text("Открыть файл file.xlsx", new SettingText(), new HyperLink()
+            //    {
+            //        LinkText = "file.xlsx",
+
+            //        TargetLink = @"C:\Users\Flax\Desktop\file.xlsx",
+            //    })),
+            //    () => clientReport.AddText(new Text("gfoooooooooooooooooo"))
+            //});
+
+            clientReport.SetExport(new Excel(@"C:\Users\Flax\Desktop", "chartTestExcel"));
             clientReport.GenerateReport(new List<Action>()
             {
-                () => clientReport.AddChart(new Chart(new Histogram(new List<double> () { 5, 7, 9, 10, 14 }, new SettingChart())))
+                () => clientReport.AddTable(GetTableData()),
             });
         }
 
@@ -116,103 +126,6 @@ namespace ExportDevExpress
             }
 
             return tableModel;
-        }
-
-        #endregion
-
-
-        #region Генерация данных для Pie charts
-
-        public IEnumerable<DoughnutData> GetDoughnutData()
-        {
-            return new List<DoughnutData>()
-            {
-                new DoughnutData() { Argument = "BTC", Value = 10 },
-                new DoughnutData() { Argument = "ETH", Value = 36 },
-                new DoughnutData() { Argument = "Doge", Value = 50 },
-                new DoughnutData() { Argument = "EOS", Value = 61 },
-                new DoughnutData() { Argument = "AVAX", Value = 89 },
-            };
-        }
-
-        #endregion
-
-        #region Генерация данных для Area
-
-        public IEnumerable<AreaPoint> GetAreaPoints()
-        {
-            return new List<AreaPoint>()
-            {
-                new AreaPoint() { XValue = 1, YValue = 15 },
-                new AreaPoint() { XValue = 2, YValue = 18 },
-                new AreaPoint() { XValue = 3, YValue = 25 },
-                new AreaPoint() { XValue = 4, YValue = 33 },
-                new AreaPoint() { XValue = 5, YValue = 39 },
-            };
-        }
-
-        public IEnumerable<AreaPoint> GetAreaPoints2()
-        {
-            return new List<AreaPoint>()
-            {
-                new AreaPoint() { XValue = 1, YValue = 10 },
-                new AreaPoint() { XValue = 2, YValue = 12 },
-                new AreaPoint() { XValue = 3, YValue = 14 },
-                new AreaPoint() { XValue = 4, YValue = 17 },
-                new AreaPoint() { XValue = 5, YValue = 21 },
-            };
-        }
-
-        public IEnumerable<AreaPoint> GetAreaPoints3()
-        {
-            return new List<AreaPoint>()
-            {
-                new AreaPoint() { XValue = 2, YValue = 10 },
-                new AreaPoint() { XValue = 3, YValue = 12 },
-                new AreaPoint() { XValue = 1, YValue = 14 },
-                new AreaPoint() { XValue = 5, YValue = 17 },
-                new AreaPoint() { XValue = 4, YValue = 21 },
-            };
-        }
-
-        #endregion
-
-        #region Генерация данных для Line
-
-        public IEnumerable<LinePoint> GetLinePoints()
-        {
-            return new List<LinePoint>()
-            {
-                new LinePoint() { XValue = 2, YValue = 10 },
-                new LinePoint() { XValue = 3, YValue = 12 },
-                new LinePoint() { XValue = 1, YValue = 14 },
-                new LinePoint() { XValue = 5, YValue = 17 },
-                new LinePoint() { XValue = 4, YValue = 21 },
-            };
-        }
-
-        public IEnumerable<LinePoint> GetLinePoints2()
-        {
-            return new List<LinePoint>()
-            {
-                new LinePoint() { XValue = 1, YValue = 10 },
-                new LinePoint() { XValue = 2, YValue = 12 },
-                new LinePoint() { XValue = 3, YValue = 14 },
-                new LinePoint() { XValue = 4, YValue = 17 },
-                new LinePoint() { XValue = 5, YValue = 21 },
-            };
-        }
-
-        public IEnumerable<LinePoint> GetLinePoints3()
-        {
-            return new List<LinePoint>()
-            {
-                new LinePoint() { XValue = 1, YValue = 15 },
-                new LinePoint() { XValue = 2, YValue = 18 },
-                new LinePoint() { XValue = 3, YValue = 25 },
-                new LinePoint() { XValue = 4, YValue = 33 },
-                new LinePoint() { XValue = 5, YValue = 39 },
-            };
         }
 
         #endregion
