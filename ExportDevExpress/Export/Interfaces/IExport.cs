@@ -25,7 +25,7 @@ namespace Export.Interfaces
         /// <summary>
         /// Добавление новой страницы в файле экспорта
         /// </summary>
-        void AddNewPage();
+        void AddNewPage(string? name = null);
 
         /// <summary>
         /// Сохранение документа

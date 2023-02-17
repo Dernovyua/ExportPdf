@@ -37,7 +37,7 @@ namespace Export.Models
                 FontName = "Helvetica",
                 FontSize = 14.0f,
                 Italic = false,
-                TextAligment = Aligment.Justify
+                TextAligment = Aligment.Left
             };
         }
     }
@@ -75,7 +75,7 @@ namespace Export.Models
         /// <summary>
         /// Выравнивание текста
         /// </summary>
-        public Aligment TextAligment { get; set; } = Aligment.Justify;
+        public Aligment TextAligment { get; set; } = Aligment.Left;
 
         public SettingText()
         {

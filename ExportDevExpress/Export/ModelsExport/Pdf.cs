@@ -1,5 +1,4 @@
 ﻿using DevExpress.Mvvm.Native;
-using DevExpress.Utils.About;
 using DevExpress.XtraPrinting;
 using DevExpress.XtraRichEdit;
 using DevExpress.XtraRichEdit.API.Native;
@@ -46,6 +45,11 @@ namespace Export.ModelsExport
 
             _path = path;
             _nameFile = nameFile;
+
+            //_richServer.Options.Bookmarks.Visibility = RichEditBookmarkVisibility.Visible;
+            //_richServer.Options.Bookmarks.Color = Color.Sienna;
+            //_richServer.Options.Bookmarks.DisplayBookmarksInPdfNavigationPane = PdfBookmarkDisplayMode.None;
+            //_richServer.Options.Bookmarks.DisplayUnreferencedPdfBookmarks = true;
         }
 
         public void AddChart(Chart chart)
@@ -56,7 +60,8 @@ namespace Export.ModelsExport
 
             Image image = chart.GetImage();
 
-            _richServer.Document.Images.Append(DocumentImageSource.FromImage(image));
+            if (image != null)
+                _richServer.Document.Images.Append(DocumentImageSource.FromImage(image));
         }
 
         public void AddTable(TableModel table)
@@ -189,7 +194,7 @@ namespace Export.ModelsExport
             #endregion
         }
 
-        public void AddNewPage()
+        public void AddNewPage(string? name = null)
         {
             _richServer.Document.AppendSection();
             _richServer.Document.Sections[^1].Page.PaperKind = PaperKind.A4;
@@ -223,10 +228,29 @@ namespace Export.ModelsExport
         /// <param name="actions">Список методов</param>
         public void GetCallSequenceMethods(IEnumerable<Action> actions)
         {
+            //actions = actions
+            //    .Append(AddOglavlenie);
+
             foreach (var action in actions)
             {
                 action();
             }
         }
+
+        //private void AddOglavlenie()
+        //{
+        //    _richServer.Document.BeginUpdate();
+
+        //    for (int i = 0; i < _richServer.Document.Paragraphs.Count; i++)
+        //    {
+        //        if (_richServer.Document.Paragraphs[i].OutlineLevel == 2)
+        //        {
+        //            Field field = _richServer.Document.Fields.Create(_richServer.Document.Paragraphs[i].Range.Start, "TOC \\u");
+        //            field.Update();
+        //            _richServer.Document.Fields.Update();
+        //        }
+        //    }
+        //    _richServer.Document.EndUpdate();
+        //}
     }
 }

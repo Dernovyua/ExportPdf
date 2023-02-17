@@ -62,9 +62,9 @@ namespace Export
             _report.OpenPreview();
         }
 
-        public void AddNewPage()
+        public void AddNewPage(string? name = null)
         {
-            _report.AddNewPage();
+            _report.AddNewPage(name);
         }
 
         public void Dispose()
