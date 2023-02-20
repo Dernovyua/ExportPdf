@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Printing;
 using System.IO;
+using System.Linq;
 using ParagraphAlignment = DevExpress.XtraRichEdit.API.Native.ParagraphAlignment;
 
 namespace Export.ModelsExport
@@ -38,6 +39,9 @@ namespace Export.ModelsExport
         public Pdf(string path, string nameFile)
         {
             _richServer = new RichEditDocumentServer();
+            _richServer.Document.Sections[0].Page.PaperKind = PaperKind.A4;
+
+            _richServer.Document.AppendSection();
             _richServer.Document.Sections[^1].Page.PaperKind = PaperKind.A4;
 
             _printingSystem = new PrintingSystem();
@@ -45,11 +49,6 @@ namespace Export.ModelsExport
 
             _path = path;
             _nameFile = nameFile;
-
-            //_richServer.Options.Bookmarks.Visibility = RichEditBookmarkVisibility.Visible;
-            //_richServer.Options.Bookmarks.Color = Color.Sienna;
-            //_richServer.Options.Bookmarks.DisplayBookmarksInPdfNavigationPane = PdfBookmarkDisplayMode.None;
-            //_richServer.Options.Bookmarks.DisplayUnreferencedPdfBookmarks = true;
         }
 
         public void AddChart(Chart chart)
@@ -60,26 +59,34 @@ namespace Export.ModelsExport
 
             Image image = chart.GetImage();
 
+            _richServer.Document.BeginUpdate();
+
             if (image != null)
-                _richServer.Document.Images.Append(DocumentImageSource.FromImage(image));
+                _richServer.Document.Images.Insert(_richServer.Document.Sections[^1].Range.End, DocumentImageSource.FromImage(image));
+
+            _richServer.Document.EndUpdate();
         }
 
         public void AddTable(TableModel table)
         {
             // Логика формирования/заполнения таблицы
 
-            _richServer.Document.Paragraphs.Append();
+            //_richServer.Document.Paragraphs.Append();
 
-            DocumentRange rangeParagraph = _richServer.Document.Paragraphs[^1].Range;
+            _richServer.Document.BeginUpdate();
 
-            ParagraphProperties paragraph = _richServer.Document.BeginUpdateParagraphs(rangeParagraph);
+            Paragraph rangeParagraph = _richServer.Document.Paragraphs.Insert(_richServer.Document.Sections[^1].Range.End);
+
+            //DocumentRange rangeParagraph = _richServer.Document.Paragraphs[^1].Range;
+
+            ParagraphProperties paragraph = _richServer.Document.BeginUpdateParagraphs(rangeParagraph.Range);
 
             paragraph.Alignment = table.TableSetting.SettingText.TextAligment.Equals(Aligment.Center) ? ParagraphAlignment.Center
                 : table.TableSetting.SettingText.TextAligment.Equals(Aligment.Left) ? ParagraphAlignment.Left
                 : table.TableSetting.SettingText.TextAligment.Equals(Aligment.Right) ? ParagraphAlignment.Right
                 : ParagraphAlignment.Justify;
 
-            Table tablePdf = _richServer.Document.Tables.Create(_richServer.Document.Selection.Start, table.TableData.Count + 1, table.HeaderTable.Headers.Count, AutoFitBehaviorType.AutoFitToWindow);
+            Table tablePdf = _richServer.Document.Tables.Create(_richServer.Document.Sections[^1].Range.End, table.TableData.Count + 1, table.HeaderTable.Headers.Count, AutoFitBehaviorType.AutoFitToWindow);
 
             DocumentRange range = _richServer.Document.Tables[^1].Range;
             CharacterProperties titleFormatting = _richServer.Document.BeginUpdateCharacters(range);
@@ -102,7 +109,7 @@ namespace Export.ModelsExport
 
             TableStyle tStyleMain = _richServer.Document.TableStyles.CreateNew();
 
-            tStyleMain.Alignment = (ParagraphAlignment)table.TableSetting.TableAligment.ParagraphAlignment;
+            //tStyleMain.Alignment = (ParagraphAlignment)table.TableSetting.TableAligment.ParagraphAlignment;
 
             tStyleMain.TableBorders.InsideHorizontalBorder.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderInsideSetting.BorderLineStyle;
             tStyleMain.TableBorders.InsideHorizontalBorder.LineThickness = table.TableSetting.TableBorderInsideSetting.LineThickness;
@@ -146,17 +153,26 @@ namespace Export.ModelsExport
             #endregion
 
             _richServer.Document.EndUpdateParagraphs(paragraph);
+
+            _richServer.Document.EndUpdate();
         }
 
         public void AddText(Text text)
         {
             // Логика добавления текста
 
-            _richServer.Document.Paragraphs.Append();
+            _richServer.Document.BeginUpdate();
 
-            DocumentRange range = _richServer.Document.Paragraphs[^1].Range;
+            Paragraph range = _richServer.Document.Paragraphs.Insert(_richServer.Document.Sections[^1].Range.End);
 
-            CharacterProperties titleFormatting = _richServer.Document.BeginUpdateCharacters(range);
+            if (text.IsHeader)
+                range.OutlineLevel = 2;
+            else
+                range.OutlineLevel = 0;
+
+            DocumentRange rangeText = _richServer.Document.InsertText(range.Range.End, text.Letter);
+
+            CharacterProperties titleFormatting = _richServer.Document.BeginUpdateCharacters(range.Range);
 
             titleFormatting.FontSize = text.SettingText.FontSize;
             titleFormatting.FontName = text.SettingText.FontName;
@@ -164,9 +180,7 @@ namespace Export.ModelsExport
             titleFormatting.Bold = text.SettingText.Bold;
             titleFormatting.Italic = text.SettingText.Italic;
 
-            DocumentRange rangeText = _richServer.Document.AppendText(text.Letter);
-
-            ParagraphProperties paragraphProperties = _richServer.Document.BeginUpdateParagraphs(range);
+            ParagraphProperties paragraphProperties = _richServer.Document.BeginUpdateParagraphs(range.Range);
 
             paragraphProperties.Alignment = text.SettingText.TextAligment.Equals(Aligment.Center) ? ParagraphAlignment.Center
                 : text.SettingText.TextAligment.Equals(Aligment.Left) ? ParagraphAlignment.Left
@@ -192,6 +206,8 @@ namespace Export.ModelsExport
             }
 
             #endregion
+
+            _richServer.Document.EndUpdate();
         }
 
         public void AddNewPage(string? name = null)
@@ -228,8 +244,8 @@ namespace Export.ModelsExport
         /// <param name="actions">Список методов</param>
         public void GetCallSequenceMethods(IEnumerable<Action> actions)
         {
-            //actions = actions
-            //    .Append(AddOglavlenie);
+            actions = actions
+                .Append(AddTOC);
 
             foreach (var action in actions)
             {
@@ -237,20 +253,59 @@ namespace Export.ModelsExport
             }
         }
 
-        //private void AddOglavlenie()
-        //{
-        //    _richServer.Document.BeginUpdate();
+        /// <summary>
+        /// Добавление оглавления
+        /// </summary>
+        private void AddTOC()
+        {
+            #region WOOOOORK
 
-        //    for (int i = 0; i < _richServer.Document.Paragraphs.Count; i++)
-        //    {
-        //        if (_richServer.Document.Paragraphs[i].OutlineLevel == 2)
-        //        {
-        //            Field field = _richServer.Document.Fields.Create(_richServer.Document.Paragraphs[i].Range.Start, "TOC \\u");
-        //            field.Update();
-        //            _richServer.Document.Fields.Update();
-        //        }
-        //    }
-        //    _richServer.Document.EndUpdate();
-        //}
+            //Document doc = _richServer.Document;
+
+            //var contentSection = doc.Sections[0];
+            //var lastSection = doc.Sections[^1];
+
+            //Document document = _richServer.Document;
+
+            //document.BeginUpdate();
+
+            //bool header = false;
+
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    if (i % 2 == 0)
+            //        header = true;
+            //    else
+            //        header = false;
+
+            //    Paragraph paragraph = document.Paragraphs.Insert(lastSection.Range.Start);
+
+            //    if (header)
+            //        paragraph.OutlineLevel = 2;
+            //    else
+            //        paragraph.OutlineLevel = 0;
+
+            //    document.InsertText(paragraph.Range.End, $"Title {i + 1}");
+
+            //    //Paragraph range = document.Paragraphs.Insert(lastSection.Range.End);
+            //    //document.InsertText(range.Range.Start, "The first created table of content");
+            //}
+            //document.Fields.Create(contentSection.Range.Start, @"TOC \h \u");
+
+            //Paragraph paragraph2 = document.Paragraphs.Insert(lastSection.Range.Start);
+            //document.InsertText(paragraph2.Range.Start, "The first created table of content");
+
+            //document.EndUpdate();
+            //document.Fields.Update();
+
+            #endregion
+
+            _richServer.Document.BeginUpdate();
+
+            _richServer.Document.Fields.Create(_richServer.Document.Sections[0].Range.Start, @"TOC \h \u");
+
+            _richServer.Document.EndUpdate();
+            _richServer.Document.Fields.Update();
+        }
     }
 }

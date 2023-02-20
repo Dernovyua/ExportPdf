@@ -56,11 +56,6 @@ namespace Export.Models
         public TableBorderInsideSetting TableBorderInsideSetting { get; set; } 
 
         /// <summary>
-        /// Настройка выравнивая элементов в таблице
-        /// </summary>
-        public TableAligment TableAligment { get; set; }
-
-        /// <summary>
         /// На каждой новой странице вначале таблицы будут отображаться названия заголовков
         /// </summary>
         public bool RepeatHeaderEveryPage { get; set; } = true;
@@ -81,11 +76,6 @@ namespace Export.Models
                 BorderLineStyle= BorderLineStyle.Single,
                 LineThickness = 1.0f
             };
-
-            TableAligment = new TableAligment()
-            {
-                ParagraphAlignment = ParagraphAlignment.Center,
-            };
         }
     }
 
@@ -98,10 +88,5 @@ namespace Export.Models
     public class TableBorderInsideSetting : TableBorderSetting
     {
 
-    }
-
-    public class TableAligment
-    {
-        public ParagraphAlignment ParagraphAlignment { get; set; } = ParagraphAlignment.Center;
     }
 }

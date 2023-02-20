@@ -13,6 +13,8 @@ namespace Export.Models
         /// </summary>
         public string Letter { get; set; } = string.Empty;
 
+        public bool IsHeader { get; set; } = false;
+
         /// <summary>
         /// Настройка текста
         /// </summary>
@@ -20,11 +22,13 @@ namespace Export.Models
 
         public HyperLink HyperLink { get; set; }
 
-        public Text(string letter, SettingText settingText, HyperLink hyperLink = null)
+        public Text(string letter, SettingText settingText, bool isHeader = false, HyperLink hyperLink = null)
         {
             Letter = letter;
             SettingText = settingText;
             HyperLink = hyperLink;
+
+            IsHeader = isHeader;
         }
 
         public Text(string letter)
