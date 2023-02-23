@@ -36,19 +36,26 @@ namespace Export.ModelsExport
         private string _path { get; set; }
         private string _nameFile { get; set; }
 
-        public Pdf(string path, string nameFile)
+        private bool _isTableContent { get; set; }
+
+        public Pdf(string path, string nameFile, bool isTableContent = true)
         {
             _richServer = new RichEditDocumentServer();
             _richServer.Document.Sections[0].Page.PaperKind = PaperKind.A4;
-
-            _richServer.Document.AppendSection();
-            _richServer.Document.Sections[^1].Page.PaperKind = PaperKind.A4;
 
             _printingSystem = new PrintingSystem();
             _link = new PrintableComponentLink(_printingSystem);
 
             _path = path;
             _nameFile = nameFile;
+
+            _isTableContent = isTableContent;
+
+            if (_isTableContent)
+            {
+                _richServer.Document.AppendSection();
+                _richServer.Document.Sections[^1].Page.PaperKind = PaperKind.A4;
+            }
         }
 
         public void AddChart(Chart chart)
@@ -71,27 +78,15 @@ namespace Export.ModelsExport
         {
             // Логика формирования/заполнения таблицы
 
-            //_richServer.Document.Paragraphs.Append();
-
             _richServer.Document.BeginUpdate();
 
-            Paragraph rangeParagraph = _richServer.Document.Paragraphs.Insert(_richServer.Document.Sections[^1].Range.End);
+            var rangePar = _richServer.Document.Paragraphs.Append();
 
-            //DocumentRange rangeParagraph = _richServer.Document.Paragraphs[^1].Range;
+            ParagraphProperties paragraphProp = _richServer.Document.BeginUpdateParagraphs(_richServer.Document.Paragraphs[^1].Range);
 
-            ParagraphProperties paragraph = _richServer.Document.BeginUpdateParagraphs(rangeParagraph.Range);
+            Table tablePdf = _richServer.Document.Tables.Create(_richServer.Document.Paragraphs[^1].Range.Start, table.TableData.Count + 1, table.HeaderTable.Headers.Count, AutoFitBehaviorType.AutoFitToWindow);
 
-            paragraph.Alignment = table.TableSetting.SettingText.TextAligment.Equals(Aligment.Center) ? ParagraphAlignment.Center
-                : table.TableSetting.SettingText.TextAligment.Equals(Aligment.Left) ? ParagraphAlignment.Left
-                : table.TableSetting.SettingText.TextAligment.Equals(Aligment.Right) ? ParagraphAlignment.Right
-                : ParagraphAlignment.Justify;
-
-            Table tablePdf = _richServer.Document.Tables.Create(_richServer.Document.Sections[^1].Range.End, table.TableData.Count + 1, table.HeaderTable.Headers.Count, AutoFitBehaviorType.AutoFitToWindow);
-
-            DocumentRange range = _richServer.Document.Tables[^1].Range;
-            CharacterProperties titleFormatting = _richServer.Document.BeginUpdateCharacters(range);
-
-            #region Настройки текста в таблице
+            CharacterProperties titleFormatting = _richServer.Document.BeginUpdateCharacters(tablePdf.Range);
 
             titleFormatting.FontSize = table.TableSetting.SettingText.FontSize;
             titleFormatting.FontName = table.TableSetting.SettingText.FontName;
@@ -99,39 +94,38 @@ namespace Export.ModelsExport
             titleFormatting.Bold = table.TableSetting.SettingText.Bold;
             titleFormatting.Italic = table.TableSetting.SettingText.Italic;
 
-            #endregion
+            ParagraphProperties paragraphProperties = _richServer.Document.BeginUpdateParagraphs(tablePdf.Range);
 
+            paragraphProperties.Alignment = table.TableSetting.SettingText.TextAligment.Equals(Aligment.Center) ? ParagraphAlignment.Center
+                : table.TableSetting.SettingText.TextAligment.Equals(Aligment.Left) ? ParagraphAlignment.Left
+                : table.TableSetting.SettingText.TextAligment.Equals(Aligment.Right) ? ParagraphAlignment.Right
+                : ParagraphAlignment.Justify;
+
+            _richServer.Document.EndUpdateParagraphs(paragraphProperties);
             _richServer.Document.EndUpdateCharacters(titleFormatting);
+            _richServer.Document.EndUpdateParagraphs(paragraphProp);
 
             tablePdf.BeginUpdate();
 
-            #region Настройки таблицы
+            tablePdf.TableAlignment = TableRowAlignment.Center;
+            tablePdf.HorizontalAlignment = TableHorizontalAlignment.Center;
+            tablePdf.VerticalAlignment = TableVerticalAlignment.Center;
 
-            TableStyle tStyleMain = _richServer.Document.TableStyles.CreateNew();
+            tablePdf.Borders.InsideHorizontalBorder.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderInsideSetting.BorderLineStyle;
+            tablePdf.Borders.InsideHorizontalBorder.LineThickness = table.TableSetting.TableBorderInsideSetting.LineThickness;
+            tablePdf.Borders.InsideVerticalBorder.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderInsideSetting.BorderLineStyle;
+            tablePdf.Borders.InsideVerticalBorder.LineThickness = table.TableSetting.TableBorderInsideSetting.LineThickness;
 
-            //tStyleMain.Alignment = (ParagraphAlignment)table.TableSetting.TableAligment.ParagraphAlignment;
+            tablePdf.Borders.Left.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderSetting.BorderLineStyle;
+            tablePdf.Borders.Left.LineThickness = table.TableSetting.TableBorderSetting.LineThickness;
+            tablePdf.Borders.Right.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderSetting.BorderLineStyle;
+            tablePdf.Borders.Right.LineThickness = table.TableSetting.TableBorderSetting.LineThickness;
+            tablePdf.Borders.Top.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderSetting.BorderLineStyle;
+            tablePdf.Borders.Top.LineThickness = table.TableSetting.TableBorderSetting.LineThickness;
+            tablePdf.Borders.Bottom.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderSetting.BorderLineStyle;
+            tablePdf.Borders.Bottom.LineThickness = table.TableSetting.TableBorderSetting.LineThickness;
 
-            tStyleMain.TableBorders.InsideHorizontalBorder.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderInsideSetting.BorderLineStyle;
-            tStyleMain.TableBorders.InsideHorizontalBorder.LineThickness = table.TableSetting.TableBorderInsideSetting.LineThickness;
-            tStyleMain.TableBorders.InsideVerticalBorder.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderInsideSetting.BorderLineStyle;
-            tStyleMain.TableBorders.InsideVerticalBorder.LineThickness = table.TableSetting.TableBorderInsideSetting.LineThickness;
-
-            tStyleMain.TableBorders.Left.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderSetting.BorderLineStyle;
-            tStyleMain.TableBorders.Left.LineThickness = table.TableSetting.TableBorderSetting.LineThickness;
-            tStyleMain.TableBorders.Right.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderSetting.BorderLineStyle;
-            tStyleMain.TableBorders.Right.LineThickness = table.TableSetting.TableBorderSetting.LineThickness;
-            tStyleMain.TableBorders.Top.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderSetting.BorderLineStyle;
-            tStyleMain.TableBorders.Top.LineThickness = table.TableSetting.TableBorderSetting.LineThickness;
-            tStyleMain.TableBorders.Bottom.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderSetting.BorderLineStyle;
-            tStyleMain.TableBorders.Bottom.LineThickness = table.TableSetting.TableBorderSetting.LineThickness;
-
-            _richServer.Document.TableStyles.Add(tStyleMain);
-
-            tablePdf.Style = tStyleMain;
-
-            tablePdf.Rows[0].RepeatAsHeaderRow = table.TableSetting.RepeatHeaderEveryPage;
-
-            #endregion
+            _richServer.Document.EndUpdate();
 
             #region Заполнение таблицы
 
@@ -148,13 +142,7 @@ namespace Export.ModelsExport
                 }
             }
 
-            tablePdf.EndUpdate();
-
             #endregion
-
-            _richServer.Document.EndUpdateParagraphs(paragraph);
-
-            _richServer.Document.EndUpdate();
         }
 
         public void AddText(Text text)
@@ -172,7 +160,7 @@ namespace Export.ModelsExport
 
             DocumentRange rangeText = _richServer.Document.InsertText(range.Range.End, text.Letter);
 
-            CharacterProperties titleFormatting = _richServer.Document.BeginUpdateCharacters(range.Range);
+            CharacterProperties titleFormatting = _richServer.Document.BeginUpdateCharacters(rangeText);
 
             titleFormatting.FontSize = text.SettingText.FontSize;
             titleFormatting.FontName = text.SettingText.FontName;
@@ -180,7 +168,7 @@ namespace Export.ModelsExport
             titleFormatting.Bold = text.SettingText.Bold;
             titleFormatting.Italic = text.SettingText.Italic;
 
-            ParagraphProperties paragraphProperties = _richServer.Document.BeginUpdateParagraphs(range.Range);
+            ParagraphProperties paragraphProperties = _richServer.Document.BeginUpdateParagraphs(rangeText);
 
             paragraphProperties.Alignment = text.SettingText.TextAligment.Equals(Aligment.Center) ? ParagraphAlignment.Center
                 : text.SettingText.TextAligment.Equals(Aligment.Left) ? ParagraphAlignment.Left
@@ -188,7 +176,6 @@ namespace Export.ModelsExport
                 : ParagraphAlignment.Justify;
 
             _richServer.Document.EndUpdateParagraphs(paragraphProperties);
-
             _richServer.Document.EndUpdateCharacters(titleFormatting);
 
             #region Добавление ссылки на указанный текст
@@ -245,6 +232,7 @@ namespace Export.ModelsExport
         public void GetCallSequenceMethods(IEnumerable<Action> actions)
         {
             actions = actions
+                //.Append(AddPageNumber)
                 .Append(AddTOC);
 
             foreach (var action in actions)
@@ -258,54 +246,31 @@ namespace Export.ModelsExport
         /// </summary>
         private void AddTOC()
         {
-            #region WOOOOORK
+            if (_isTableContent)
+            {
+                _richServer.Document.BeginUpdate();
 
-            //Document doc = _richServer.Document;
+                _richServer.Document.Fields.Create(_richServer.Document.Sections[0].Range.Start, @"TOC \h \u");
 
-            //var contentSection = doc.Sections[0];
-            //var lastSection = doc.Sections[^1];
+                _richServer.Document.EndUpdate();
+                _richServer.Document.Fields.Update();
 
-            //Document document = _richServer.Document;
+                //_richServer.Document.UpdateAllFields();
+            }
+        }
 
-            //document.BeginUpdate();
+        private void AddPageNumber()
+        {
+            //_richServer.Document.Sections[1].PageNumbering.FirstPageNumber = 3;
+            //_richServer.Document.Sections[1].PageNumbering.ContinueNumbering = true;
 
-            //bool header = false;
+            //var footer = _richServer.Document.Sections[1].BeginUpdateFooter();
 
-            //for (int i = 0; i < 10; i++)
-            //{
-            //    if (i % 2 == 0)
-            //        header = true;
-            //    else
-            //        header = false;
+            //footer.Fields.Create(footer.Range.End, "PAGE");
 
-            //    Paragraph paragraph = document.Paragraphs.Insert(lastSection.Range.Start);
+            //_richServer.Document.Sections[1].EndUpdateFooter(footer);
 
-            //    if (header)
-            //        paragraph.OutlineLevel = 2;
-            //    else
-            //        paragraph.OutlineLevel = 0;
-
-            //    document.InsertText(paragraph.Range.End, $"Title {i + 1}");
-
-            //    //Paragraph range = document.Paragraphs.Insert(lastSection.Range.End);
-            //    //document.InsertText(range.Range.Start, "The first created table of content");
-            //}
-            //document.Fields.Create(contentSection.Range.Start, @"TOC \h \u");
-
-            //Paragraph paragraph2 = document.Paragraphs.Insert(lastSection.Range.Start);
-            //document.InsertText(paragraph2.Range.Start, "The first created table of content");
-
-            //document.EndUpdate();
-            //document.Fields.Update();
-
-            #endregion
-
-            _richServer.Document.BeginUpdate();
-
-            _richServer.Document.Fields.Create(_richServer.Document.Sections[0].Range.Start, @"TOC \h \u");
-
-            _richServer.Document.EndUpdate();
-            _richServer.Document.Fields.Update();
+            //_richServer.Document.UpdateAllFields();
         }
     }
 }

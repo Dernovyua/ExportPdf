@@ -81,7 +81,7 @@ namespace Export.Models
 
     public class TableBorderSetting
     {
-        public BorderLineStyle BorderLineStyle { get; set; }
+        public BorderLineStyle BorderLineStyle { get; set; } = BorderLineStyle.Single;
         public float LineThickness { get; set; } = 0.0f;
     }
 
