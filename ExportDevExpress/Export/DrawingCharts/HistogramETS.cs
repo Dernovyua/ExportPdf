@@ -12,7 +12,7 @@ namespace Export.DrawingCharts
         public Bitmap _bmp { get; private set; }
         public List<float> _chartData;
         Graphics _g;
-        float _kBorder = 0.05f;
+        float _kBorder = 0.075f;
         float _border = 0;
         float _wChart = 0;
         float _hChart = 0;
@@ -39,7 +39,6 @@ namespace Export.DrawingCharts
             {
                 _chartData.Add(x * _hChart);
             }
-            //_step = (int)( Math.Floor( _wChart / _chartData.Count ));
             _step = _wChart / _chartData.Count;
             _barDelta = _step * 0.2f;
 
@@ -93,6 +92,20 @@ namespace Export.DrawingCharts
                 yOriginal += 0.25f;
                 y = _bmp.Height - (float)(_border + yOriginal * _hChart);
             }
+            // Подпись горизонтальной оси
+            Font fontSigne = new Font("Arial", 8, FontStyle.Regular);
+            SizeF size = _g.MeasureString(_chartSet.xText, fontSigne);
+            x = _bmp.Width / 2 - size.Width / 2;
+            y = _bmp.Height - (size.Height + 10f);
+            _g.DrawString(_chartSet.xText, fontSigne, new SolidBrush(Color.Black), x, y);
+            // Подпись вертикальной оси
+            size = _g.MeasureString(_chartSet.yText, fontSigne);
+            x = 3f;
+            y = _bmp.Height / 2 + size.Width / 2;
+            _g.TranslateTransform(x, y);
+            _g.RotateTransform(-90f);
+            _g.DrawString(_chartSet.yText, fontSigne, new SolidBrush(Color.Black), 0, 0);
+            // Восстанавливаем матрицу
             _g.Transform = m;
         }
 
@@ -115,28 +128,23 @@ namespace Export.DrawingCharts
                 x += _step;
             }
         }
-
-        public void SavePNG(string fname)
-        {
-            _bmp.Save(fname, ImageFormat.Png);
-        }
     }
 
     public class HistrogramEtsSettings
     {
         public int _mapW = 700;
         public int _mapH = 350;
-        public List<double> _data;
+        public List<Double> _data;
         public int _markerStart = 0;
         public int _markerCount = 0;
         public Color _chartColor = Color.Blue;
         public Color _markerColor = Color.Red;
-        public string xText = "";
-        public string yText = "";
+        public string xText = "Индекс прохода в текущем цикле";
+        public string yText = "Индекс прохода в текущем цикле";
 
         public HistrogramEtsSettings()
         {
-            _data = new List<double>();
+            _data = new List<Double>();
             _chartColor = Color.Blue;
             _markerColor = Color.Red;
         }

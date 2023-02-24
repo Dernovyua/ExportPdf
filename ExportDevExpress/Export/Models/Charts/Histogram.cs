@@ -21,7 +21,9 @@ namespace Export.Models.Charts
             {
                 _data = histrogramData,
                 _markerCount = markerCount,
-                _markerStart = markerStart
+                _markerStart = markerStart,
+                //xText = "Индекс прохода в текущем цикле",
+                //yText = "Индекс прохода в текущем цикле"
             });
         }
 
@@ -38,8 +40,8 @@ namespace Export.Models.Charts
                 _mapH = settingChart.Height,
                 _mapW = settingChart.Width,
 
-                xText = settingChart.SignatureX,
-                yText = settingChart.SignatureY,
+                //xText = settingChart.SignatureX,
+                //yText = settingChart.SignatureY,
 
                 _chartColor = settingChart.ChartColor,
 

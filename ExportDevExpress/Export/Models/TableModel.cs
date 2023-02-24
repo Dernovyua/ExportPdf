@@ -68,12 +68,12 @@ namespace Export.Models
             SettingText = new SettingText();
             TableBorderSetting = new TableBorderSetting()
             {
-                BorderLineStyle = BorderLineStyle.Single,
+                BorderLineStyle = SettingBorderLineStyle.Single,
                 LineThickness = 1.0f
             };
             TableBorderInsideSetting = new TableBorderInsideSetting()
             {
-                BorderLineStyle= BorderLineStyle.Single,
+                BorderLineStyle= SettingBorderLineStyle.Single,
                 LineThickness = 1.0f
             };
         }
@@ -81,7 +81,7 @@ namespace Export.Models
 
     public class TableBorderSetting
     {
-        public BorderLineStyle BorderLineStyle { get; set; } = BorderLineStyle.Single;
+        public SettingBorderLineStyle BorderLineStyle { get; set; } = SettingBorderLineStyle.Single;
         public float LineThickness { get; set; } = 0.0f;
     }
 

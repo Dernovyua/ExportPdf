@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Export.Models;
 using DevExpress.XtraPrinting;
 using System.Drawing;
+using Export.Enums;
 
 namespace Export.ModelsExport
 {
@@ -68,6 +69,29 @@ namespace Export.ModelsExport
             _workbook.BeginUpdate();
             _worksheet = _workbook.Worksheets[^1];
 
+            BorderLineStyle borderLineStyle = table.TableSetting.TableBorderInsideSetting.BorderLineStyle.Equals(SettingBorderLineStyle.Dotted)
+                ? BorderLineStyle.Dotted : table.TableSetting.TableBorderInsideSetting.BorderLineStyle.Equals(SettingBorderLineStyle.Double)
+                ? BorderLineStyle.Double : table.TableSetting.TableBorderInsideSetting.BorderLineStyle.Equals(SettingBorderLineStyle.Thick)
+                ? BorderLineStyle.Thick : table.TableSetting.TableBorderInsideSetting.BorderLineStyle.Equals(SettingBorderLineStyle.DotDash)
+                ? BorderLineStyle.DashDot : table.TableSetting.TableBorderInsideSetting.BorderLineStyle.Equals(SettingBorderLineStyle.Dashed)
+                ? BorderLineStyle.Dashed : table.TableSetting.TableBorderInsideSetting.BorderLineStyle.Equals(SettingBorderLineStyle.DotDotDash)
+                ? BorderLineStyle.DashDotDot : table.TableSetting.TableBorderInsideSetting.BorderLineStyle.Equals(SettingBorderLineStyle.Single)
+                ? BorderLineStyle.Thin : BorderLineStyle.None;
+
+            BorderLineStyle borderLineStyle2 = table.TableSetting.TableBorderSetting.BorderLineStyle.Equals(SettingBorderLineStyle.Dotted)
+               ? BorderLineStyle.Dotted : table.TableSetting.TableBorderSetting.BorderLineStyle.Equals(SettingBorderLineStyle.Double)
+               ? BorderLineStyle.Double : table.TableSetting.TableBorderSetting.BorderLineStyle.Equals(SettingBorderLineStyle.Thick)
+               ? BorderLineStyle.Thick : table.TableSetting.TableBorderSetting.BorderLineStyle.Equals(SettingBorderLineStyle.DotDash)
+               ? BorderLineStyle.DashDot : table.TableSetting.TableBorderSetting.BorderLineStyle.Equals(SettingBorderLineStyle.Dashed)
+               ? BorderLineStyle.Dashed : table.TableSetting.TableBorderSetting.BorderLineStyle.Equals(SettingBorderLineStyle.DotDotDash)
+               ? BorderLineStyle.DashDotDot : table.TableSetting.TableBorderSetting.BorderLineStyle.Equals(SettingBorderLineStyle.Single)
+               ? BorderLineStyle.Thin : BorderLineStyle.None;
+
+            SpreadsheetHorizontalAlignment spreadsheetHorizontal = table.TableSetting.SettingText.TextAligment.Equals(Aligment.Center)
+                ? SpreadsheetHorizontalAlignment.Center : table.TableSetting.SettingText.TextAligment.Equals(Aligment.Left)
+                ? SpreadsheetHorizontalAlignment.Left : table.TableSetting.SettingText.TextAligment.Equals(Aligment.Right)
+                ? SpreadsheetHorizontalAlignment.Right : SpreadsheetHorizontalAlignment.Justify;
+
             #region Заполнение заголовков таблицы
 
             for (int i = 0; i < table.HeaderTable.Headers.Count; i++)
@@ -76,12 +100,20 @@ namespace Export.ModelsExport
 
                 #region Настройка ячеек заголовков
 
-                _worksheet.Cells[rowIndex, i].Alignment.Horizontal = SpreadsheetHorizontalAlignment.Center;
+                _worksheet.Cells[rowIndex, i].Alignment.Horizontal = spreadsheetHorizontal;
                 _worksheet.Cells[rowIndex, i].Alignment.Vertical = SpreadsheetVerticalAlignment.Center;
 
                 _worksheet.Cells[rowIndex, i].Fill.BackgroundColor = Color.FromArgb(64, 66, 166);
                 _worksheet.Cells[rowIndex, i].Font.Color = Color.White;
                 _worksheet.Cells[rowIndex, i].Font.Bold = true;
+                //_worksheet.Cells[rowIndex, i].Font.Size = Convert.ToDouble(table.TableSetting.SettingText.FontSize);
+
+                _worksheet.Cells[rowIndex, i].Borders.InsideHorizontalBorders.LineStyle = borderLineStyle;
+                _worksheet.Cells[rowIndex, i].Borders.InsideVerticalBorders.LineStyle = borderLineStyle;
+                _worksheet.Cells[rowIndex, i].Borders.TopBorder.LineStyle = borderLineStyle2;
+                _worksheet.Cells[rowIndex, i].Borders.LeftBorder.LineStyle = borderLineStyle2;
+                _worksheet.Cells[rowIndex, i].Borders.RightBorder.LineStyle = borderLineStyle2;
+                _worksheet.Cells[rowIndex, i].Borders.BottomBorder.LineStyle = borderLineStyle2;
 
                 #endregion
             }
@@ -98,8 +130,17 @@ namespace Export.ModelsExport
 
                     #region Настройка ячеек
 
-                    _worksheet.Cells[rowIndex + i + 1, j].Alignment.Horizontal = SpreadsheetHorizontalAlignment.Center;
+                    _worksheet.Cells[rowIndex + i + 1, j].Alignment.Horizontal = spreadsheetHorizontal;
                     _worksheet.Cells[rowIndex + i + 1, j].Alignment.Vertical = SpreadsheetVerticalAlignment.Center;
+                    //_worksheet.Cells[rowIndex + i + 1, j].Font.Size = Convert.ToDouble(table.TableSetting.SettingText.FontSize);
+
+                    _worksheet.Cells[rowIndex + i + 1, j].Borders.InsideVerticalBorders.LineStyle = borderLineStyle;
+                    _worksheet.Cells[rowIndex + i + 1, j].Borders.InsideHorizontalBorders.LineStyle = borderLineStyle;
+
+                    _worksheet.Cells[rowIndex + i + 1, j].Borders.TopBorder.LineStyle = borderLineStyle2;
+                    _worksheet.Cells[rowIndex + i + 1, j].Borders.RightBorder.LineStyle = borderLineStyle2;
+                    _worksheet.Cells[rowIndex + i + 1, j].Borders.BottomBorder.LineStyle = borderLineStyle2;
+                    _worksheet.Cells[rowIndex + i + 1, j].Borders.LeftBorder.LineStyle = borderLineStyle2;
 
                     if ((i + 1) % 2 == 0)
                     {
