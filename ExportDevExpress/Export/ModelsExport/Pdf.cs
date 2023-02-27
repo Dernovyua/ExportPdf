@@ -159,7 +159,8 @@ namespace Export.ModelsExport
 
                     _richServer.Document.EndUpdateCharacters(titleFormatting2);
 
-                    if ((i + 1) % table.TableSetting.BodySetting.ColorRow.ColorEveryRow == 0)
+                    if (table.TableSetting.BodySetting.ColorRow.ColorEveryRow > 0
+                        && (i + 1) % table.TableSetting.BodySetting.ColorRow.ColorEveryRow == 0)
                     {
                         tablePdf[i + 1, j].BackgroundColor = table.TableSetting.BodySetting.ColorRow.BackGroundColor;
                     }
