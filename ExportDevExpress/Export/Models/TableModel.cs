@@ -1,10 +1,11 @@
 ﻿using Export.Enums;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace Export.Models
 {
     /// <summary>
-    /// Модель таблицы, состощая из настроек/заголовков/данных таблицы
+    /// Модель таблицы, состоящая из настроек/заголовков/данных таблицы
     /// </summary>
     public class TableModel
     {
@@ -41,11 +42,15 @@ namespace Export.Models
     public class TableSetting
     {
         /// <summary>
-        /// Настройки текста (шрифт, размер, цвет и т.п)
+        /// Настройки заголовков
         /// </summary>
-        public SettingText SettingText { get; set; }
+        public HeaderSetting HeaderSetting { get; set; }
 
         /// <summary>
+        /// Настройки таблицы
+        /// </summary>
+        public BodySetting BodySetting { get; set; }
+
         /// Настройка внешних границ таблицы
         /// </summary>
         public TableBorderSetting TableBorderSetting { get; set; }
@@ -53,40 +58,72 @@ namespace Export.Models
         /// <summary>
         /// Настройка внутренних границ таблицы
         /// </summary>
-        public TableBorderInsideSetting TableBorderInsideSetting { get; set; } 
-
-        /// <summary>
-        /// На каждой новой странице вначале таблицы будут отображаться названия заголовков
-        /// </summary>
-        public bool RepeatHeaderEveryPage { get; set; } = true;
+        public TableBorderInsideSetting TableBorderInsideSetting { get; set; }
 
         /// <summary>
         /// Настройки по умолчанию
         /// </summary>
         public TableSetting()
         {
-            SettingText = new SettingText();
-            TableBorderSetting = new TableBorderSetting()
-            {
-                BorderLineStyle = SettingBorderLineStyle.Single,
-                LineThickness = 1.0f
-            };
-            TableBorderInsideSetting = new TableBorderInsideSetting()
-            {
-                BorderLineStyle= SettingBorderLineStyle.Single,
-                LineThickness = 1.0f
-            };
+            HeaderSetting = new HeaderSetting();
+            BodySetting = new BodySetting();
+            TableBorderSetting = new TableBorderSetting() { BorderLineStyle = SettingBorderLineStyle.None };
+            TableBorderInsideSetting = new TableBorderInsideSetting() { BorderLineStyle = SettingBorderLineStyle.None };
         }
     }
 
     public class TableBorderSetting
     {
-        public SettingBorderLineStyle BorderLineStyle { get; set; } = SettingBorderLineStyle.Single;
-        public float LineThickness { get; set; } = 0.0f;
+        public SettingBorderLineStyle BorderLineStyle { get; set; }
+        public float LineThickness { get; set; } = 1.0f;
     }
 
     public class TableBorderInsideSetting : TableBorderSetting
     {
 
+    }
+
+    public class HeaderSetting
+    {
+        public SettingText SettingText { get; set; }
+        public Color BackGroundColor { get; set; }
+
+        /// <summary>
+        /// На каждой новой странице вначале таблицы будут отображаться названия заголовков
+        /// </summary>
+        public bool RepeatHeaderEveryPage { get; set; }
+
+        /// <summary>
+        /// Создаются настройки по умолчанию
+        /// </summary>
+        public HeaderSetting()
+        {
+            SettingText = new SettingText() { Bold = true, Color = Color.White, TextAligment = Aligment.Center };
+
+            BackGroundColor = Color.FromArgb(64, 66, 166);
+            RepeatHeaderEveryPage = true;
+        }
+    }
+
+    public class BodySetting
+    {
+        public SettingText SettingText { get; set; }
+        public ColorRow ColorRow { get; set; }
+
+        public BodySetting()
+        {
+            SettingText = new SettingText() { Bold = false, Color = Color.Black, TextAligment = Aligment.Center };
+            ColorRow = new ColorRow() { BackGroundColor = Color.FromArgb(220, 230, 242), ColorEveryRow = 2 };
+        }
+    }
+
+    public class ColorRow
+    {
+        /// <summary>
+        /// Подкрашивание каждой n строки в таблице (По умолчанию, каждая вторая строка)
+        /// </summary>
+        public ushort ColorEveryRow { get; set; }
+
+        public Color BackGroundColor { get; set; }
     }
 }

@@ -87,10 +87,15 @@ namespace Export.ModelsExport
                ? BorderLineStyle.DashDotDot : table.TableSetting.TableBorderSetting.BorderLineStyle.Equals(SettingBorderLineStyle.Single)
                ? BorderLineStyle.Thin : BorderLineStyle.None;
 
-            SpreadsheetHorizontalAlignment spreadsheetHorizontal = table.TableSetting.SettingText.TextAligment.Equals(Aligment.Center)
-                ? SpreadsheetHorizontalAlignment.Center : table.TableSetting.SettingText.TextAligment.Equals(Aligment.Left)
-                ? SpreadsheetHorizontalAlignment.Left : table.TableSetting.SettingText.TextAligment.Equals(Aligment.Right)
+            SpreadsheetHorizontalAlignment spreadsheetHeaderHorizontal = table.TableSetting.HeaderSetting.SettingText.TextAligment.Equals(Aligment.Center)
+                ? SpreadsheetHorizontalAlignment.Center : table.TableSetting.HeaderSetting.SettingText.TextAligment.Equals(Aligment.Left)
+                ? SpreadsheetHorizontalAlignment.Left : table.TableSetting.HeaderSetting.SettingText.TextAligment.Equals(Aligment.Right)
                 ? SpreadsheetHorizontalAlignment.Right : SpreadsheetHorizontalAlignment.Justify;
+
+            SpreadsheetHorizontalAlignment spreadsheetBodyHorizontal = table.TableSetting.BodySetting.SettingText.TextAligment.Equals(Aligment.Center)
+               ? SpreadsheetHorizontalAlignment.Center : table.TableSetting.BodySetting.SettingText.TextAligment.Equals(Aligment.Left)
+               ? SpreadsheetHorizontalAlignment.Left : table.TableSetting.BodySetting.SettingText.TextAligment.Equals(Aligment.Right)
+               ? SpreadsheetHorizontalAlignment.Right : SpreadsheetHorizontalAlignment.Justify;
 
             #region Заполнение заголовков таблицы
 
@@ -100,13 +105,17 @@ namespace Export.ModelsExport
 
                 #region Настройка ячеек заголовков
 
-                _worksheet.Cells[rowIndex, i].Alignment.Horizontal = spreadsheetHorizontal;
+                _worksheet.Cells[rowIndex, i].Alignment.Horizontal = spreadsheetHeaderHorizontal;
                 _worksheet.Cells[rowIndex, i].Alignment.Vertical = SpreadsheetVerticalAlignment.Center;
 
-                _worksheet.Cells[rowIndex, i].Fill.BackgroundColor = Color.FromArgb(64, 66, 166);
-                _worksheet.Cells[rowIndex, i].Font.Color = Color.White;
-                _worksheet.Cells[rowIndex, i].Font.Bold = true;
-                //_worksheet.Cells[rowIndex, i].Font.Size = Convert.ToDouble(table.TableSetting.SettingText.FontSize);
+                _worksheet.Cells[rowIndex, i].Fill.BackgroundColor = table.TableSetting.HeaderSetting.BackGroundColor;
+                _worksheet.Cells[rowIndex, i].Font.Color = table.TableSetting.HeaderSetting.SettingText.Color;
+                _worksheet.Cells[rowIndex, i].Font.Bold = table.TableSetting.HeaderSetting.SettingText.Bold;
+                _worksheet.Cells[rowIndex, i].Font.Italic = table.TableSetting.HeaderSetting.SettingText.Italic;
+                _worksheet.Cells[rowIndex, i].Font.Size = Convert.ToDouble(table.TableSetting.HeaderSetting.SettingText.FontSize);
+
+                if (!string.IsNullOrEmpty(table.TableSetting.HeaderSetting.SettingText.FontName))
+                    _worksheet.Cells[rowIndex, i].Font.Name = table.TableSetting.HeaderSetting.SettingText.FontName;
 
                 _worksheet.Cells[rowIndex, i].Borders.InsideHorizontalBorders.LineStyle = borderLineStyle;
                 _worksheet.Cells[rowIndex, i].Borders.InsideVerticalBorders.LineStyle = borderLineStyle;
@@ -130,9 +139,15 @@ namespace Export.ModelsExport
 
                     #region Настройка ячеек
 
-                    _worksheet.Cells[rowIndex + i + 1, j].Alignment.Horizontal = spreadsheetHorizontal;
+                    _worksheet.Cells[rowIndex + i + 1, j].Alignment.Horizontal = spreadsheetBodyHorizontal;
                     _worksheet.Cells[rowIndex + i + 1, j].Alignment.Vertical = SpreadsheetVerticalAlignment.Center;
-                    //_worksheet.Cells[rowIndex + i + 1, j].Font.Size = Convert.ToDouble(table.TableSetting.SettingText.FontSize);
+
+                    if (!string.IsNullOrEmpty(table.TableSetting.BodySetting.SettingText.FontName))
+                        _worksheet.Cells[rowIndex + i + 1, j].Font.Name = table.TableSetting.BodySetting.SettingText.FontName;
+
+                    _worksheet.Cells[rowIndex + i + 1, j].Font.Bold = table.TableSetting.BodySetting.SettingText.Bold;
+                    _worksheet.Cells[rowIndex + i + 1, j].Font.Italic = table.TableSetting.BodySetting.SettingText.Italic;
+                    _worksheet.Cells[rowIndex + i + 1, j].Font.Size = Convert.ToDouble(table.TableSetting.BodySetting.SettingText.FontSize);
 
                     _worksheet.Cells[rowIndex + i + 1, j].Borders.InsideVerticalBorders.LineStyle = borderLineStyle;
                     _worksheet.Cells[rowIndex + i + 1, j].Borders.InsideHorizontalBorders.LineStyle = borderLineStyle;
@@ -142,9 +157,10 @@ namespace Export.ModelsExport
                     _worksheet.Cells[rowIndex + i + 1, j].Borders.BottomBorder.LineStyle = borderLineStyle2;
                     _worksheet.Cells[rowIndex + i + 1, j].Borders.LeftBorder.LineStyle = borderLineStyle2;
 
-                    if ((i + 1) % 2 == 0)
+                    if (table.TableSetting.BodySetting.ColorRow.ColorEveryRow > 0 
+                        && (i + 1) % table.TableSetting.BodySetting.ColorRow.ColorEveryRow == 0)
                     {
-                        _worksheet.Cells[rowIndex + i + 1, j].Fill.BackgroundColor = Color.FromArgb(220, 230, 242);
+                        _worksheet.Cells[rowIndex + i + 1, j].Fill.BackgroundColor = table.TableSetting.BodySetting.ColorRow.BackGroundColor;
                     }
 
                     #endregion

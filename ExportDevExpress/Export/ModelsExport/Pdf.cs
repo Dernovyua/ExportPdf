@@ -82,34 +82,9 @@ namespace Export.ModelsExport
 
             var rangePar = _richServer.Document.Paragraphs.Append();
 
-            ParagraphProperties paragraphProp = _richServer.Document.BeginUpdateParagraphs(_richServer.Document.Paragraphs[^1].Range);
-
             Table tablePdf = _richServer.Document.Tables.Create(_richServer.Document.Paragraphs[^1].Range.Start, table.TableData.Count + 1, table.HeaderTable.Headers.Count, AutoFitBehaviorType.AutoFitToWindow);
 
-            CharacterProperties titleFormatting = _richServer.Document.BeginUpdateCharacters(tablePdf.Range);
-
-            titleFormatting.FontSize = table.TableSetting.SettingText.FontSize;
-            titleFormatting.FontName = table.TableSetting.SettingText.FontName;
-            titleFormatting.ForeColor = table.TableSetting.SettingText.Color;
-            titleFormatting.Bold = table.TableSetting.SettingText.Bold;
-            titleFormatting.Italic = table.TableSetting.SettingText.Italic;
-
-            ParagraphProperties paragraphProperties = _richServer.Document.BeginUpdateParagraphs(tablePdf.Range);
-
-            paragraphProperties.Alignment = table.TableSetting.SettingText.TextAligment.Equals(Aligment.Center) ? ParagraphAlignment.Center
-                : table.TableSetting.SettingText.TextAligment.Equals(Aligment.Left) ? ParagraphAlignment.Left
-                : table.TableSetting.SettingText.TextAligment.Equals(Aligment.Right) ? ParagraphAlignment.Right
-                : ParagraphAlignment.Justify;
-
-            _richServer.Document.EndUpdateParagraphs(paragraphProperties);
-            _richServer.Document.EndUpdateCharacters(titleFormatting);
-            _richServer.Document.EndUpdateParagraphs(paragraphProp);
-
             tablePdf.BeginUpdate();
-
-            tablePdf.TableAlignment = TableRowAlignment.Center;
-            tablePdf.HorizontalAlignment = TableHorizontalAlignment.Center;
-            tablePdf.VerticalAlignment = TableVerticalAlignment.Center;
 
             tablePdf.Borders.InsideHorizontalBorder.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderInsideSetting.BorderLineStyle;
             tablePdf.Borders.InsideHorizontalBorder.LineThickness = table.TableSetting.TableBorderInsideSetting.LineThickness;
@@ -125,22 +100,74 @@ namespace Export.ModelsExport
             tablePdf.Borders.Bottom.LineStyle = (TableBorderLineStyle)table.TableSetting.TableBorderSetting.BorderLineStyle;
             tablePdf.Borders.Bottom.LineThickness = table.TableSetting.TableBorderSetting.LineThickness;
 
+            tablePdf.FirstRow.RepeatAsHeaderRow = table.TableSetting.HeaderSetting.RepeatHeaderEveryPage;
+
             _richServer.Document.EndUpdate();
 
             #region Заполнение таблицы
 
-            table.HeaderTable.Headers.ForEach((headreName, i) =>
+            ParagraphProperties paragraphHeaderProperties = _richServer.Document.BeginUpdateParagraphs(tablePdf.FirstRow.Range);
+
+            paragraphHeaderProperties.Alignment = table.TableSetting.HeaderSetting.SettingText.TextAligment.Equals(Aligment.Center) ? ParagraphAlignment.Center
+                : table.TableSetting.HeaderSetting.SettingText.TextAligment.Equals(Aligment.Left) ? ParagraphAlignment.Left
+                : table.TableSetting.HeaderSetting.SettingText.TextAligment.Equals(Aligment.Right) ? ParagraphAlignment.Right
+                : ParagraphAlignment.Justify;
+
+            table.HeaderTable.Headers.ForEach((headerName, i) =>
             {
-                _richServer.Document.InsertText(tablePdf[0, i].Range.Start, headreName);
+                DocumentRange insertedText = _richServer.Document.InsertText(tablePdf[0, i].Range.Start, headerName);
+
+                tablePdf[0, i].BackgroundColor = table.TableSetting.HeaderSetting.BackGroundColor;
+
+                CharacterProperties titleFormatting2 = _richServer.Document.BeginUpdateCharacters(insertedText);
+
+                titleFormatting2.Bold = table.TableSetting.HeaderSetting.SettingText.Bold;
+                titleFormatting2.Italic = table.TableSetting.HeaderSetting.SettingText.Italic;
+                titleFormatting2.ForeColor = table.TableSetting.HeaderSetting.SettingText.Color;
+                titleFormatting2.FontSize = table.TableSetting.HeaderSetting.SettingText.FontSize;
+
+                if (!string.IsNullOrEmpty(table.TableSetting.HeaderSetting.SettingText.FontName))
+                    titleFormatting2.FontName = table.TableSetting.HeaderSetting.SettingText.FontName;
+
+                _richServer.Document.EndUpdateCharacters(titleFormatting2);
             });
+
+            _richServer.Document.EndUpdateParagraphs(paragraphHeaderProperties);
 
             for (int i = 0; i < table.TableData.Count; i++)
             {
                 for (int j = 0; j < table.HeaderTable.Headers.Count; j++)
                 {
-                    _richServer.Document.InsertText(tablePdf[i + 1, j].Range.Start, table.TableData[i][j].ToString());
+                    ParagraphProperties paragraphBodyProperties = _richServer.Document.BeginUpdateParagraphs(tablePdf[i + 1, j].Range);
+
+                    paragraphBodyProperties.Alignment = table.TableSetting.BodySetting.SettingText.TextAligment.Equals(Aligment.Center) ? ParagraphAlignment.Center
+                        : table.TableSetting.BodySetting.SettingText.TextAligment.Equals(Aligment.Left) ? ParagraphAlignment.Left
+                        : table.TableSetting.BodySetting.SettingText.TextAligment.Equals(Aligment.Right) ? ParagraphAlignment.Right
+                        : ParagraphAlignment.Justify;
+
+                    DocumentRange insertedText = _richServer.Document.InsertText(tablePdf[i + 1, j].Range.Start, table.TableData[i][j].ToString());
+
+                    CharacterProperties titleFormatting2 = _richServer.Document.BeginUpdateCharacters(insertedText);
+
+                    titleFormatting2.Bold = table.TableSetting.BodySetting.SettingText.Bold;
+                    titleFormatting2.Italic = table.TableSetting.BodySetting.SettingText.Italic;
+                    titleFormatting2.ForeColor = table.TableSetting.BodySetting.SettingText.Color;
+                    titleFormatting2.FontSize = table.TableSetting.BodySetting.SettingText.FontSize;
+
+                    if (!string.IsNullOrEmpty(table.TableSetting.BodySetting.SettingText.FontName))
+                        titleFormatting2.FontName = table.TableSetting.BodySetting.SettingText.FontName;
+
+                    _richServer.Document.EndUpdateCharacters(titleFormatting2);
+
+                    if ((i + 1) % table.TableSetting.BodySetting.ColorRow.ColorEveryRow == 0)
+                    {
+                        tablePdf[i + 1, j].BackgroundColor = table.TableSetting.BodySetting.ColorRow.BackGroundColor;
+                    }
+
+                    _richServer.Document.EndUpdateParagraphs(paragraphBodyProperties);
                 }
             }
+
 
             #endregion
         }

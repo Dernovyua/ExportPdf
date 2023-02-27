@@ -59,22 +59,22 @@ namespace Export.Models
         /// <summary>
         /// Жирный шрифт
         /// </summary>
-        public bool? Bold { get; set; } = false;
+        public bool Bold { get; set; } = false;
 
         /// <summary>
         /// Наклонный шрифт
         /// </summary>
-        public bool? Italic { get; set; } = false;
+        public bool Italic { get; set; } = false;
 
         /// <summary>
         /// Название шрифта
         /// </summary>
-        public string FontName { get; set; } = "Helvetica";
+        public string FontName { get; set; } = string.Empty;
 
         /// <summary>
         /// Размер шрифта
         /// </summary>
-        public float? FontSize { get; set; } = 14.0f;
+        public float? FontSize { get; set; } = 12.0f;
 
         /// <summary>
         /// Выравнивание текста

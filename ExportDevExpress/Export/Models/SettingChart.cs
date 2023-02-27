@@ -1,5 +1,4 @@
-﻿using Export.Enums;
-using System.Drawing;
+﻿using System.Drawing;
 
 namespace Export.Models
 {
