@@ -40,8 +40,12 @@ namespace Export.Models.Charts
                 _mapH = settingChart.Height,
                 _mapW = settingChart.Width,
 
-                //xText = settingChart.SignatureX,
-                //yText = settingChart.SignatureY,
+                xText = settingChart.SignatureX,
+                yText = settingChart.SignatureY,
+
+                FontName = settingChart.SettingText.FontName,
+                Color = settingChart.SettingText.Color,
+                FontSize = settingChart.SettingText.FontSize.GetValueOrDefault(),
 
                 _chartColor = settingChart.ChartColor,
 
@@ -53,9 +57,7 @@ namespace Export.Models.Charts
 
         public Image CreateChartImage()
         {
-            histogramETS.DrawChart();
-
-            return histogramETS._bmp;
+            return histogramETS.GetImage();
         }
     }
 }
