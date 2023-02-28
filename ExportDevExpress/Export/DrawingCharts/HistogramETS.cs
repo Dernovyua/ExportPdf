@@ -9,7 +9,7 @@ namespace Export.DrawingCharts
     public class HistogramETS
     {
         HistrogramEtsSettings _chartSet = null;
-        public Bitmap _bmp { get; private set; }
+        private Bitmap _bmp { get; set; }
         public List<float> _chartData;
         Graphics _g;
         float _kBorder = 0.075f;
@@ -46,7 +46,7 @@ namespace Export.DrawingCharts
                 _barDelta = 1;
         }
 
-        public void DrawAxis()
+        private void DrawAxis()
         {
             // рисуем Оси
             _g.DrawLine(new Pen(Color.Black, 2), _border, _border, _border, (float)_bmp.Height - _border / 2);
@@ -74,7 +74,7 @@ namespace Export.DrawingCharts
 
             Matrix m = _g.Transform;
             _g.Transform = _original;
-            Font font = new Font("Arial", 6, FontStyle.Regular);
+            Font font = new Font(_chartSet.FontName, _chartSet.FontSize, FontStyle.Regular);
 
             for (int i = 0; i < _chartData.Count; i += markerStep)
             {
@@ -93,23 +93,22 @@ namespace Export.DrawingCharts
                 y = _bmp.Height - (float)(_border + yOriginal * _hChart);
             }
             // Подпись горизонтальной оси
-            Font fontSigne = new Font("Arial", 8, FontStyle.Regular);
+            Font fontSigne = new Font(_chartSet.FontName, _chartSet.FontSize, FontStyle.Regular);
             SizeF size = _g.MeasureString(_chartSet.xText, fontSigne);
             x = _bmp.Width / 2 - size.Width / 2;
             y = _bmp.Height - (size.Height + 10f);
-            _g.DrawString(_chartSet.xText, fontSigne, new SolidBrush(Color.Black), x, y);
+            _g.DrawString(_chartSet.xText, fontSigne, new SolidBrush(_chartSet.Color), x, y);
             // Подпись вертикальной оси
             size = _g.MeasureString(_chartSet.yText, fontSigne);
             x = 3f;
             y = _bmp.Height / 2 + size.Width / 2;
             _g.TranslateTransform(x, y);
             _g.RotateTransform(-90f);
-            _g.DrawString(_chartSet.yText, fontSigne, new SolidBrush(Color.Black), 0, 0);
+            _g.DrawString(_chartSet.yText, fontSigne, new SolidBrush(_chartSet.Color), 0, 0);
             // Восстанавливаем матрицу
             _g.Transform = m;
         }
-
-        public void DrawChart()
+        private void DrawChart()
         {
             DrawAxis();
             float x = _border + 3f;
@@ -128,10 +127,21 @@ namespace Export.DrawingCharts
                 x += _step;
             }
         }
+
+        public Image GetImage()
+        {
+            DrawChart();
+
+            return _bmp;
+        }
     }
 
     public class HistrogramEtsSettings
     {
+        public string FontName { get; set; } = "Arial";
+        public float FontSize { get; set; } = 8;
+        public Color Color { get; set; } = Color.Black;
+
         public int _mapW = 700;
         public int _mapH = 350;
         public List<Double> _data;
