@@ -14,6 +14,7 @@ namespace Export.Models
         public string Letter { get; set; } = string.Empty;
 
         public bool IsHeader { get; set; } = false;
+        public int OutLineLevel { get; set; }
 
         /// <summary>
         /// Настройка текста
@@ -22,13 +23,14 @@ namespace Export.Models
 
         public HyperLink HyperLink { get; set; }
 
-        public Text(string letter, SettingText settingText, bool isHeader = false, HyperLink hyperLink = null)
+        public Text(string letter, SettingText settingText, bool isHeader = false, int outLineLevel = 1, HyperLink hyperLink = null)
         {
             Letter = letter;
             SettingText = settingText;
             HyperLink = hyperLink;
 
             IsHeader = isHeader;
+            OutLineLevel = outLineLevel;
         }
 
         public Text(string letter)
@@ -38,8 +40,7 @@ namespace Export.Models
             {
                 Bold = false,
                 Color = Color.Black,
-                FontName = "Helvetica",
-                FontSize = 14.0f,
+                FontSize = 12.0f,
                 Italic = false,
                 TextAligment = Aligment.Left
             };
@@ -98,7 +99,7 @@ namespace Export.Models
         public string LinkText { get; set; } = string.Empty;
 
         /// <summary>
-        /// Ссылка на файл (локальный путь или гипперсылка)
+        /// Ссылка на файл (локальный путь или гиперссылка)
         /// </summary>
         public string TargetLink { get; set; } = string.Empty;
 

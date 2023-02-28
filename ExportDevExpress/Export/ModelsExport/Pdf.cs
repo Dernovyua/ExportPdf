@@ -169,7 +169,6 @@ namespace Export.ModelsExport
                 }
             }
 
-
             #endregion
         }
 
@@ -182,7 +181,7 @@ namespace Export.ModelsExport
             Paragraph range = _richServer.Document.Paragraphs.Insert(_richServer.Document.Sections[^1].Range.End);
 
             if (text.IsHeader)
-                range.OutlineLevel = 2;
+                range.OutlineLevel = text.OutLineLevel;
             else
                 range.OutlineLevel = 0;
 
