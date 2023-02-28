@@ -35,12 +35,14 @@ namespace Export.Models
         /// </summary>
         public string SignatureX { get; set; } = string.Empty;
 
-        public Color ChartColor { get; set; } = Color.Blue;
+        public Color ChartColor { get; set; }
 
         public SettingChart()
         {
             SettingText = new SettingText();
             MarkerSetting = new MarkerSetting();
+
+            ChartColor = Color.Blue;
         }
     }
 
@@ -49,6 +51,11 @@ namespace Export.Models
         public int MarkerStart { get; set; } = 0;
         public int MarkerCount { get; set; } = 0;
 
-        public Color MarkerColor { get; set; } = Color.Red;
+        public Color MarkerColor { get; set; }
+
+        public MarkerSetting()
+        {
+            MarkerColor = Color.Red;
+        }
     }
 }
