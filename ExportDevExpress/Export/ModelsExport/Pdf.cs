@@ -38,7 +38,7 @@ namespace Export.ModelsExport
 
         private bool _isTableContent { get; set; }
 
-        public Pdf(string path, string nameFile, bool isTableContent = true)
+        public Pdf(string path, string nameFile, bool isTableContent = false)
         {
             _richServer = new RichEditDocumentServer();
             _richServer.Document.Sections[0].Page.PaperKind = PaperKind.A4;

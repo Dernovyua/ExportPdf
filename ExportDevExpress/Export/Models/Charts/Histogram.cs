@@ -15,17 +15,17 @@ namespace Export.Models.Charts
 
         private HistogramETS histogramETS { get; set; }
 
-        public Histogram(List<double> histrogramData, int markerStart, int markerCount)
-        {
-            histogramETS = new HistogramETS(new HistrogramEtsSettings()
-            {
-                _data = histrogramData,
-                _markerCount = markerCount,
-                _markerStart = markerStart,
-                //xText = "Индекс прохода в текущем цикле",
-                //yText = "Индекс прохода в текущем цикле"
-            });
-        }
+        //public Histogram(List<double> histrogramData, int markerStart, int markerCount)
+        //{
+        //    histogramETS = new HistogramETS(new HistrogramEtsSettings()
+        //    {
+        //        _data = histrogramData,
+        //        _markerCount = markerCount,
+        //        _markerStart = markerStart,
+        //        //xText = "Индекс прохода в текущем цикле",
+        //        //yText = "Индекс прохода в текущем цикле"
+        //    });
+        //}
 
         public Histogram(List<double> histrogramData, SettingChart settingChart)
         {

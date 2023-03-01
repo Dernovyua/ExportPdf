@@ -116,7 +116,7 @@ namespace Export.ModelsExport
 
                 if (!string.IsNullOrEmpty(table.TableSetting.HeaderSetting.SettingText.FontName))
                     _worksheet.Cells[rowIndex, i].Font.Name = table.TableSetting.HeaderSetting.SettingText.FontName;
-             
+
                 _worksheet.Cells[rowIndex, i].Borders.TopBorder.LineStyle = borderLineStyle2;
                 _worksheet.Cells[rowIndex, i].Borders.LeftBorder.LineStyle = borderLineStyle2;
                 _worksheet.Cells[rowIndex, i].Borders.RightBorder.LineStyle = borderLineStyle2;
@@ -149,7 +149,7 @@ namespace Export.ModelsExport
                     _worksheet.Cells[rowIndex + i + 1, j].Font.Bold = table.TableSetting.BodySetting.SettingText.Bold;
                     _worksheet.Cells[rowIndex + i + 1, j].Font.Italic = table.TableSetting.BodySetting.SettingText.Italic;
                     _worksheet.Cells[rowIndex + i + 1, j].Font.Size = Convert.ToDouble(table.TableSetting.BodySetting.SettingText.FontSize);
-                 
+
                     _worksheet.Cells[rowIndex + i + 1, j].Borders.TopBorder.LineStyle = borderLineStyle2;
                     _worksheet.Cells[rowIndex + i + 1, j].Borders.RightBorder.LineStyle = borderLineStyle2;
                     _worksheet.Cells[rowIndex + i + 1, j].Borders.BottomBorder.LineStyle = borderLineStyle2;
@@ -159,7 +159,7 @@ namespace Export.ModelsExport
                     _worksheet.Cells[rowIndex + i + 1, j].Borders.InsideHorizontalBorders.LineStyle = borderLineStyle;
 
 
-                    if (table.TableSetting.BodySetting.ColorRow.ColorEveryRow > 0 
+                    if (table.TableSetting.BodySetting.ColorRow.ColorEveryRow > 0
                         && (i + 1) % table.TableSetting.BodySetting.ColorRow.ColorEveryRow == 0)
                     {
                         _worksheet.Cells[rowIndex + i + 1, j].Fill.BackgroundColor = table.TableSetting.BodySetting.ColorRow.BackGroundColor;
