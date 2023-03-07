@@ -1,25 +1,26 @@
-﻿using Export.Interfaces;
+﻿using Export.DrawingCharts;
+using Export.Interfaces;
 using System.Drawing;
 
 namespace Export.Models.Charts
 {
     public class Line : IChart
     {
-        /// <summary>
-        /// Список линий, которые необходимо построить
-        /// </summary>
-       // public IEnumerable<LineData> Lines { get; set; } = Array.Empty<LineData>();
-
         public SettingChart SettingChart { get; set; }
 
-        public Line()
+        private LineETS _lineETS { get; set; }
+
+        public Line(LineETS lineETS)
         {
-            SettingChart = new SettingChart();
+            _lineETS = lineETS;
         }
 
         public Image CreateChartImage()
         {
-            return null;
+            _lineETS.Draw();
+
+            return _lineETS.GetImage();
         }
     }
 }
+
