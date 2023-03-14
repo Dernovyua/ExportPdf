@@ -13,7 +13,6 @@ namespace Export.DrawingCharts
         LineChartSet _chartSet = null;
         List<LineChartData> _data;
         Graphics _g;
-        float _kBorder = 0.075f;
         float _border = 0;
         float _wChart = 0;
         float _hChart = 0;
@@ -26,6 +25,9 @@ namespace Export.DrawingCharts
         double _offX = 0;
         double _normY = 0;
         double _offY = 0;
+        /// <summary>
+        ///  Конструктор
+        /// </summary>
 
         public LineETS(LineChartSet set, List<LineChartData> data)
         {
@@ -33,14 +35,20 @@ namespace Export.DrawingCharts
             _data = data;
             _bmp = new Bitmap(Convert.ToInt32(_chartSet._mapW), Convert.ToInt32(_chartSet._mapH), PixelFormat.Format32bppArgb);
             _g = Graphics.FromImage(_bmp);
-            _border = (float)_chartSet._mapW * _kBorder;
+            Normalize();
+            // Расчет border
+            Font font1 = new Font("Arial", _chartSet.markerFontSize, FontStyle.Regular);
+            Font font2 = new Font("Arial", _chartSet.axisFontSize, FontStyle.Regular);
+            string maxValue = Math.Round(_normY, 2).ToString();
+            SizeF size1 = _g.MeasureString(maxValue, font1);
+            SizeF size2 = _g.MeasureString(_chartSet.yText, font2);
+            _border = (float)(size1.Width + size2.Height + 5f);
             _wChart = _chartSet._mapW - _border * 2;
             _hChart = _chartSet._mapH - _border * 2;
             _original = _g.Transform;
             Matrix m = new Matrix(1, 0, 0, -1, 0, (float)_chartSet._mapH);
             _g.Transform = m;
             _g.Clear(Color.White);
-            Normalize();
         }
 
         /// <summary>
@@ -58,8 +66,7 @@ namespace Export.DrawingCharts
         /// <summary>
         ///  Маркировка по оси Y
         /// </summary>
-        void DrawYMarker(float y, double value, SolidBrush brush)
-        {
+        void DrawYMarker(float y, double value, SolidBrush brush) {
             Matrix m = _g.Transform;
             _g.Transform = _original;
             Font font = new Font("Arial", _chartSet.markerFontSize, FontStyle.Regular);
@@ -70,12 +77,10 @@ namespace Export.DrawingCharts
             _g.DrawString(strValue, font, brush, scrX, scrY);
             _g.Transform = m;
         }
-
         /// <summary>
         /// рисуем временную метку по оси X 
         /// </summary>
-        void DawXMarker(float x, DateTime dt, SolidBrush brush)
-        {
+        void DawXMarker(float x, DateTime dt, SolidBrush brush) {
             Matrix m = _g.Transform;
             _g.Transform = _original;
             Font font = new Font("Arial", _chartSet.markerFontSize, FontStyle.Regular);
@@ -86,12 +91,10 @@ namespace Export.DrawingCharts
             _g.DrawString(strVal, font, brush, scrX, scrY);
             _g.Transform = m;
         }
-
         /// <summary>
         ///  Подпись вертикальной оси
         /// </summary>
-        void SignYAxis()
-        {
+        void SignYAxis() {
             Matrix m = _g.Transform;
             _g.Transform = _original;
             Font font = new Font("Arial", _chartSet.axisFontSize, FontStyle.Regular);
@@ -106,8 +109,7 @@ namespace Export.DrawingCharts
         /// <summary>
         ///  Подпись горизонтальной оси
         /// </summary>
-        void SignXAxis()
-        {
+        void SignXAxis() {
             Matrix m = _g.Transform;
             _g.Transform = _original;
             Font font = new Font("Arial", _chartSet.axisFontSize, FontStyle.Regular);
@@ -120,8 +122,7 @@ namespace Export.DrawingCharts
         /// <summary>
         ///  Оси, сетка, ....
         /// </summary>
-        public void DrawAxis()
-        {
+        public void DrawAxis() {
             Pen grayPen = new Pen(Color.LightGray, 1);
             Pen blackPen = new Pen(Color.Black, 1);
             SolidBrush blackBrush = new SolidBrush(Color.Black);
@@ -135,21 +136,18 @@ namespace Export.DrawingCharts
             // рисуем горизонтальную сетку
             double step = 0.2;
 
-            for (int i = 0; i < (int)1 / step; i++)
-            {
+            for (int i = 0; i < (int)1 / step; i++) {
                 double upY = ScrY(step * (i + 1));
                 double downY = ScrY(-step * (i + 1));
 
-                if (upY < _border + _hChart)
-                {
+                if (upY < _border + _hChart) {
                     double yValue = step * (i + 1);
                     float scrY = ScrY(yValue);
                     _g.DrawLine(grayPen, ScrX(0), scrY, (float)_bmp.Width - _border / 2, scrY);
                     DrawYMarker(scrY, yValue * _normY, blackBrush);
                 }
 
-                if (downY > _border)
-                {
+                if (downY > _border) {
                     double yValue = -step * (i + 1);
                     float scrY = ScrY(yValue);
                     _g.DrawLine(grayPen, ScrX(0), scrY, (float)_bmp.Width - _border / 2, scrY);
@@ -163,8 +161,7 @@ namespace Export.DrawingCharts
             float y1 = _border + 5f;
             float y2 = _border - 5f;
 
-            for (int i = 0; i < (int)1 / step; i++)
-            {
+            for (int i = 0; i < (int)1 / step; i++) {
                 float x = ScrX(step * (i + 1));
                 _g.DrawLine(blackPen, x, y1, x, y2);
                 int dtIdx = (int)((step * (i + 1)) * _normX);
@@ -177,18 +174,15 @@ namespace Export.DrawingCharts
         /// <summary>
         ///  рисуем график0
         /// </summary>
-        public void Draw()
-        {
+        public void Draw() {
             DrawAxis();
 
-            for (int i = 0; i < _data.Count; i++)
-            {
+            for (int i = 0; i < _data.Count; i++) {
                 List<Point> points = _data[i].points;
                 Pen pen = new Pen(_data[i].color, _data[i].width);
                 Pen redPen = new Pen(Color.Red, _data[i].width);
 
-                for (int j = 0; j < points.Count - 1; j++)
-                {
+                for (int j = 0; j < points.Count - 1; j++) {
                     if (points[j + 1].Y >= 0)
                         _g.DrawLine(pen, ScrX(points[j].X), ScrY(points[j].Y), ScrX(points[j + 1].X), ScrY(points[j + 1].Y));
                     else
@@ -199,15 +193,13 @@ namespace Export.DrawingCharts
         /// <summary>
         ///  Нормируем параметры
         /// </summary>
-        void Normalize()
-        {
+        void Normalize() {
             double minX = double.MaxValue;
             double maxX = double.MinValue;
             double minY = double.MaxValue;
             double maxY = double.MinValue;
 
-            foreach (LineChartData data in _data)
-            {
+            foreach (LineChartData data in _data) {
                 List<Point> points = data.points;
                 double min = points.Min(a => a.X);
 
@@ -232,16 +224,13 @@ namespace Export.DrawingCharts
             _offX = minX / _normX;
             _offY = minY / _normY;
 
-            foreach (LineChartData data in _data)
-            {
-                foreach (Point point in data.points)
-                {
+            foreach (LineChartData data in _data) {
+                foreach (Point point in data.points) {
                     point.X /= _normX;
                     point.Y /= _normY;
                 }
             }
         }
-
         public class Point
         {
             public double X { get; set; } = 0;
