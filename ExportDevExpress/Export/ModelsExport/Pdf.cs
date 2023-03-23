@@ -243,7 +243,7 @@ namespace Export.ModelsExport
 
         public void SaveDocument()
         {
-            using (FileStream fs = new FileStream($@"{_path}/{_nameFile}.pdf", FileMode.OpenOrCreate))
+            using (FileStream fs = new FileStream($@"{_path}/{_nameFile}.pdf", FileMode.Create))
             {
                 _link.Component = _richServer;
 
