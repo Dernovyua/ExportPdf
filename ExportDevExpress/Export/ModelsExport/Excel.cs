@@ -197,7 +197,7 @@ namespace Export.ModelsExport
         /// Вызов методов в нужной последовательности (который заложит пользователь при добавлении в список)
         /// </summary>
         /// <param name="actions">Список методов</param>
-        public void GetCallSequenceMethods(IEnumerable<Action> actions)
+        public void GetCallSequenceMethods(List<Action> actions)
         {
             foreach (var action in actions)
             {

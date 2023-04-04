@@ -32,7 +32,7 @@ namespace Export
         /// Один метод, в котором лежит последовательность вызова методов, заложенной пользователем
         /// </summary>
         /// <param name="actions">Методы</param>
-        public void GenerateReport(IEnumerable<Action> actions)
+        public void GenerateReport(List<Action> actions)
         {
             _report.GetCallSequenceMethods(actions);
         }
