@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ExportDevExpress"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800" WindowStartupLocation="CenterScreen">
     <Grid>
         <Button x:Name="GeneratePdf" Content="GeneratePdf" HorizontalAlignment="Left" Margin="312,63,0,0" VerticalAlignment="Top" Height="61" Width="122" Click="button_Click"/>
         <Button x:Name="button1" Content="OpenPreview" HorizontalAlignment="Left" Margin="312,142,0,0" VerticalAlignment="Top" Height="61" Width="122" Click="button1_Click"/>
