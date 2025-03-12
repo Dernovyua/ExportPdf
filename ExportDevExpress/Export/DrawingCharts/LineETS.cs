@@ -220,9 +220,19 @@ namespace Export.DrawingCharts
             }
 
             _normX = maxX - minX;
+            if (_normX < 0.0000000001)
+                _normX = 1;
+
             _normY = maxY - minY;
+            if (_normY < 0.000000001)
+                _normY = 1;
             _offX = minX / _normX;
             _offY = minY / _normY;
+
+            //if (Double.IsNegativeInfinity(_offY) || Double.IsInfinity(_offY))
+            //    _offY = minY;
+
+
 
             foreach (LineChartData data in _data) {
                 foreach (Point point in data.points) {
@@ -252,7 +262,7 @@ namespace Export.DrawingCharts
 
         public class LineChartSet
         {
-            public int _mapW = 700;
+            public int _mapW = 600;
             public int _mapH = 350;
             public string xText = "Доходность";
             public string yText = "Период времени";

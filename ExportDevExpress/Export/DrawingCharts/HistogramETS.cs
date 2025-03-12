@@ -142,7 +142,7 @@ namespace Export.DrawingCharts
         public float FontSize { get; set; } = 8;
         public Color Color { get; set; } = Color.Black;
 
-        public int _mapW = 700;
+        public int _mapW = 600;
         public int _mapH = 350;
         public List<Double> _data;
         public int _markerStart = 0;
